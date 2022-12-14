@@ -1,0 +1,102 @@
+---
+site_name: mm_utils Python Docs
+***REMOVED***
+***REMOVED***
+***REMOVED***
+theme:
+  name: "material"
+  # logo: assets/logo.png
+  # favicon: assets/logo.png
+  features:
+    - navigation.instant
+    - navigation.expand
+    # - navigation.indexes
+    - navigation.top
+    # - navigation.tabs
+    - search.highlight
+    - search.share
+    - search.suggest
+  icon:
+    repo: fontawesome/brands/gitlab
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+extra:
+  social:
+    - icon: fontawesome/brands/slack
+***REMOVED***
+  generator: false
+copyright: Copyright &copy; 2022 Colibri SAS
+
+nav:
+  - Home:
+      - Readme: index.md
+
+
+
+markdown_extensions:
+  - mkdocs-click
+  - abbr
+  - admonition
+  - tables
+  - codehilite
+  - toc:
+      permalink: "¤"
+  - pymdownx.magiclink
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+plugins:
+  - section-index
+  - search
+  - include-markdown
+  - autorefs
+  - mkdocstrings:
+      watch:
+        - src/mm_utils
+      handlers:
+        python:
+          import:
+            - https://docs.python.org/3.10/objects.inv
+          paths: [src]  # search packages in the src folder
+          options:
+            show_root_heading: false
+            show_signature_annotations: true
+            show_if_no_docstring: false
+            separate_signature: true
+            line_length: 80
+            merge_init_into_class: true
+            show_submodules: true
+
+  - git-revision-date
+
+
+# extra_css:
+#   - stylesheets/extra.css

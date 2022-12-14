@@ -1,0 +1,18 @@
+---
+extends: default
+
+ignore: |
+  __pypackages__
+  build
+  dev_packages
+  packages
+
+rules:
+  line-length:
+    max: 140
+    level: warning
+  comments-indentation:
+    ignore: "*"
+  indentation:
+    spaces: 2
+    indent-sequences: consistent

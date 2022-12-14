@@ -1,0 +1,55 @@
+import json
+import re
+from pathlib import Path
+from typing import IO, Any
+from uuid import UUID
+
+try:
+    from gitlab.base import RESTObject
+except ImportError:
+    RESTObject = None
+
+
+class JSONEncoder(json.JSONEncoder):
+    def default(self, o):  # pylint: disable=too-many-return-statements
+        if hasattr(o, "__json__"):
+            return o.__json__()
+        if hasattr(o, "isoformat") and callable(o.isoformat):
+            return o.isoformat()  # datetime and similar
+        if isinstance(o, re.Match):  # XXX should be refactored into models.core.RegexMatch(models.core.Match)
+            return dict(
+                match=o.group(),
+                match_spans=[o.span(i) for i in range(len(o.groups()) + 1)],
+                match_type="regex.Match",
+                matches=o.groups(),
+            )
+        if isinstance(o, UUID):
+            return str(o)
+        if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
+            return str(o)
+        if RESTObject is not None and isinstance(o, Path):
+            return o.as_posix()
+        if isinstance(o, RESTObject):
+            return o._attrs  # pylint:disable=protected-access
+        if type(o).__name__ == "function":
+            # We don't match on callable cause it could catch more than we intend
+            # XXX: Should we warn on this? It's a bit pointless to serialize :/
+            return o.__qualname__
+        if hasattr(o, "__dataclass_fields__"):
+            return o.__dict__
+        return super().encode(o)
+
+
+class ShortJSONEncoder(JSONEncoder):
+    def default(self, o):
+        if hasattr(o, "__short_json__"):
+            return o.__short_json__()
+        return super().default(o)
+
+
+def dump(obj: Any, fp: IO[str], **kwargs):
+    return json.dump(obj, fp, cls=JSONEncoder, **kwargs)
+
+
+def dumps(obj: Any, **kwargs):
+    return json.dumps(obj, cls=JSONEncoder, **kwargs)

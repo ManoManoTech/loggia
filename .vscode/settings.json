@@ -1,0 +1,41 @@
+{
+  "files.exclude": {
+    "**/*.pyc": true,
+    ".static/": true,
+    "node_modules": true,
+    "htmlcov": true,
+    "build": true,
+    "*.log": true,
+    "*.egg-info": true,
+    "pytest-*.xml": true,
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    "dist*": true,
+  },
+  "html.format.templating": true,
+  "python.formatting.provider": "black",
+  "python.linting.flake8Enabled": false,
+  "python.linting.enabled": true,
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "--rootdir=."
+  ],
+  "python.linting.pylintEnabled": true,
+  "python.linting.mypyEnabled": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": true
+    },
+  },
+  "isort.args": [
+    "--profile",
+    "black"
+  ],
+  "python.analysis.stubPath": "stubs",
+}
