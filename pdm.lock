@@ -96,7 +96,7 @@ summary = "iniconfig: brain-dead simple config-ini parsing"
 
 [[package]]
 name = "isort"
-version = "5.11.1"
+version = "5.11.2"
 requires_python = ">=3.7.0"
 summary = "A Python utility / library to sort Python imports."
 
@@ -502,9 +502,9 @@ content_hash = "sha256:3294f97b2420435847606a915238357aebc60aff19fa778ad8115784a
     {url = "https://files.pythonhosted.org/packages/23/a2/97899f6bd0e873fed3a7e67ae8d3a08b21799430fb4da15cfedf10d6e2c2/iniconfig-1.1.1.tar.gz", hash = "sha256:bc3af051d7d14b2ee5ef9969666def0cd1a000e121eaea580d4a313df4b37f32"},
     {url = "https://files.pythonhosted.org/packages/9b/dd/b3c12c6d707058fa947864b67f0c4e0c39ef8610988d7baea9578f3c48f3/iniconfig-1.1.1-py2.py3-none-any.whl", hash = "sha256:011e24c64b7f47f6ebd835bb12a743f2fbe9a26d4cecaa7f53bc4f35ee9da8b3"},
 ]
-"isort 5.11.1" = [
-    {url = "https://files.pythonhosted.org/packages/5b/55/53df1bfaf98e08224f5880546ddd09fbc7271b316bf401de5d46aabcdcee/isort-5.11.1-py3-none-any.whl", hash = "sha256:bf02c95f1fe615ebbe13a619cfed1619ddfe8941274c9e3de3143adca406cb02"},
-    {url = "https://files.pythonhosted.org/packages/d7/1a/a43e2f3e6928fa210b03758a2a397898aa7381c480e3bfac121707d233cc/isort-5.11.1.tar.gz", hash = "sha256:7c5bd998504826b6f1e6f2f98b533976b066baba29b8bae83fdeefd0b89c6b70"},
+"isort 5.11.2" = [
+    {url = "https://files.pythonhosted.org/packages/42/48/d46b8a013e2f9c6f639197b1d96791196133d8a36a5b594529cfdb780a8d/isort-5.11.2.tar.gz", hash = "sha256:dd8bbc5c0990f2a095d754e50360915f73b4c26fc82733eb5bfc6b48396af4d2"},
+    {url = "https://files.pythonhosted.org/packages/cc/95/ccd309181d2b05afbe98cf452210f7e3bd73731ec1849db5c210e2df2117/isort-5.11.2-py3-none-any.whl", hash = "sha256:e486966fba83f25b8045f8dd7455b0a0d1e4de481e1d7ce4669902d9fb85e622"},
 ]
 "jinja2 3.1.2" = [
     {url = "https://files.pythonhosted.org/packages/7a/ff/75c28576a1d900e87eb6335b063fab47a8ef3c8b4d88524c4bf78f670cce/Jinja2-3.1.2.tar.gz", hash = "sha256:31351a702a408a9e7595a8fc6150fc3f43bb6bf7e319770cbc0db9df9437e852"},
