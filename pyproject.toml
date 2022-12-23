@@ -43,7 +43,7 @@ python = ["310", "311"]
 [tool.pdm]
 version = { source = "file", path = "mm_utils/__version__.py" }
 [tool.pdm.resolution.overrides]
-"pygit2" = { version = "1.11.1" }
+pygit2 = "1.11.1"
 [tool.pdm.dev-dependencies]
 dev = [
   "pytest>=7.2.0",
