@@ -14,6 +14,7 @@ authors = [
 ]
 dependencies = [
 ***REMOVED***
+    "ezsre>=0.4.6",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -42,6 +43,18 @@ python = ["310", "311"]
 
 [tool.pdm]
 version = { source = "file", path = "mm_utils/__version__.py" }
+
+[[tool.pdm.source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[[tool.pdm.source]]
+name = "artifactory"
+# Be careful not to change these variable names or we can't make things work both locally and in CI
+***REMOVED***
+verify_ssl = true
+
 [tool.pdm.resolution.overrides]
 pygit2 = "1.11.1"
 [tool.pdm.dev-dependencies]
