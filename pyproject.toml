@@ -12,17 +12,21 @@ authors = [
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
-dependencies = []
+dependencies = [
+***REMOVED***
+]
 requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "MIT" }
 
 
 [project.optional-dependencies]
-pygit2 = ["pygit2>=1.11.1"]
+pygit2 = ["pygit2"]
 loguru = ["loguru>=0.6.0"]
 
 [tool.hatch]
+[tool.hatch.metadata]
+allow-direct-references=true
 [tool.hatch.version]
 path = "mm_utils/__about__.py"
 
