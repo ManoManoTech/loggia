@@ -44,8 +44,6 @@ nav:
   - Home:
       - Readme: index.md
 
-
-
 markdown_extensions:
   - mkdocs-click
   - abbr
@@ -85,7 +83,7 @@ plugins:
         python:
           import:
             - https://docs.python.org/3.10/objects.inv
-          paths: [src]  # search packages in the src folder
+          paths: [src] # search packages in the src folder
           options:
             show_root_heading: false
             show_signature_annotations: true
@@ -96,7 +94,5 @@ plugins:
             show_submodules: true
 
   - git-revision-date
-
-
 # extra_css:
 #   - stylesheets/extra.css

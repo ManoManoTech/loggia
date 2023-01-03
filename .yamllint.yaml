@@ -6,6 +6,7 @@ ignore: |
   build
   dev_packages
   packages
+  .venv
 
 rules:
   line-length:
