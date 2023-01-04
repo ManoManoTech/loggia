@@ -38,14 +38,13 @@ extra:
     - icon: fontawesome/brands/slack
 ***REMOVED***
   generator: false
-copyright: Copyright &copy; 2022 Colibri SAS
+copyright: Copyright &copy; Colibri SAS
 
 nav:
   - Home:
       - Readme: index.md
 
 markdown_extensions:
-  - mkdocs-click
   - abbr
   - admonition
   - tables
@@ -72,18 +71,17 @@ markdown_extensions:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
 plugins:
-  - section-index
+  # - section-index
   - search
   - include-markdown
   - autorefs
+  - git-revision-date
   - mkdocstrings:
-      watch:
-        - src/mm_utils
       handlers:
         python:
           import:
             - https://docs.python.org/3.10/objects.inv
-          paths: [src] # search packages in the src folder
+          paths: [mm_utils]  # search packages in the src folder
           options:
             show_root_heading: false
             show_signature_annotations: true
@@ -93,6 +91,5 @@ plugins:
             merge_init_into_class: true
             show_submodules: true
 
-  - git-revision-date
 # extra_css:
 #   - stylesheets/extra.css
