@@ -79,7 +79,8 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = ["mm_utils/__about__.py", "tests/*", "__pypackages__"]
+omit = ["mm_utils/__about__.py", "tests/*", "__pypackages__/*", ".venv/*"]
+source = ["mm_utils"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
