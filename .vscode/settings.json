@@ -38,4 +38,5 @@
     "black"
   ],
   "python.analysis.stubPath": "stubs",
+  "yaml.customTags": ["!reference sequence"]
 }
