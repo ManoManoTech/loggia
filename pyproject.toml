@@ -1,11 +1,11 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 
 [project]
 name = "mm-utils"
-dynamic = ["version"]
+dynamic = ["version", "urls"]
 description = "Common utils and logging configurations for ManoMano Python projects"
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
@@ -29,7 +29,13 @@ loguru = ["loguru>=0.6.0"]
 [tool.hatch.metadata]
 allow-direct-references = true
 [tool.hatch.version]
-path = "mm_utils/__about__.py"
+# path = "mm_utils/__about__.py"
+source = "vcs"
+[tool.hatch.build.hooks.vcs]
+version-file = "_version.py"
+[tool.hatch.metadata.hooks.vcs]
+***REMOVED***
+***REMOVED***
 
 [tool.hatch.envs.default]
 dependencies = ["pytest", "pytest-cov"]
@@ -40,9 +46,18 @@ no-cov = "cov --no-cov {args}"
 [[tool.hatch.envs.test.matrix]]
 python = ["310", "311"]
 
+[tool.hatch.envs.default.env-vars]
+***REMOVED***
+
 
 [tool.pdm]
-version = { source = "file", path = "mm_utils/__version__.py" }
+# version = { source = "file", path = "mm_utils/__about__.py" }
+[tool.pdm.version]
+source = "scm"
+write_to = "mm_utils/__about__.py"
+write_template = "__version__ = '{}'"  # optional, default to "{}"
+[tool.pdm.scripts]
+test = "pytest tests"
 
 [[tool.pdm.source]]
 name = "pypi"
@@ -67,6 +82,8 @@ dev = [
     "pytest-cov>=4.0.0",
     "tox-pdm>=0.6.1",
     "yamllint>=1.28.0",
+    "hatch-vcs>=0.3.0",
+    "hatchling>=1.12.2",
 ]
 doc = [
     "mkdocs>=1.4.2",
