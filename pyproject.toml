@@ -5,7 +5,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mm-utils"
-dynamic = ["version", "urls"]
+dynamic = ["urls"]
+version = "0.1"
 description = "Common utils and logging configurations for ManoMano Python projects"
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
@@ -13,8 +14,7 @@ authors = [
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
 dependencies = [
-***REMOVED***
-  "ezsre>=0.4.6",
+    "structlog>=23.1.0",
 ]
 requires-python = ">=3.10"
 readme = "README.md"
@@ -24,16 +24,22 @@ license = { text = "MIT" }
 [project.optional-dependencies]
 pygit2 = ["pygit2"]
 loguru = ["loguru>=0.6.0"]
+rich = [
+    "rich>=13.3.4",
+]
 
-[tool.hatch]
+
+# [tool.hatch]
+# [tool.hatch.version]
+# source = "env"
+# variable = "VERSION"
 [tool.hatch.metadata]
 allow-direct-references = true
-[tool.hatch.version]
-# path = "mm_utils/__about__.py"
+
 source = "vcs"
 [tool.hatch.build.hooks.vcs]
 version-file = "_version.py"
-[tool.hatch.metadata.hooks.vcs]
+[tool.hatch.metadata.hooks.vcs.urls]
 ***REMOVED***
 ***REMOVED***
 
@@ -51,11 +57,6 @@ python = ["310", "311"]
 
 
 [tool.pdm]
-# version = { source = "file", path = "mm_utils/__about__.py" }
-[tool.pdm.version]
-source = "scm"
-write_to = "mm_utils/__about__.py"
-write_template = "__version__ = '{}'"  # optional, default to "{}"
 [tool.pdm.scripts]
 test = "pytest tests"
 
@@ -64,40 +65,38 @@ name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
-[[tool.pdm.source]]
-name = "artifactory"
-# Be careful not to change these variable names or we can't make things work both locally and in CI
-***REMOVED***
-verify_ssl = true
-
 [tool.pdm.resolution.overrides]
 pygit2 = "1.11.1"
 [tool.pdm.dev-dependencies]
 dev = [
     "pytest>=7.2.0",
-    "isort>=5.11.1",
     "black>=22.12.0",
-    "mypy>=0.991",
+    "mypy>=1.2",
     "pylint>=2.15.8",
     "pytest-cov>=4.0.0",
     "tox-pdm>=0.6.1",
     "yamllint>=1.28.0",
     "hatch-vcs>=0.3.0",
     "hatchling>=1.12.2",
+    "ipdb>=0.13.13",
+    "rich>=13.3.4",
+    "gunicorn>=20.1.0",
+    "hypercorn>=0.14.3",
+    "ruff>=0.0.262",
+    "python-json-logger>=2.0.7",
 ]
 doc = [
-    "mkdocs>=1.4.2",
-    "mkdocs-material>=8.5.11",
-    "mkdocs-git-revision-date-plugin>=0.3.2",
-    "mkdocs-include-markdown-plugin>=3.9.1",
-    "mkdocstrings[python]>=0.19.1",
-    "mkdocs-section-index>=0.3.4",
+  "mkdocs>=1.4.2",
+  "mkdocs-material>=8.5.11",
+  "mkdocs-git-revision-date-plugin>=0.3.2",
+  "mkdocs-include-markdown-plugin>=3.9.1",
+  "mkdocstrings[python]>=0.19.1",
+  "mkdocs-section-index>=0.3.4",
 ]
-
 
 [tool.pytest]
 [tool.pytest.ini_options]
-minversion = "6.0"
+minversion = "7.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
 
@@ -125,7 +124,14 @@ wrap_length = 140
 [tool.pylint]
 [tool.pylint.MASTER]
 py-version = "3.10"
-ignore = ['__pypackages__', '.git', 'packages']
+ignore = ['__pypackages__', '.git', 'packages', '.venv']
+
 
 [tool.pylint.FORMAT]
 max-line-length = 140
+
+[tool.ruff]
+line-length = 140
+ignore = [
+  "E501"
+]

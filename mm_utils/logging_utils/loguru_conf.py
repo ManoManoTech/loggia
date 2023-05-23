@@ -1,7 +1,7 @@
 import os
 import sys
 
-from mm_utils.logging.loguru_dd_format import datadog_formatter
+from mm_utils.logging_utils.loguru_dd_format import datadog_formatter
 
 try:
     from loguru import logger
