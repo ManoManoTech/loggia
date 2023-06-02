@@ -1,12 +1,13 @@
 import traceback
 from datetime import timedelta
+from typing import Any
 
 from mm_utils.utils.dictutils import mv_attr
 
 from .json import dumps
 
 
-def datadog_formatter(record: dict):
+def datadog_formatter(record: dict[str, Any]) -> str:
     """
     Massage record to have attributes name consistently with the Datadog convention:
     https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#overview

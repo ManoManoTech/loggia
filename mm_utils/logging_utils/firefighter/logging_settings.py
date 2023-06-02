@@ -9,9 +9,11 @@
 from logging import Filter, Formatter, LogRecord
 from typing import Any
 
-from firefighter.settings.components.logging.custom_json_formatter import CustomJsonEncoder, CustomJsonFormatter
-from firefighter.settings.components.logging.pretty_formatter import PrettyFormatter
 from firefighter.settings.settings_utils import ENV, config
+
+from mm_utils.logging_utils.formatters.base_formatters import CustomJsonEncoder
+from mm_utils.logging_utils.formatters.gunicorn_json_formatter import CustomJsonFormatter
+from mm_utils.logging_utils.formatters.pretty_formatter import PrettyFormatter
 
 
 class AccessLogFilter(Filter):

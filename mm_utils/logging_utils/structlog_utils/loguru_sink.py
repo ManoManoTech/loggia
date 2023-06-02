@@ -10,24 +10,22 @@ If you use primarily use loguru, you should consider using logging or structlog 
 
 
 """
+from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 import structlog
 from loguru import logger as loguru_logger
 
-from mm_utils.logging_utils.structlog_utils.log import configure_logging
-
-
-class LoguruMessage(str):
-    """From loguru._logger.Message."""
-
-    __slots__ = ("record",)
+if TYPE_CHECKING:
+    from loguru import Message as LoguruMessage
+    from loguru import Record as LoguruRecord
 
 
 # Custom sink function for Loguru to pass log messages to Structlog
-def loguru_to_structlog_sink(message: LoguruMessage | str):
-    record: dict = message.record
+def loguru_to_structlog_sink(message: LoguruMessage) -> None:
+    record: LoguruRecord = message.record
     # structlog_logger: structlog.stdlib.BoundLogger = structlog.wrap_logger(
 
     #     processors=[
@@ -54,16 +52,14 @@ def loguru_to_structlog_sink(message: LoguruMessage | str):
     structlog_logger.log(
         level=record["level"].no,
         event=record["message"],
-        # {
         **{"lineno": lineno, "module": module, "pathname": pathname, "filename": filename},
         **record["extra"],
-        # },
         stacklevel=5,
         # stack_info=True,
     )
 
 
-def configure_loguru():
+def configure_loguru() -> None:
     # # Remove Loguru's default handler and add the custom sink function
     loguru_logger.remove()
     loguru_logger.add(loguru_to_structlog_sink, level=logging.DEBUG)

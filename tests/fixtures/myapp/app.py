@@ -1,7 +1,11 @@
 # isort: off
 import mm_utils.logging_utils.structlog_utils.log  # noqa
 
-# from hypercorn.logging
+import os
+
+import gunicorn.app.wsgiapp
+from gunicorn.app.base import Application
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -13,12 +17,6 @@ def application(environ, start_response):
     logger.info("Hello, World!")
     start_response("200 OK", [("Content-Type", "text/plain"), ("Content-Length", str(len(data)))])
     return iter([data])
-
-
-import os
-
-import gunicorn.app.wsgiapp
-from gunicorn.app.base import Application
 
 
 class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):
@@ -36,7 +34,7 @@ class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):
 
         if "GUNICORN_TIMEOUT" in os.environ:
             self.cfg.set("timeout", int(os.environ["GUNICORN_TIMEOUT"]))
-        self.app_uri = app
+        self.app_uri = "myapp.app"
 
 
 def main():

@@ -3,7 +3,8 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import COLORS, PALETTES, PrettyConsoleRenderer, html_to_triple_dec
+from mm_utils.logging_utils.colors import COLORS, PALETTES, html_to_triple_dec
+from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
 
 
 def remove_color_codes(text: str) -> str:

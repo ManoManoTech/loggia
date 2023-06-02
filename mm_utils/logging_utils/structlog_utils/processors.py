@@ -1,19 +1,24 @@
+import enum
 import inspect
+import logging
 import logging.config
 import os
 import sys
 import traceback
-from logging import Logger, LogRecord, _nameToLevel
+from logging import Logger, LogRecord
 from types import TracebackType
-from typing import Any, Iterable, Mapping, Protocol, Union
+from typing import Any, Collection, Iterable, Mapping, Union
+
+import structlog
+from structlog.processors import CallsiteParameter, CallsiteParameterAdder, _find_first_app_frame_and_name
+from structlog.types import EventDict
+
+# from structlog.typing import EventDict
 
 try:
     import ddtrace
 except ImportError:
-    ddtrace = None
-import structlog
-from structlog.typing import EventDict, Processor, WrappedLogger
-
+    ddtrace = None  # type: ignore
 # XXX Make sure that all processors types are correct. With processor
 ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
 CONSOLE = True if os.getenv("ENV") == "DEV" else True
@@ -72,7 +77,7 @@ def datadog_add_logger_name(logger: logging.Logger, method_name: str, event_dict
     return event_dict
 
 
-def datadog_add_log_level(logger: logging.Logger, method_name: str, event_dict: EventDict) -> EventDict:
+def datadog_add_log_level(_: logging.Logger, method_name: str, event_dict: EventDict) -> EventDict:
     """
     Add the log level to the event dict under the ``status`` key.
 
@@ -90,7 +95,7 @@ def datadog_add_log_level(logger: logging.Logger, method_name: str, event_dict: 
     return event_dict
 
 
-def extract_from_record_datadog(_, __, event_dict: EventDict) -> EventDict:
+def extract_from_record_datadog(_: logging.Logger, __: str, event_dict: EventDict) -> EventDict:
     """
     Extract thread and process names and add them to the event dict.
     They are added under the ``logger`` key to be compatible with DataDog's naming convention.
@@ -119,7 +124,7 @@ def extract_from_record_datadog(_, __, event_dict: EventDict) -> EventDict:
 #     return event_dict
 
 
-def datadog_error_mapping_processor(_, __, event_dict: EventDict) -> EventDict:
+def datadog_error_mapping_processor(_: logging.Logger, __: str, event_dict: EventDict) -> EventDict:
     """
     Extracts the exception information from the event dict and adds it to the
     event dict as error.stack, error.message and error.kind.
@@ -205,13 +210,13 @@ def add_log_level_number(logger: logging.Logger, method_name: str, event_dict: E
 class DataDogTraceInjectionProcessor:
     """Adapted from the official Datadog documentation https://docs.datadoghq.com/tracing/other_telemetry/connect_logs_and_traces/python/#no-standard-library-logging"""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         if not ddtrace:
             # XXX Should we ignore this silently?
             raise ImportError("ddtrace is not installed")
         self.ddtrace = ddtrace
 
-    def __call__(self, logger, log_method, event_dict: EventDict) -> EventDict:
+    def __call__(self, logger: logging.Logger, log_method: str, event_dict: EventDict) -> EventDict:
         # get correlation ids from current tracer context
         span = self.ddtrace.tracer.current_span()
         trace_id, span_id = (span.trace_id, span.span_id) if span else (None, None)
@@ -225,19 +230,6 @@ class DataDogTraceInjectionProcessor:
         event_dict["dd.service"] = self.ddtrace.config.service or ""
         event_dict["dd.version"] = self.ddtrace.config.version or ""
         return event_dict
-
-
-import enum
-import inspect
-import logging
-import os
-import threading
-from typing import Any, Callable, ClassVar, Collection, NamedTuple, Optional
-
-from structlog.processors import CallsiteParameter, CallsiteParameterAdder, _find_first_app_frame_and_name
-
-# from structlog.stdlib import get_processname
-from structlog.types import EventDict
 
 
 class CustomCallsiteParameter(enum.Enum):

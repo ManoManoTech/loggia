@@ -6,70 +6,19 @@ See also the narrative documentation in `development`.
 from __future__ import annotations
 
 import logging
-import sys
 import warnings
 from io import StringIO
-from typing import Iterable
+from typing import TYPE_CHECKING, Iterable
 
-from structlog.dev import (
-    _EVENT_WIDTH,
-    ConsoleRenderer,
-    Styles,
-    _has_colors,
-    _pad,
-    default_exception_formatter,
-    plain_traceback,
-)
+from structlog.dev import _EVENT_WIDTH, ConsoleRenderer, Styles, _has_colors, _pad, default_exception_formatter, plain_traceback
 from structlog.processors import _figure_out_exc_info
-from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
 
-COLORS: dict[str, str] = {
-    "Forest Green": "#086e3f",
-    "Emerald Green": "#58ad72",
-    "Lint": "#4bd676",
-    "Pale Lint": "#75e097",
-    "Fuchsia": "#fb4570",
-    "Hot Pink": "#fb6b90",
-    "Pink": "#fb8da0",
-    "Pink White": "#efebe0",
-    "Red": "#ed4040",
-    "Ivory": "#f1ece4",
-    "Nude": "#c3b090",
-    "Sand Dollar": "#de943a",
-    "Tan": "#92794f",
-    "Blue Gray": "#8da7c4",
-    "Sky": "#ace1fc",
-    "Stone Blue": "#8da7c4",
-    "White Blue": "#e5ddfc",
-}
+from mm_utils.logging_utils.colors import PALETTES, ansi_fg
 
-PALETTES: dict[int, tuple[str, str, str, str]] = {
-    logging.NOTSET: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
-    logging.DEBUG: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
-    logging.INFO: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),
-    logging.WARNING: ("Nude", "Tan", "Nude", "Sand Dollar"),
-    logging.ERROR: ("Hot Pink", "Fuchsia", "Pink", "Red"),
-    logging.CRITICAL: ("Hot Pink", "Fuchsia", "Pink", "Red"),
-}
+if TYPE_CHECKING:
+    from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
 
-
-def html_to_triple_dec(html_code: str) -> list[int]:
-    return [int(x, 16) for x in (html_code[1:3], html_code[3:5], html_code[5:8])]
-
-
-def _ansi_fg(name: str) -> str:
-    html_code = COLORS[name]
-    return "\x1b[38;2;{};{};{}m".format(*html_to_triple_dec(html_code))
-
-
-def _ansi_end() -> str:
-    return "\x1b[0m"
-
-
-if sys.version_info >= (3, 8):
-    pass
-else:
-    pass
+_ansi_fg = ansi_fg
 
 
 try:

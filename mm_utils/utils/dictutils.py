@@ -1,6 +1,6 @@
 import asyncio
 import re
-from collections.abc import Callable, Iterable, Mapping
+from collections.abc import Callable, Iterable, Mapping, MutableMapping
 from concurrent.futures import Future
 from copy import deepcopy
 from typing import Any, Coroutine, Optional, TypeVar, Union
@@ -185,10 +185,22 @@ def select_keys(_dict, keys: list):
     return {k: v for k, v in _dict.items() if k in output_keys}
 
 
-def mv_attr(obj, src_key, dst_key):
+def mv_attr(obj: MutableMapping[K, Any], src_key: K, dst_key: K):
     if src_key in obj:
         obj[dst_key] = obj[src_key]
         del obj[src_key]
+
+
+def del_if_possible(obj: MutableMapping[K, Any], key: K):
+    try:
+        del obj[key]
+    except KeyError:
+        pass
+
+
+def del_many_if_possible(obj: MutableMapping[K, Any], keys: list[K]):
+    for key in keys:
+        del_if_possible(obj, key)
 
 
 def mapdict(dict_: dict, fn: Callable[[dict], dict]) -> dict:

@@ -1,10 +1,14 @@
 # From radiologist-python
 
-from radiologist.collector.util.hypercornlog import AccessLogFilter, CustomJsonEncoder, CustomJsonFormatter
-from radiologist.collector.util.logging import loguru_production_mode
 
 # Hypercorn config
 # https://pgjones.gitlab.io/hypercorn/how_to_guides/configuring.html#configuration-options
+
+from typing import Any
+
+from mm_utils.logging_utils.formatters.base_formatters import CustomJsonEncoder
+from mm_utils.logging_utils.formatters.hypercorn_json_formatter import AccessLogFilter, CustomJsonFormatter
+from mm_utils.logging_utils.loguru_utils.loguru_conf import loguru_production_mode
 
 bind = ["0.0.0.0:3000"]
 keep_alive_timeout = 300
@@ -18,7 +22,7 @@ loglevel = "INFO"
 
 attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
 attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
-formatter = {"()": CustomJsonFormatter}
+formatter: dict[str, type[CustomJsonFormatter] | Any] = {"()": CustomJsonFormatter}
 formatter.update(
     dict(
         json_indent=None,

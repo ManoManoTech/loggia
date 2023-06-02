@@ -1,12 +1,13 @@
-from typing import Mapping
+from typing import TYPE_CHECKING, Mapping
 
 import structlog
 from hypercorn.config import Config
 from hypercorn.logging import Logger
-from hypercorn.typing import ResponseSummary, WWWScope
 
-# print("TEST")
 from mm_utils.logging_utils.structlog_utils import log
+
+if TYPE_CHECKING:
+    from hypercorn.typing import ResponseSummary, WWWScope
 
 log.configure_logging()
 HEADER_ATTRIBUTES = [
@@ -46,8 +47,8 @@ class HypercornLogger(Logger):
 
     def __init__(self, cfg: Config):
         # print("O")
-        self.error_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.error")
-        self.access_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.access")
+        self.error_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.error")  # type: ignore
+        self.access_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.access")  # type: ignore
         self.cfg = cfg
         self.access_log_format = cfg.access_log_format
 
@@ -70,7 +71,7 @@ class HypercornLogger(Logger):
         # Value: value.decode('latin1')
         headers = {}
         # Convert microseconds to nanoseconds
-        atoms["D"] = atoms["D"] * 1e3
+        atoms["D"] = atoms["D"] * 1e3  # type: ignore
         for key_b, value in request["headers"]:
             key = key_b.decode("latin1").lower()
             if key in HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):

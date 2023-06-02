@@ -1,45 +1,19 @@
 import re
 from logging import LogRecord
 from os import getenv
-from socket import socket
-from typing import Any, MutableMapping, TypeVar
+from typing import Any, Final
 
-from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
+from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonFormatter
 
-GUNICORN_KEY_RE = re.compile("{([^}]+)}")
-T = TypeVar("T")
-K = TypeVar("K")
+from mm_utils.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
-
-def del_if_possible(obj: MutableMapping[K, Any], key: K):
-    try:
-        del obj[key]
-    except KeyError:
-        pass
-
-
-def del_many_if_possible(obj: MutableMapping[K, Any], keys: list[K]):
-    for key in keys:
-        del_if_possible(obj, key)
-
-
-def mv_attr(obj: MutableMapping[K, Any], src_key: K, dst_key: K):
-    if src_key in obj:
-        obj[dst_key] = obj[src_key]
-        del obj[src_key]
-
-
-class CustomJsonEncoder(JsonEncoder):
-    def encode(self, o: Any) -> str:
-        if isinstance(o, socket):
-            return super().encode(dict(socket=dict(peer=o.getpeername())))
-        return super().encode(o)
+GUNICORN_KEY_RE: Final[re.Pattern[str]] = re.compile("{([^}]+)}")
 
 
 class CustomJsonFormatter(JsonFormatter):
     RESERVED_ATTRS = RESERVED_ATTRS
 
-    def add_fields(self, log_record: dict[str, Any], record: LogRecord, message_dict):
+    def add_fields(self, log_record: dict[str, Any], record: LogRecord, message_dict: dict[str, Any]) -> None:
         # XXX probably send empty message dict and merge it ourselves instead of top level
         super().add_fields(log_record, record, message_dict)
 

@@ -1,6 +1,8 @@
 import logging
+import os
 
-import mm_utils.log
+import gunicorn.app.wsgiapp
+from gunicorn.app.base import Application
 
 logger = logging.getLogger(__name__)
 logging.info("Main")
@@ -11,12 +13,6 @@ def app(environ, start_response):
     logger.info("Hello, World!")
     start_response("200 OK", [("Content-Type", "text/plain"), ("Content-Length", str(len(data)))])
     return iter([data])
-
-
-import os
-
-import gunicorn.app.wsgiapp
-from gunicorn.app.base import Application
 
 
 class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):

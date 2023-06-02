@@ -1,12 +1,11 @@
 import json
 import re
-from pathlib import Path
 from typing import IO, Any
 from uuid import UUID
 
 
 class JSONEncoder(json.JSONEncoder):
-    def default(self, o):  # pylint: disable=too-many-return-statements
+    def default(self, o: Any) -> str | Any:  # pylint: disable=too-many-return-statements
         if hasattr(o, "__json__"):
             return o.__json__()
         if hasattr(o, "isoformat") and callable(o.isoformat):
@@ -36,15 +35,15 @@ class JSONEncoder(json.JSONEncoder):
 
 
 class ShortJSONEncoder(JSONEncoder):
-    def default(self, o):
+    def default(self, o: Any) -> Any:
         if hasattr(o, "__short_json__"):
             return o.__short_json__()
         return super().default(o)
 
 
-def dump(obj: Any, fp: IO[str], **kwargs):
+def dump(obj: Any, fp: IO[str], **kwargs: Any) -> None:
     return json.dump(obj, fp, cls=JSONEncoder, **kwargs)
 
 
-def dumps(obj: Any, **kwargs):
+def dumps(obj: Any, **kwargs: Any) -> str:
     return json.dumps(obj, cls=JSONEncoder, **kwargs)

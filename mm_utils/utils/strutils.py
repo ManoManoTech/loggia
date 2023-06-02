@@ -7,6 +7,7 @@ import re
 _snake_case_re = re.compile(r"(?<!^)(?=[A-Z])")
 _clean_alphanumerical_and_separator_re = re.compile(r"[^0-9a-zA-Z\-\_\.\ ]+")
 
+
 # TODO Fix string in parenthesis
 def to_snake_case(s: str) -> str:
     return _snake_case_re.sub("_", s).lower()

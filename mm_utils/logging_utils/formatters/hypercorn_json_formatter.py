@@ -1,14 +1,14 @@
 import re
-from collections.abc import Iterable, MutableMapping
 from logging import Filter, LogRecord
 from os import getenv
-from socket import socket
-from typing import Any, OrderedDict
+from typing import Any, Final
 
-from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
+from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonFormatter
 
-GUNICORN_KEY_RE = re.compile("{([^}]+)}")
-HYPERCORN_MAP = {
+from mm_utils.utils.dictutils import del_if_possible, mv_attr
+
+GUNICORN_KEY_RE: Final[re.Pattern[str]] = re.compile("{([^}]+)}")
+HYPERCORN_MAP: Final[dict[str, str]] = {
     "s": "http.status_code",
     "m": "http.method",
     "f": "http.referer",
@@ -20,39 +20,12 @@ HYPERCORN_MAP = {
     "D": "duration",
 }
 
-# Type for objects that support __delitem__
-
-
-def del_if_possible(obj: MutableMapping, key):
-    try:
-        del obj[key]
-    except KeyError:
-        pass
-
-
-def del_many_if_possible(obj: MutableMapping, keys: Iterable):
-    for key in keys:
-        del_if_possible(obj, key)
-
-
-def mv_attr(obj: MutableMapping, src_key, dst_key):
-    if src_key in obj:
-        obj[dst_key] = obj[src_key]
-        del obj[src_key]
-
-
-class CustomJsonEncoder(JsonEncoder):
-    def encode(self, o: Any) -> str:
-        if isinstance(o, socket):
-            return super().encode(dict(socket=dict(peer=o.getpeername())))
-        return super().encode(o)
-
 
 # pylint:disable=too-many-branches
 class CustomJsonFormatter(JsonFormatter):
     RESERVED_ATTRS = RESERVED_ATTRS
 
-    def add_fields(self, log_record: dict[str, Any], record: LogRecord, message_dict):
+    def add_fields(self, log_record: dict[str, Any], record: LogRecord, message_dict: dict[str, Any]) -> None:
         # XXX probably send empty message dict and merge it ourselves instead of top level
         super().add_fields(log_record, record, message_dict)
 
