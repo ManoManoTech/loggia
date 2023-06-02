@@ -1,5 +1,4 @@
 import datetime
-import logging.config
 import os
 
 import structlog
@@ -26,7 +25,6 @@ class GunicornLogger:
 
     def access(self, resp: Response, req: Request, environ: dict, request_time: datetime.timedelta) -> None:
         status = resp.status
-        from ipdb import set_trace
 
         # set_trace()
         if isinstance(status, str):

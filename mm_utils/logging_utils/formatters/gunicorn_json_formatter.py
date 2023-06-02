@@ -2,26 +2,28 @@ import re
 from logging import LogRecord
 from os import getenv
 from socket import socket
-from typing import Any
+from typing import Any, MutableMapping, TypeVar
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
 GUNICORN_KEY_RE = re.compile("{([^}]+)}")
+T = TypeVar("T")
+K = TypeVar("K")
 
 
-def del_if_possible(obj: dict[str, Any], key: str):
+def del_if_possible(obj: MutableMapping[K, Any], key: K):
     try:
         del obj[key]
     except KeyError:
         pass
 
 
-def del_many_if_possible(obj: dict[str, Any], keys: list[str]):
+def del_many_if_possible(obj: MutableMapping[K, Any], keys: list[K]):
     for key in keys:
         del_if_possible(obj, key)
 
 
-def mv_attr(obj: dict[str, Any], src_key: str, dst_key: str):
+def mv_attr(obj: MutableMapping[K, Any], src_key: K, dst_key: K):
     if src_key in obj:
         obj[dst_key] = obj[src_key]
         del obj[src_key]

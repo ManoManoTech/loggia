@@ -1,10 +1,6 @@
-import datetime
-import logging.config
-import os
+from typing import Mapping
 
 import structlog
-from gunicorn.http.message import Request
-from gunicorn.http.wsgi import Response
 from hypercorn.config import Config
 from hypercorn.logging import Logger
 from hypercorn.typing import ResponseSummary, WWWScope
@@ -66,7 +62,7 @@ class HypercornLogger(Logger):
     async def access(self, request: "WWWScope", response: "ResponseSummary", request_time: float) -> None:
         # XXX Url vs URI?
         # XXX Check duration is in ns
-        atoms = self.atoms(request, response, request_time)
+        atoms: Mapping[str, float | int | str] = self.atoms(request, response, request_time)
         # Add all headers in the HEADER_ATTRIBUTES list to the log, or any header starting with x- or sec-
         # Keep in minds that headers are case insensitive, so we need to lowercase them
         # request["headers"] is a tuple of bytes
@@ -112,7 +108,3 @@ class HypercornLogger(Logger):
     #     },
     #     request_time_seconds="%d.%06d" % (request_time.seconds, request_time.microseconds),
     # )
-
-    # def close_on_exec(self, *args, **kwargs):
-    #     pass
-    #     pass

@@ -906,7 +906,7 @@ dependencies = [
 lock_version = "4.2"
 cross_platform = true
 groups = ["default", "dev", "doc", "loguru", "pygit2", "rich"]
-content_hash = "sha256:189958d339fd4b85692df8a58563db604befb5980673a9e5a88c9659262249ef"
+content_hash = "sha256:0adced0b2d7f3f8cccc11ebbb6e5a357da6abee6572b89e77728229f6733f1bc"
 
 [metadata.files]
 "appnope 0.1.3" = [

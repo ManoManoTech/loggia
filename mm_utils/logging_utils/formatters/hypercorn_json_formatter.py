@@ -52,7 +52,7 @@ class CustomJsonEncoder(JsonEncoder):
 class CustomJsonFormatter(JsonFormatter):
     RESERVED_ATTRS = RESERVED_ATTRS
 
-    def add_fields(self, log_record: OrderedDict, record: LogRecord, message_dict):
+    def add_fields(self, log_record: dict[str, Any], record: LogRecord, message_dict):
         # XXX probably send empty message dict and merge it ourselves instead of top level
         super().add_fields(log_record, record, message_dict)
 

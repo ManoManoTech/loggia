@@ -23,7 +23,9 @@ license = { text = "MIT" }
 
 [project.optional-dependencies]
 pygit2 = ["pygit2"]
-loguru = ["loguru>=0.6.0"]
+loguru = [
+    "loguru>=0.7.0",
+]
 rich = [
     "rich>=13.3.4",
 ]
@@ -135,3 +137,19 @@ line-length = 140
 ignore = [
   "E501"
 ]
+
+
+[tool.mypy]
+python_version = "3.11"
+strict_optional = true
+mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
+allow_redefinition = false
+ignore_missing_imports = true
+local_partial_types = true
+strict_equality = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unreachable = true
+warn_no_return = false
+check_untyped_defs = true
