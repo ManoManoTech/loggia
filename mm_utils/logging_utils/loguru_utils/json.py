@@ -1,7 +1,13 @@
 import json
 import re
-from typing import IO, Any
+from types import _T_contra
+from typing import Any, Protocol
 from uuid import UUID
+
+
+class SupportsWrite(Protocol[_T_contra]):
+    def write(self, __s: _T_contra) -> object:
+        ...
 
 
 class JSONEncoder(json.JSONEncoder):
@@ -11,12 +17,12 @@ class JSONEncoder(json.JSONEncoder):
         if hasattr(o, "isoformat") and callable(o.isoformat):
             return o.isoformat()  # datetime and similar
         if isinstance(o, re.Match):  # XXX should be refactored into models.core.RegexMatch(models.core.Match)
-            return dict(
-                match=o.group(),
-                match_spans=[o.span(i) for i in range(len(o.groups()) + 1)],
-                match_type="regex.Match",
-                matches=o.groups(),
-            )
+            return {
+                "match": o.group(),
+                "match_spans": [o.span(i) for i in range(len(o.groups()) + 1)],
+                "match_type": "regex.Match",
+                "matches": o.groups(),
+            }
         if isinstance(o, UUID):
             return str(o)
         if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
@@ -41,7 +47,7 @@ class ShortJSONEncoder(JSONEncoder):
         return super().default(o)
 
 
-def dump(obj: Any, fp: IO[str], **kwargs: Any) -> None:
+def dump(obj: Any, fp: SupportsWrite[str], **kwargs: Any) -> None:
     return json.dump(obj, fp, cls=JSONEncoder, **kwargs)
 
 

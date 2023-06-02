@@ -1,9 +1,11 @@
-# From radiologist-python
+"""From radiologist-python
 
 
-# Hypercorn config
-# https://pgjones.gitlab.io/hypercorn/how_to_guides/configuring.html#configuration-options
+Hypercorn config
 
+https://pgjones.gitlab.io/hypercorn/how_to_guides/configuring.html#configuration-options
+"""
+# pylint: disable=invalid-name
 from typing import Any
 
 from mm_utils.logging_utils.formatters.base_formatters import CustomJsonEncoder
@@ -24,12 +26,12 @@ attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
 attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
 formatter: dict[str, type[CustomJsonFormatter] | Any] = {"()": CustomJsonFormatter}
 formatter.update(
-    dict(
-        json_indent=None,
-        json_encoder=CustomJsonEncoder,
-        reserved_attrs=attrs,
-        timestamp=True,
-    )
+    {
+        "json_indent": None,
+        "json_encoder": CustomJsonEncoder,
+        "reserved_attrs": attrs,
+        "timestamp": True,
+    },
 )  # type: ignore
 base_level = loglevel
 logconfig_dict = {

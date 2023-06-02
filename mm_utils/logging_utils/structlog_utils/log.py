@@ -1,3 +1,5 @@
+"""Main module for logging configuration, using structlog."""
+
 import logging
 import logging.config
 import os
@@ -54,7 +56,7 @@ def make_formatter_structured() -> dict[str, Any]:
                     CallsiteParameter.LINENO.value: "logger.lineno",
                     "logger": "logger.name",
                     "level": "status",
-                }
+                },
             ),
             ManoManoDataDogAttributesProcessor(),
             stdlib.ProcessorFormatter.remove_processors_meta,
@@ -95,7 +97,6 @@ def make_formatter_colored() -> dict[str, Any]:
     }
 
 
-"""Processors to be used for logs coming from standard logging."""
 std_pre_chain: Iterable[Processor] = [
     contextvars.merge_contextvars,
     stdlib.PositionalArgumentsFormatter(),
@@ -106,8 +107,9 @@ std_pre_chain: Iterable[Processor] = [
     add_log_level,
     EventRenamer("message"),
 ]
+"""Processors to be used for logs coming from standard logging."""
 
-"""Processors to be used for logs coming from structlog."""
+
 struct_pre_chain: Iterable[Processor] = [
     contextvars.merge_contextvars,
     stdlib.PositionalArgumentsFormatter(),
@@ -117,16 +119,30 @@ struct_pre_chain: Iterable[Processor] = [
     # Keep this last!
     stdlib.ProcessorFormatter.wrap_for_formatter,
 ]
+"""Processors to be used for logs coming from structlog."""
 
 
 class LoggingConfig:
+    """ "
+    Base class for our custom logging configuration.
+    XXX More extensible, maybe dataclass or pydantic?
+    """
+
     ignore_duplicate_processors: bool = False
     excepthook: bool = True
+    config: "logging.config._DictConfigArgs" | None
+    formatter_name: str
+    log_level: int
 
-    def __init__(self, *_: Any, **__: Any) -> None:
-        self.log_level: int = get_log_level_number_from_env()
-        self.formatter_name: str = get_main_formatter_name()
-        self.config: "logging.config._DictConfigArgs" | None = None
+    def __init__(
+        self,
+        log_level: int | None = None,
+        formatter_name: str | None = None,
+        std_logger_config: "logging.config._DictConfigArgs" | None = None,
+    ) -> None:
+        self.log_level: int = get_log_level_number_from_env() if log_level is None else log_level
+        self.formatter_name: str = get_main_formatter_name() if formatter_name is None else formatter_name
+        self.config: "logging.config._DictConfigArgs" | None = None if std_logger_config is None else std_logger_config
 
     def set_log_level(self, level: int, *_: Any, **__: Any) -> None:
         self.log_level = level
@@ -139,6 +155,7 @@ class LoggingConfig:
 
 
 def get_main_formatter_name() -> Literal["colored", "structured"]:
+    """Get the main formatter name from the environment variable ENV."""
     return "colored" if os.getenv("ENV", "").upper() == "DEV" else "structured"
 
 
@@ -160,7 +177,13 @@ def get_log_level_number_from_env(log_level_env: str = "LOG_LEVEL") -> int:
         return logging.DEBUG if os.getenv("ENV", "").upper() == "DEV" else logging.INFO
 
 
-def configure_logging(logging_config: LoggingConfig | None = None) -> None:
+def configure_logging(logging_config: LoggingConfig | None = None, print_config_debug: bool = False) -> None:
+    """Main function to configure logging.
+
+    Args:
+        logging_config (LoggingConfig | None, optional): Your custom config. If None, a default config will be used.
+        print_config_debug (bool, optional): Log the config. Defaults to False.
+    """
     if logging_config is None:
         logging_config = LoggingConfig()
 
@@ -173,7 +196,7 @@ def configure_logging(logging_config: LoggingConfig | None = None) -> None:
                 "level": "DEBUG",
                 "class": "logging.StreamHandler",
                 "formatter": "colored",
-            }
+            },
         },
         "loggers": {
             "": {
@@ -237,8 +260,10 @@ def configure_logging(logging_config: LoggingConfig | None = None) -> None:
 
     if logging_config.excepthook:
         set_excepthook(stdlib.get_logger())
-    logger = stdlib.get_logger()
-    logger.debug("Logging configured", config=config)
+
+    if print_config_debug:
+        logger = stdlib.get_logger()
+        logger.debug("Logging configured", config=config)
 
 
 def set_formatter(formatter_name: str) -> None:
@@ -299,20 +324,23 @@ def check_duplicate_processors(logger: logging.Logger) -> None:
         print("Duplicate processors in ProcessorFormatter", duplicates, processor_names)
         logger.warning(
             "Duplicate processors in ProcessorFormatter",
-            extra=dict(
-                duplicates=duplicates,
-                processors=processor_names,
-            ),
+            extra={
+                "duplicates": duplicates,
+                "processors": processor_names,
+            },
         )
 
 
 def _get_closest_smaller_log_level(log_level: int) -> int:
-    """From an arbitrary log level (not only the default one), get the closest smaller or equal log level.
+    """From an arbitrary log level value (not only the default one), get the closest smaller or equal [default log level value](https://docs.python.org/3/library/logging.html#logging-levels).
 
-    Eg. if log_level is 30, it will return 30 (WARNING)
-        if log_level is 5, it will return 0 (NOTSET)
-        if log_level is 42, it will return 40 (ERROR)
-        if log_level is 143, it will return 50 (CRITICAL)
+
+    Examples:
+
+    - if log_level is 30, it will return 30 (WARNING)
+    - if log_level is 5, it will return 0 (NOTSET)
+    - if log_level is 42, it will return 40 (ERROR)
+    - if log_level is 143, it will return 50 (CRITICAL)
     """
     closest_smaller_log_level = 0
     for level in [0, 10, 20, 30, 40, 50]:

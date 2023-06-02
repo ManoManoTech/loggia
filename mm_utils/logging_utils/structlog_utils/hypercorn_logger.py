@@ -60,7 +60,7 @@ class HypercornLogger(Logger):
 
         # atoms["http.url_details"] = request["url_details"]
         self.access_logger.info(
-            "access", **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP}, **headers
+            "access", **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP}, **headers,
         )
 
     # from ipdb import set_trace

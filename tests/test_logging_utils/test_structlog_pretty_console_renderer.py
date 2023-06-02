@@ -3,8 +3,9 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from mm_utils.logging_utils.colors import COLORS, PALETTES, html_to_triple_dec
+from mm_utils.logging_utils.constants import COLORS, PALETTES
 from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
+from mm_utils.utils.colorsutils import html_to_triple_dec
 
 
 def remove_color_codes(text: str) -> str:
@@ -13,9 +14,9 @@ def remove_color_codes(text: str) -> str:
 
 
 def test_html_to_triple_dec():
-    assert html_to_triple_dec("#FF00FF") == [255, 0, 255]
-    assert html_to_triple_dec("#123456") == [18, 52, 86]
-    assert html_to_triple_dec("#FFFFFF") == [255, 255, 255]
+    assert html_to_triple_dec("#FF00FF") == (255, 0, 255)
+    assert html_to_triple_dec("#123456") == (18, 52, 86)
+    assert html_to_triple_dec("#FFFFFF") == (255, 255, 255)
 
 
 def test_COLORS():

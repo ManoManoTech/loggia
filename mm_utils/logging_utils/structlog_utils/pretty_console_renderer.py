@@ -14,12 +14,11 @@ from typing import TYPE_CHECKING
 from structlog.dev import _EVENT_WIDTH, ConsoleRenderer, Styles, _has_colors, _pad, default_exception_formatter, plain_traceback
 from structlog.processors import _figure_out_exc_info
 
-from mm_utils.logging_utils.colors import PALETTES, ansi_fg
+from mm_utils.logging_utils.constants import PALETTES
+from mm_utils.utils.colorsutils import ansi_fg
 
 if TYPE_CHECKING:
     from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
-
-_ansi_fg = ansi_fg
 
 
 try:
@@ -116,7 +115,7 @@ class PrettyConsoleRenderer(ConsoleRenderer):
 
         self.palettes: dict[int, list[str]] = {}
         for pal_level, pal_colors in PALETTES.items():
-            self.palettes[pal_level] = [_ansi_fg(color) for color in pal_colors]
+            self.palettes[pal_level] = [ansi_fg(color) for color in pal_colors]
 
     def __call__(self, logger: WrappedLogger, name: str, event_dict: EventDict) -> str:
         sio = StringIO()
@@ -131,7 +130,7 @@ class PrettyConsoleRenderer(ConsoleRenderer):
                 palette[0]
                 + str(ts)
                 + self._styles.reset
-                + " "
+                + " ",
             )
         level = event_dict.pop("level", None)
         if level is not None:
@@ -173,7 +172,7 @@ class PrettyConsoleRenderer(ConsoleRenderer):
                 + "\n  ".join(
                     palette[2] + key + self._styles.reset + "=" + palette[3] + self._repr(event_dict[key]) + self._styles.reset
                     for key in event_dict_keys
-                )
+                ),
             )
 
         if stack is not None:

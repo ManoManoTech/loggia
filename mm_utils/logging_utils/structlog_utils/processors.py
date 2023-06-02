@@ -67,9 +67,7 @@ class EventAttributeMapper:
 
 
 def datadog_add_logger_name(logger: logging.Logger, method_name: str, event_dict: EventDict) -> EventDict:
-    """
-    Add the logger name to the event dict, using DataDog's naming convention, under the ``logger.name`` key.
-    """
+    """Add the logger name to the event dict, using DataDog's naming convention, under the ``logger.name`` key."""
     record = event_dict.get("_record")
     if record is None:
         event_dict["logger.name"] = logger.name

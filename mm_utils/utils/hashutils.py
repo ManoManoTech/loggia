@@ -9,7 +9,7 @@ class HashableDict(dict):
     A sure way to hurt yourself if you use this dict as a key then mutate it.
     """
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(tuple(sorted(self.items())))
 
 
@@ -19,7 +19,7 @@ class HashableList(list):
     A sure way to hurt yourself if you use this list as a key then mutate it.
     """
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash(tuple(self))
 
 

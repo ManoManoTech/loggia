@@ -1,6 +1,4 @@
-"""
-Text utils, unused.
-"""
+"""Text utils, unused."""
 
 import re
 

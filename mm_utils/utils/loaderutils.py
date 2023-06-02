@@ -29,21 +29,17 @@ def import_fqn(fully_qualified_name: str, ensure_instance_of=None, ensure_callab
 
     result = getattr(resource_module, name)
 
-    if ensure_instance_of is not None:
-        if not isinstance(result, ensure_instance_of):
-            raise ImportError(f"Object '{fully_qualified_name}' isn't instance of {ensure_instance_of}")
+    if ensure_instance_of is not None and not isinstance(result, ensure_instance_of):
+        raise ImportError(f"Object '{fully_qualified_name}' isn't instance of {ensure_instance_of}")
 
-    if ensure_callable:
-        if not callable(result):
-            raise ImportError(f"Object '{fully_qualified_name}' is not callable.")
+    if ensure_callable and not callable(result):
+        raise ImportError(f"Object '{fully_qualified_name}' is not callable.")
 
     return result
 
 
 def class_fqn_of(o: object) -> str:
-    """
-    Return the FQN of an object's class.
-    """
+    """Return the FQN of an object's class."""
     if hasattr(o, "__module__"):
         return f"{o.__module__}.{o.__class__.__name__}"
     return o.__class__.__name__

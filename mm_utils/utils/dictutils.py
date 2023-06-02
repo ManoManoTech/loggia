@@ -3,9 +3,9 @@ import re
 from collections.abc import Callable, Coroutine, Iterable, Mapping, MutableMapping
 from concurrent.futures import Future
 from copy import deepcopy
-from typing import Any, TypeVar
+from typing import Any, Final, TypeVar
 
-ALNUM_RE = re.compile("[^a-zA-Z0-9_]")
+ALNUM_RE: Final[re.Pattern[str]] = re.compile("[^a-zA-Z0-9_]")
 K = TypeVar("K")
 V = TypeVar("V")
 T = TypeVar("T")
@@ -143,7 +143,7 @@ def set_in(_dict: dict, keys: list[str], value: Any, create=False):
     container = get_in(_dict, keys[:-1])
     if not isinstance(container, dict) and not hasattr(container, "__setitem__"):
         if create:
-            container = dict()
+            container = {}
             set_in(_dict, keys[:-1], container, True)
         else:
             raise KeyError(f"Cannot find a dict at '{'.'.join(keys)}' to set value in. " f"Found object of type {type(container)} instead.")

@@ -15,10 +15,8 @@ def smart_open(filename: AnyStr | None = None, encoding: str = "utf-8") -> Gener
         filename (AnyStr, optional): Filename or `-` for [sys.stdout][]. Defaults to None.
         encoding (str, optional): Defaults to "utf-8".
     """
-    if filename and filename != "-":
-        fh = open(filename, "w", encoding=encoding)
-    else:
-        fh = sys.stdout
+
+    fh = open(filename, "w", encoding=encoding) if filename and filename != "-" else sys.stdout
 
     try:
         yield fh

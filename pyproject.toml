@@ -130,12 +130,13 @@ ignore = ['__pypackages__', '.git', 'packages', '.venv']
 
 
 [tool.pylint.FORMAT]
-max-line-length = 140
+max-line-length = 180
 
 [tool.ruff]
 line-length = 140
 ignore = [
-  "E501"
+  "E501",   # Line too long
+  "ANN101", # Missing type annotation for self in method
 ]
 
 
