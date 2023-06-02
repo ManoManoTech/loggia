@@ -7,8 +7,9 @@ from __future__ import annotations
 
 import logging
 import warnings
+from collections.abc import Iterable
 from io import StringIO
-from typing import TYPE_CHECKING, Iterable
+from typing import TYPE_CHECKING
 
 from structlog.dev import _EVENT_WIDTH, ConsoleRenderer, Styles, _has_colors, _pad, default_exception_formatter, plain_traceback
 from structlog.processors import _figure_out_exc_info

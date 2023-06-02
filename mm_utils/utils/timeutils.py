@@ -19,13 +19,13 @@ __re = re.compile(
 )
 
 
-__assumable_units_roots = {"week", "day", "hour", "minute", "second", "microsecond", "millisecond"}
+__assumable_units_roots: set[str] = {"week", "day", "hour", "minute", "second", "microsecond", "millisecond"}
 __assumable_units_keys = [(au, au[0], f"{au}s") for au in __assumable_units_roots]
-__assumable_units = reduce(lambda m, e: m | {e[0]: e[2], e[1]: e[2], e[2]: e[2]}, __assumable_units_keys, {})
+__assumable_units: dict[str, str] = reduce(lambda m, e: m | {e[0]: e[2], e[1]: e[2], e[2]: e[2]}, __assumable_units_keys, {})
 __assumable_units |= {"m": "minutes", "ms": "milliseconds", "us": "microseconds"}
 
 
-def timedelta_from_string(s: str, assumed_unit="s") -> timedelta:
+def timedelta_from_string(s: str, assumed_unit: str = "s") -> timedelta:
     if assumed_unit not in __assumable_units:
         raise ValueError(f"assumed_unit='{assumed_unit}' is invalid. valid choices: {list(__assumable_units.keys())}")
     assumed_unit = __assumable_units[assumed_unit]

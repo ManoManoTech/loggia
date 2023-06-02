@@ -1,24 +1,11 @@
-import re
 from logging import Filter, LogRecord
 from os import getenv
-from typing import Any, Final
+from typing import Any
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonFormatter
 
+from mm_utils.logging_utils.constants import GUNICORN_HYPERCORN_KEY_RE, HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 from mm_utils.utils.dictutils import del_if_possible, mv_attr
-
-GUNICORN_KEY_RE: Final[re.Pattern[str]] = re.compile("{([^}]+)}")
-HYPERCORN_MAP: Final[dict[str, str]] = {
-    "s": "http.status_code",
-    "m": "http.method",
-    "f": "http.referer",
-    "a": "http.useragent",
-    "H": "http.version",
-    "S": "http.url_details.scheme",
-    "q": "http.url_details.queryString",
-    "U": "http.url_details.path",
-    "D": "duration",
-}
 
 
 # pylint:disable=too-many-branches
@@ -66,11 +53,11 @@ class CustomJsonFormatter(JsonFormatter):
         if "hypercorn" in log_record["logger.name"]:
             if hasattr(record.args, "items"):
                 for k, v in record.args.items():  # type: ignore
-                    if k in HYPERCORN_MAP:
-                        log_record[HYPERCORN_MAP[k]] = v
+                    if k in HYPERCORN_ATTRIBUTES_MAP:
+                        log_record[HYPERCORN_ATTRIBUTES_MAP[k]] = v
                     if "{" not in k or k.startswith("{http_") or "}e" in k:
                         continue
-                    m = GUNICORN_KEY_RE.search(k)
+                    m = GUNICORN_HYPERCORN_KEY_RE.search(k)
                     if m:
                         log_record[m[1]] = v
             else:
@@ -86,21 +73,7 @@ class CustomJsonFormatter(JsonFormatter):
         mv_attr(log_record, "user_agent", "http.user_agent")
         mv_attr(log_record, "server_protocol", "http.version")
 
-        header_attributes = [
-            "accept",
-            "accept-encoding",
-            "accept-language",
-            "access-control-allow-origin",
-            "cache-control",
-            "connection",
-            "content_length",
-            "content-encoding",
-            "content-length",
-            "content-type",
-            "cookie",
-            "etag",
-            "pragma",
-        ]
+        header_attributes = SAFE_HEADER_ATTRIBUTES
         xtra_ks = [k for k in log_record.keys() if k.startswith("x-") or k.startswith("sec-")]
         header_attributes.extend(xtra_ks)
         for header_attr in header_attributes:

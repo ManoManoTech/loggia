@@ -5,9 +5,10 @@ import logging.config
 import os
 import sys
 import traceback
+from collections.abc import Collection, Iterable, Mapping
 from logging import Logger, LogRecord
 from types import TracebackType
-from typing import Any, Collection, Iterable, Mapping, Union
+from typing import Any, Union
 
 import structlog
 from structlog.processors import CallsiteParameter, CallsiteParameterAdder, _find_first_app_frame_and_name
@@ -237,7 +238,7 @@ class CustomCallsiteParameter(enum.Enum):
 
 
 # Define a type alias for convenience
-CallsiteParameterType = Union[CallsiteParameter, CustomCallsiteParameter]
+CallsiteParameterType = CallsiteParameter | CustomCallsiteParameter
 
 
 class CustomCallsiteParameterAdder(CallsiteParameterAdder):

@@ -1,9 +1,9 @@
 import asyncio
 import re
-from collections.abc import Callable, Iterable, Mapping, MutableMapping
+from collections.abc import Callable, Coroutine, Iterable, Mapping, MutableMapping
 from concurrent.futures import Future
 from copy import deepcopy
-from typing import Any, Coroutine, Optional, TypeVar, Union
+from typing import Any, TypeVar
 
 ALNUM_RE = re.compile("[^a-zA-Z0-9_]")
 K = TypeVar("K")
@@ -18,7 +18,7 @@ def literal_str(v: Any):
     return str(v)
 
 
-def get_all(dict_or_list, keys: list[str], default=None) -> Optional[Union[list[Any], Any]]:
+def get_all(dict_or_list, keys: list[str], default=None) -> list[Any] | Any | None:
     """
     Get possibly many values from arbitrarily nested dicts.
     Returns an empty list when values cannot be resolved.
@@ -221,7 +221,7 @@ def mapdict(dict_: dict, fn: Callable[[dict], dict]) -> dict:
     return _mapdict(result)
 
 
-NestableContainer = Union[Mapping, Iterable]
+NestableContainer = Mapping | Iterable
 
 
 def recursive_map(thing: NestableContainer, fn: Callable[[NestableContainer], NestableContainer]) -> NestableContainer:
@@ -232,7 +232,7 @@ def recursive_map(thing: NestableContainer, fn: Callable[[NestableContainer], Ne
 
         if isinstance(result, Mapping):
             for k, v in result.items():
-                if isinstance(v, (Mapping, Iterable)):
+                if isinstance(v, Mapping | Iterable):
                     result[k] = _recursive_map(v)
         elif isinstance(result, Iterable):
             result = result.__class__(_recursive_map(e) for e in result)

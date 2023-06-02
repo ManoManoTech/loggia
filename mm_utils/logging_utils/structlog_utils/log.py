@@ -2,8 +2,9 @@ import logging
 import logging.config
 import os
 import sys
+from collections.abc import Iterable
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Iterable, Literal, Optional
+from typing import TYPE_CHECKING, Any, Literal
 
 from structlog import configure, contextvars, make_filtering_bound_logger, stdlib
 from structlog.processors import CallsiteParameter, EventRenamer, JSONRenderer, StackInfoRenderer, TimeStamper, add_log_level
@@ -159,7 +160,7 @@ def get_log_level_number_from_env(log_level_env: str = "LOG_LEVEL") -> int:
         return logging.DEBUG if os.getenv("ENV", "").upper() == "DEV" else logging.INFO
 
 
-def configure_logging(logging_config: Optional[LoggingConfig] = None) -> None:
+def configure_logging(logging_config: LoggingConfig | None = None) -> None:
     if logging_config is None:
         logging_config = LoggingConfig()
 

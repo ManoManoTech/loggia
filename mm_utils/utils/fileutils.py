@@ -2,11 +2,11 @@ import sys
 from collections.abc import Generator
 from contextlib import contextmanager
 from io import TextIOWrapper
-from typing import AnyStr, Optional, TextIO, Union
+from typing import AnyStr, TextIO
 
 
 @contextmanager
-def smart_open(filename: Optional[AnyStr] = None, encoding: str = "utf-8") -> Generator[Union[TextIO, TextIOWrapper], None, None]:
+def smart_open(filename: AnyStr | None = None, encoding: str = "utf-8") -> Generator[TextIO | TextIOWrapper, None, None]:
     """
     Open a file, and close it when done.
     Can write to [stdout][sys.stdout] if filename is `-` or None.

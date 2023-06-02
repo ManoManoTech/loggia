@@ -1,8 +1,7 @@
-from typing import Tuple
 from urllib.parse import urlsplit, urlunsplit
 
 
-def get_repository_information(source_url: str) -> Tuple[str, str]:
+def get_repository_information(source_url: str) -> tuple[str, str]:
     """
     Retrieve name of the repository and url from any commit or file url from Gitlab.
 

@@ -1,13 +1,7 @@
-import re
 from socket import socket
-from typing import Any, TypeVar
+from typing import Any
 
 from pythonjsonlogger.jsonlogger import JsonEncoder
-
-
-GUNICORN_KEY_RE = re.compile("{([^}]+)}")
-T = TypeVar("T")
-K = TypeVar("K")
 
 
 class CustomJsonEncoder(JsonEncoder):

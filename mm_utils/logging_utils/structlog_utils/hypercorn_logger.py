@@ -1,41 +1,17 @@
-from typing import TYPE_CHECKING, Mapping
+from collections.abc import Mapping
+from typing import TYPE_CHECKING
 
 import structlog
 from hypercorn.config import Config
 from hypercorn.logging import Logger
 
+from mm_utils.logging_utils.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 from mm_utils.logging_utils.structlog_utils import log
 
 if TYPE_CHECKING:
     from hypercorn.typing import ResponseSummary, WWWScope
 
 log.configure_logging()
-HEADER_ATTRIBUTES = [
-    "accept",
-    "accept-encoding",
-    "accept-language",
-    "access-control-allow-origin",
-    "cache-control",
-    "connection",
-    "content_length",
-    "content-encoding",
-    "content-length",
-    "content-type",
-    "cookie",
-    "etag",
-    "pragma",
-]
-HYPERCORN_MAP = {
-    "s": "http.status_code",
-    "m": "http.method",
-    "f": "http.referer",
-    "a": "http.useragent",
-    "H": "http.version",
-    "S": "http.url_details.scheme",
-    "q": "http.url_details.queryString",
-    "U": "http.url_details.path",
-    "D": "duration",
-}
 
 
 class HypercornLogger(Logger):
@@ -74,16 +50,18 @@ class HypercornLogger(Logger):
         atoms["D"] = atoms["D"] * 1e3  # type: ignore
         for key_b, value in request["headers"]:
             key = key_b.decode("latin1").lower()
-            if key in HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
+            if key in SAFE_HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
                 headers["http.headers." + key] = value.decode("latin1")
         # Same for response headers in http.response_headers
         for key_b, value in response["headers"]:
             key = key_b.decode("latin1").lower()
-            if key in HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
+            if key in SAFE_HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
                 headers["http.response_headers." + key] = value.decode("latin1")
 
         # atoms["http.url_details"] = request["url_details"]
-        self.access_logger.info("access", **{HYPERCORN_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_MAP}, **headers)
+        self.access_logger.info(
+            "access", **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP}, **headers
+        )
 
     # from ipdb import set_trace
 
