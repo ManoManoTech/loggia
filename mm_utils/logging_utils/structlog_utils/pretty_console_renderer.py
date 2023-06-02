@@ -9,28 +9,19 @@ import logging
 import sys
 import warnings
 from io import StringIO
-from typing import Any, Iterable, TextIO, Type, Union
+from typing import Iterable
 
-from structlog._frames import _format_exception
 from structlog.dev import (
     _EVENT_WIDTH,
-    _IS_WINDOWS,
-    _MISSING,
     ConsoleRenderer,
     Styles,
-    _ColorfulStyles,
     _has_colors,
     _pad,
-    _PlainStyles,
-    _Styles,
-    _use_colors,
-    better_traceback,
     default_exception_formatter,
     plain_traceback,
-    rich_traceback,
 )
 from structlog.processors import _figure_out_exc_info
-from structlog.typing import EventDict, ExceptionRenderer, ExcInfo, WrappedLogger
+from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
 
 COLORS: dict[str, str] = {
     "Forest Green": "#086e3f",
@@ -76,9 +67,9 @@ def _ansi_end() -> str:
 
 
 if sys.version_info >= (3, 8):
-    from typing import Protocol
+    pass
 else:
-    from typing_extensions import Protocol
+    pass
 
 
 try:
@@ -88,16 +79,8 @@ except ImportError:
 
 try:
     import rich
-    from rich.console import Console
-    from rich.traceback import Traceback
 except ImportError:
     rich = None  # type: ignore[assignment]
-
-
-_IS_WINDOWS = sys.platform == "win32"
-
-_MISSING = "{who} requires the {package} package installed.  "
-_EVENT_WIDTH = 30  # pad the event name to so many characters
 
 
 if colorama is not None:
@@ -125,37 +108,6 @@ else:
     YELLOW = "\033[33m"
     GREEN = "\033[32m"
     RED_BACK = "\033[41m"
-
-
-if _IS_WINDOWS:  # pragma: no cover
-    # On Windows, use colors by default only if Colorama is installed.
-    _has_colors = colorama is not None
-else:
-    # On other OSes, use colors by default.
-    _has_colors = True
-
-# Prevent breakage of packages that used the old name of the variable.
-_use_colors = _has_colors
-
-
-class _Styles(Protocol):
-    reset: str
-    bright: str
-    level_critical: str
-    level_exception: str
-    level_error: str
-    level_warn: str
-    level_info: str
-    level_debug: str
-    level_notset: str
-
-    timestamp: str
-    logger_name: str
-    kv_key: str
-    kv_value: str
-
-
-Styles = Union[_Styles, Type[_Styles]]
 
 
 class PrettyConsoleRenderer(ConsoleRenderer):
