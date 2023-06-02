@@ -4,11 +4,6 @@ from pathlib import Path
 from typing import IO, Any
 from uuid import UUID
 
-try:
-    from gitlab.base import RESTObject
-except ImportError:
-    RESTObject = None
-
 
 class JSONEncoder(json.JSONEncoder):
     def default(self, o):  # pylint: disable=too-many-return-statements
@@ -27,10 +22,10 @@ class JSONEncoder(json.JSONEncoder):
             return str(o)
         if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
             return str(o)
-        if RESTObject is not None and isinstance(o, Path):
-            return o.as_posix()
-        if isinstance(o, RESTObject):
-            return o._attrs  # pylint:disable=protected-access
+        # if RESTObject is not None and isinstance(o, Path):
+        #     return o.as_posix()
+        # if RESTObject and isinstance(o, RESTObject):
+        #     return o._attrs  # pylint:disable=protected-access
         if type(o).__name__ == "function":
             # We don't match on callable cause it could catch more than we intend
             # XXX: Should we warn on this? It's a bit pointless to serialize :/

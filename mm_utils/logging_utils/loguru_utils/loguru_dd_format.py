@@ -1,10 +1,5 @@
-import os
-import sys
 import traceback
 from datetime import timedelta
-
-from loguru import logger
-from loguru._recattrs import RecordException, RecordFile, RecordLevel, RecordProcess, RecordThread
 
 from mm_utils.utils.dictutils import mv_attr
 
@@ -16,6 +11,8 @@ def datadog_formatter(record: dict):
     Massage record to have attributes name consistently with the Datadog convention:
     https://docs.datadoghq.com/logs/log_configuration/attributes_naming_convention/#overview
     """
+
+    from loguru._recattrs import RecordException, RecordFile, RecordLevel, RecordProcess, RecordThread
 
     # Normalization: Datadog source code attributes for standard Python logging attributes
     mv_attr(record, "name", "logger.name")
@@ -54,7 +51,7 @@ def datadog_formatter(record: dict):
 
     # Normalization: Datadog duration in nanoseconds (for standard Python logging)
     if "msecs" in record:
-        record["duration"] = record.msecs * 1000000
+        record["duration"] = record["msecs"] * 1000000
 
     # Normalization: Datadog duration in nanoseconds (for loguru logging)
     if "elapsed" in record and isinstance(record["elapsed"], timedelta):

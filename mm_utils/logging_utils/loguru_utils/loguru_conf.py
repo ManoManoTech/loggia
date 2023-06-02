@@ -1,17 +1,15 @@
 import os
 import sys
 
-from mm_utils.logging_utils.loguru_dd_format import datadog_formatter
-
-try:
-    from loguru import logger
-except ImportError:
-    logger = None
+from mm_utils.logging_utils.loguru_utils.loguru_dd_format import datadog_formatter
 
 
 def loguru_production_mode():
-    if logger is None:
+    try:
+        from loguru import logger
+    except ImportError:
         raise ImportError("loguru is not installed")
+
     logger.remove()
     logger.add(
         sys.__stdout__,
@@ -21,7 +19,9 @@ def loguru_production_mode():
 
 
 def loguru_extra_levels():
-    if logger is None:
+    try:
+        from loguru import logger
+    except ImportError:
         raise ImportError("loguru is not installed")
     logger.level("NIT_ERROR", no=4, color="<red><bold>", icon="🛑")
     logger.level("NIT_WARNING", no=3, color="<yellow>", icon="⚠️")
