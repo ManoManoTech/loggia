@@ -3,7 +3,7 @@ import re
 from collections.abc import Callable, Iterable, Mapping
 from concurrent.futures import Future
 from copy import deepcopy
-from typing import Any, Callable, Coroutine, Optional, TypeVar, Union
+from typing import Any, Coroutine, Optional, TypeVar, Union
 
 ALNUM_RE = re.compile("[^a-zA-Z0-9_]")
 K = TypeVar("K")
@@ -158,11 +158,6 @@ def set_in_path(_dict: dict, dot_separated_keys: str, value: Any, create=False):
     return set_in(_dict, dot_separated_keys.split("."), value, create)
 
 
-K = TypeVar("K")
-V = TypeVar("V")
-T = TypeVar("T")
-
-
 def groupby(iterable: Iterable[T], key: Callable[[T], K]) -> dict[K, list[T]]:
     """
     Groups by elements from an iterable into a dict. Takes arguments very similar
@@ -235,10 +230,6 @@ def recursive_map(thing: NestableContainer, fn: Callable[[NestableContainer], Ne
 
 
 # From https://gist.github.com/privatwolke/11711cc26a843784afd1aeeb16308a30 (Public domain)
-K = TypeVar("K")
-V = TypeVar("V")
-
-
 async def gather_dict(tasks: dict[K, Future[V]]) -> dict[K, V]:
     """Return a dict of (key, returned_values) from a dict of (key, future)"""
 

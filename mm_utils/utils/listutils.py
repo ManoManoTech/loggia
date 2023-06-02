@@ -7,20 +7,20 @@ T = TypeVar("T")
 Q = TypeVar("Q", object, None)
 
 
-def flatten_generator(l: list) -> Generator[Any, None, None]:
-    for el in l:
+def flatten_generator(lst: list | set) -> Generator[Any, None, None]:
+    for el in lst:
         if isinstance(el, (list, set)):
             yield from flatten_generator(el)
         else:
             yield el
 
 
-def flatten(l: list[L]) -> list[L]:
+def flatten(lst: list[L]) -> list[L]:
     """
     Flattens nested lists and sets together.
     Consider using more_itertools.flatten (one level) or more_itertools.collapse (arbitrary levels) instead.
     """
-    return list(flatten_generator(l))
+    return list(flatten_generator(lst))
 
 
 def lget(lst: list[T], i: int, default: Q = None) -> T | Q:
