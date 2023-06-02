@@ -40,6 +40,10 @@ extra:
   generator: false
 copyright: Copyright &copy; Colibri SAS
 
+watch:
+  - mm_utils
+  - docs
+
 nav:
   - Home:
       - Readme: index.md
@@ -91,5 +95,5 @@ plugins:
             merge_init_into_class: true
             show_submodules: true
 
-# extra_css:
-#   - stylesheets/extra.css
+extra_css:
+  - style.css
