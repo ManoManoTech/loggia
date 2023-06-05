@@ -1,5 +1,7 @@
 """Main module for logging configuration, using structlog."""
+from __future__ import annotations
 
+from functools import partial
 import logging
 import logging.config
 import os
@@ -8,6 +10,7 @@ from collections.abc import Iterable
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Literal
 
+import structlog
 from structlog import configure, contextvars, make_filtering_bound_logger, stdlib
 from structlog.processors import CallsiteParameter, EventRenamer, JSONRenderer, StackInfoRenderer, TimeStamper, add_log_level
 from structlog.typing import Processor
@@ -20,11 +23,28 @@ from mm_utils.logging_utils.structlog_utils.processors import (
     datadog_error_mapping_processor,
 )
 
+logging.addLevelName(5, "TRACE")
+
+structlog._log_levels.TRACE = 5
+structlog._log_levels._NAME_TO_LEVEL["trace"] = 5
+
+structlog._log_levels._LEVEL_TO_NAME = {
+    v: k
+    for k, v in structlog._log_levels._NAME_TO_LEVEL.items()
+    if k not in ("warn", "exception", "notset")
+}
+
+structlog._log_levels.BoundLoggerFilteringAtTrace = structlog._log_levels._make_filtering_bound_logger(structlog._log_levels.TRACE)
+
+structlog._log_levels._LEVEL_TO_FILTERING_LOGGER[structlog._log_levels.TRACE] = structlog._log_levels.BoundLoggerFilteringAtTrace
+
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
 
 def make_formatter_structured() -> dict[str, Any]:
+    json_indent = int(os.getenv("MM_LOGGING_JSON_INDENT", "0"))
+
     return {
         "()": stdlib.ProcessorFormatter,
         "processors": [
@@ -61,7 +81,7 @@ def make_formatter_structured() -> dict[str, Any]:
             ManoManoDataDogAttributesProcessor(),
             stdlib.ProcessorFormatter.remove_processors_meta,
             # XXX Custom JSON Renderer (more performance?)
-            JSONRenderer(sort_keys=True, ensure_ascii=False, indent=2),
+            JSONRenderer(sort_keys=True, ensure_ascii=False, indent=json_indent),
         ],
         "foreign_pre_chain": std_pre_chain,
     }
@@ -159,7 +179,7 @@ def get_main_formatter_name() -> Literal["colored", "structured"]:
     return "colored" if os.getenv("ENV", "").upper() == "DEV" else "structured"
 
 
-def get_log_level_number_from_env(log_level_env: str = "LOG_LEVEL") -> int:
+def get_log_level_number_from_env(log_level_env: str = "MM_LOGGING_LEVEL") -> int:
     """Get the log level number from the environment variable LOG_LEVEL, which may be a string or an int.
     If LOG_LEVEL is not set, return "DEBUG" if ENV is "DEV", otherwise return "INFO".
     Supports custom log levels, e.g. "TRACE", using getLevelName"""
@@ -177,6 +197,27 @@ def get_log_level_number_from_env(log_level_env: str = "LOG_LEVEL") -> int:
         return logging.DEBUG if os.getenv("ENV", "").upper() == "DEV" else logging.INFO
 
 
+class ActiveConfig:
+    _cfg: LoggingConfig | None = None
+
+    @classmethod
+    def store(cls, cfg: LoggingConfig):
+        cls._cfg = cfg
+
+    @classmethod
+    def get(cls) -> LoggingConfig:
+        if cls._cfg is None:
+            raise RuntimeError("no active config")
+        return cls._cfg
+
+
+class OurLoggerFactory(stdlib.LoggerFactory):
+    def __call__(self, *args: Any) -> logging.Logger:
+        result = super().__call__(*args)
+        result.trace = partial(result.log, 5)
+        return result
+
+
 def configure_logging(logging_config: LoggingConfig | None = None, print_config_debug: bool = False) -> None:
     """Main function to configure logging.
 
@@ -187,13 +228,14 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
     if logging_config is None:
         logging_config = LoggingConfig()
 
+    ActiveConfig.store(logging_config)
+
     default_config: "logging.config._DictConfigArgs" = {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {},
         "handlers": {
             "default": {
-                "level": "DEBUG",
                 "class": "logging.StreamHandler",
                 "formatter": "colored",
             },
@@ -201,22 +243,18 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
         "loggers": {
             "": {
                 "handlers": ["default"],
-                "level": "DEBUG",
                 "propagate": True,
             },
             "gunicorn.access": {
                 "handlers": ["default"],
-                "level": "DEBUG",
                 "propagate": False,
             },
             "gunicorn.error": {
                 "handlers": ["default"],
-                "level": "DEBUG",
                 "propagate": False,
             },
             "gunicorn.errors": {
                 "handlers": ["default"],
-                "level": "DEBUG",
                 "propagate": False,
             },
             "hypercorn.error": {
@@ -244,12 +282,12 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
     # FilterBoundLogger only supports basic log levels, so we need to find the closest one.
     # XXX Make sure we have a filter for the exact number
     # XXX Make a custom filterable?
-    closet_smaller_log_level = _get_closest_smaller_log_level(logging_config.log_level)
+    closest_smaller_log_level = _get_closest_smaller_log_level(logging_config.log_level)
 
     configure(
         processors=struct_pre_chain,
-        logger_factory=stdlib.LoggerFactory(),
-        wrapper_class=make_filtering_bound_logger(closet_smaller_log_level),
+        logger_factory=OurLoggerFactory(),
+        wrapper_class=make_filtering_bound_logger(closest_smaller_log_level),
         # wrapper_class=structlog._log_levels.(logging_config.log_level),
         cache_logger_on_first_use=True,
     )
@@ -338,16 +376,14 @@ def _get_closest_smaller_log_level(log_level: int) -> int:
     Examples:
 
     - if log_level is 30, it will return 30 (WARNING)
-    - if log_level is 5, it will return 0 (NOTSET)
+    - if log_level is 4, it will return 0 (NOTSET)
     - if log_level is 42, it will return 40 (ERROR)
     - if log_level is 143, it will return 50 (CRITICAL)
     """
-    closest_smaller_log_level = 0
-    for level in [0, 10, 20, 30, 40, 50]:
-        if level > log_level:
-            break
-        closest_smaller_log_level = level
-    return closest_smaller_log_level
+    reversedMap = {v: k for k, v in logging.getLevelNamesMapping().items()}
+    while log_level not in reversedMap:
+        log_level -= 1
+    return log_level
 
 
 if __name__ == "__main__":

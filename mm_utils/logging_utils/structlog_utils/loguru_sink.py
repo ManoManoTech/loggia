@@ -18,6 +18,8 @@ from typing import TYPE_CHECKING
 import structlog
 from loguru import logger as loguru_logger
 
+from mm_utils.logging_utils.structlog_utils.log import ActiveConfig
+
 if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
     from loguru import Record as LoguruRecord
@@ -61,8 +63,9 @@ def loguru_to_structlog_sink(message: LoguruMessage) -> None:
 
 def configure_loguru() -> None:
     # # Remove Loguru's default handler and add the custom sink function
+    cfg = ActiveConfig.get()
     loguru_logger.remove()
-    loguru_logger.add(loguru_to_structlog_sink, level=logging.DEBUG)
+    loguru_logger.add(loguru_to_structlog_sink, level=cfg.log_level)
 
 
 # # Sample Structlog configuration

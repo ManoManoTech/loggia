@@ -6,12 +6,9 @@ from hypercorn.config import Config
 from hypercorn.logging import Logger
 
 from mm_utils.logging_utils.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
-from mm_utils.logging_utils.structlog_utils import log
 
 if TYPE_CHECKING:
     from hypercorn.typing import ResponseSummary, WWWScope
-
-log.configure_logging()
 
 
 class HypercornLogger(Logger):
