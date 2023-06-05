@@ -1,87 +1,114 @@
 """Main module for logging configuration, using structlog."""
 from __future__ import annotations
 
-from functools import partial
 import logging
 import logging.config
 import os
 import sys
 from collections.abc import Iterable
+from functools import partial
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, Literal
 
+# from msgspec.json import Encoder as MsgSpecJsonEncoder
 import structlog
-from structlog import configure, contextvars, make_filtering_bound_logger, stdlib
-from structlog.processors import CallsiteParameter, EventRenamer, JSONRenderer, StackInfoRenderer, TimeStamper, add_log_level
 from structlog.typing import Processor
 
 from mm_utils.logging_utils.structlog_utils.processors import (
     CustomCallsiteParameterAdder,
     EventAttributeMapper,
     ManoManoDataDogAttributesProcessor,
+    RemoveKeysProcessor,
     add_log_level_number,
     datadog_error_mapping_processor,
 )
 
-logging.addLevelName(5, "TRACE")
-
-structlog._log_levels.TRACE = 5
-structlog._log_levels._NAME_TO_LEVEL["trace"] = 5
-
-structlog._log_levels._LEVEL_TO_NAME = {
-    v: k
-    for k, v in structlog._log_levels._NAME_TO_LEVEL.items()
-    if k not in ("warn", "exception", "notset")
-}
-
-structlog._log_levels.BoundLoggerFilteringAtTrace = structlog._log_levels._make_filtering_bound_logger(structlog._log_levels.TRACE)
-
-structlog._log_levels._LEVEL_TO_FILTERING_LOGGER[structlog._log_levels.TRACE] = structlog._log_levels.BoundLoggerFilteringAtTrace
-
 if TYPE_CHECKING:
     from collections.abc import Sequence
+
+
+def patch_to_add_level(level_number: int, level_name: str) -> None:
+    """Add a new level to structlog.
+    Sanity check for existing levels is left as an exercise to the user.
+    """
+
+    level_name_upper = level_name.upper()
+    level_name_lower = level_name.lower()
+
+    logging.addLevelName(level_number, level_name_upper)
+
+    setattr(structlog.stdlib, level_name_upper, level_number)
+    structlog.stdlib._NAME_TO_LEVEL["level_name"] = level_number
+    structlog.stdlib._LEVEL_TO_NAME[level_number] = "level_name"
+
+    setattr(structlog._log_levels, level_name_upper, level_number)
+    structlog._log_levels._NAME_TO_LEVEL[level_name_lower] = level_number
+
+    structlog._log_levels._LEVEL_TO_NAME = {
+        v: k for k, v in structlog._log_levels._NAME_TO_LEVEL.items() if k not in ("warn", "exception", "notset")
+    }
+
+    def new_level(self, msg, *args, **kw):
+        return self.log(level_number, msg, *args, **kw)
+
+    setattr(structlog.stdlib._FixedFindCallerLogger, level_name_lower, new_level)
+    setattr(structlog.stdlib.BoundLogger, level_name_lower, new_level)
+
+    setattr(
+        structlog._log_levels,
+        f"BoundLoggerFilteringAt{level_name_upper}",
+        structlog._log_levels._make_filtering_bound_logger(getattr(structlog._log_levels, level_name_upper)),
+    )
+
+    structlog._log_levels._LEVEL_TO_FILTERING_LOGGER[getattr(structlog._log_levels, level_name_upper)] = getattr(
+        structlog._log_levels, f"BoundLoggerFilteringAt{level_name_upper}"
+    )
+
+
+patch_to_add_level(5, "trace")
+patch_to_add_level(25, "success")
 
 
 def make_formatter_structured() -> dict[str, Any]:
     json_indent = int(os.getenv("MM_LOGGING_JSON_INDENT", "0"))
 
     return {
-        "()": stdlib.ProcessorFormatter,
+        "()": structlog.stdlib.ProcessorFormatter,
         "processors": [
             # extract_from_record_datadog,
-            TimeStamper(fmt="iso", utc=True, key="timestamp"),
+            structlog.processors.TimeStamper(fmt="iso", utc=True, key="timestamp"),
             datadog_error_mapping_processor,
-            stdlib.add_logger_name,
+            structlog.stdlib.add_logger_name,
             CustomCallsiteParameterAdder(
                 [
-                    CallsiteParameter.PATHNAME,
-                    CallsiteParameter.FUNC_NAME,
-                    CallsiteParameter.LINENO,
-                    CallsiteParameter.THREAD_NAME,
+                    structlog.processors.CallsiteParameter.PATHNAME,
+                    structlog.processors.CallsiteParameter.FUNC_NAME,
+                    structlog.processors.CallsiteParameter.LINENO,
+                    structlog.processors.CallsiteParameter.THREAD_NAME,
                 ],
                 custom_attribute_names={
-                    CallsiteParameter.THREAD_NAME: "logger.thread_name",
-                    CallsiteParameter.PATHNAME: "logger.path_name",
-                    CallsiteParameter.FUNC_NAME: "logger.method_name",
-                    CallsiteParameter.LINENO: "logger.lineno",
+                    structlog.processors.CallsiteParameter.THREAD_NAME: "logger.thread_name",
+                    structlog.processors.CallsiteParameter.PATHNAME: "logger.path_name",
+                    structlog.processors.CallsiteParameter.FUNC_NAME: "logger.method_name",
+                    structlog.processors.CallsiteParameter.LINENO: "logger.lineno",
                     # "logger": "logger.name",
                     # "level": "status",
                 },
             ),
             EventAttributeMapper(
                 {
-                    CallsiteParameter.THREAD_NAME.value: "logger.thread_name",
-                    CallsiteParameter.PATHNAME.value: "logger.path_name",
-                    CallsiteParameter.FUNC_NAME.value: "logger.method_name",
-                    CallsiteParameter.LINENO.value: "logger.lineno",
+                    structlog.processors.CallsiteParameter.THREAD_NAME.value: "logger.thread_name",
+                    structlog.processors.CallsiteParameter.PATHNAME.value: "logger.path_name",
+                    structlog.processors.CallsiteParameter.FUNC_NAME.value: "logger.method_name",
+                    structlog.processors.CallsiteParameter.LINENO.value: "logger.lineno",
                     "logger": "logger.name",
                     "level": "status",
                 },
             ),
             ManoManoDataDogAttributesProcessor(),
-            stdlib.ProcessorFormatter.remove_processors_meta,
+            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
             # XXX Custom JSON Renderer (more performance?)
-            JSONRenderer(sort_keys=True, ensure_ascii=False, indent=json_indent),
+            structlog.processors.JSONRenderer(sort_keys=True, ensure_ascii=False, indent=json_indent),
         ],
         "foreign_pre_chain": std_pre_chain,
     }
@@ -92,25 +119,53 @@ def make_formatter_colored() -> dict[str, Any]:
     from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
 
     return {
-        "()": stdlib.ProcessorFormatter,
+        "()": structlog.stdlib.ProcessorFormatter,
         "processors": [
             # extract_from_record_datadog,
             # ISO local time
-            TimeStamper(fmt="%H:%M:%S.%f%z", utc=False, key="timestamp"),
+            structlog.processors.TimeStamper(fmt="%H:%M:%S.%f%z", utc=False, key="timestamp"),
             CustomCallsiteParameterAdder(
                 [
-                    CallsiteParameter.LINENO,
-                    # CallsiteParameter.THREAD_NAME,
-                    # CallsiteParameter.PROCESS,
-                    #  CallsiteParameter.PATHNAME
+                    structlog.processors.CallsiteParameter.LINENO,
+                    structlog.processors.CallsiteParameter.THREAD_NAME,
+                    structlog.processors.CallsiteParameter.PROCESS,
+                    structlog.processors.CallsiteParameter.PROCESS_NAME,
+                    structlog.processors.CallsiteParameter.PATHNAME,
+                    structlog.processors.CallsiteParameter.FUNC_NAME,
+                    structlog.processors.CallsiteParameter.THREAD,
                 ],
-                additional_ignores=["mm_utils", "__main__"],
+                additional_ignores=["mm_utils", "__main__", "loguru_sink", "loguru"],
+                custom_attribute_names={
+                    # structlog.processors.CallsiteParameter.THREAD: "logger.thread_id",
+                    # structlog.processors.CallsiteParameter.THREAD_NAME: "logger.thread_name",
+                    # structlog.processors.CallsiteParameter.PATHNAME: "logger.path_name",
+                    # structlog.processors.CallsiteParameter.FUNC_NAME: "logger.method_name",
+                    # # structlog.processors.CallsiteParameter.LINENO: "logger.lineno",
+                    # structlog.processors.CallsiteParameter.PROCESS: "logger.process_id",
+                    # structlog.processors.CallsiteParameter.PROCESS_NAME: "logger.process_name",
+                    # # "logger": "logger.name",
+                    # "level": "status",
+                },
             ),
-            stdlib.add_logger_name,
+            EventAttributeMapper(
+                {
+                    structlog.processors.CallsiteParameter.THREAD.value: "logger.thread_id",
+                    structlog.processors.CallsiteParameter.THREAD_NAME.value: "logger.thread_name",
+                    structlog.processors.CallsiteParameter.PATHNAME.value: "logger.path_name",
+                    structlog.processors.CallsiteParameter.FUNC_NAME.value: "logger.method_name",
+                    # structlog.processors.CallsiteParameter.LINENO.value: "logger.lineno",
+                    structlog.processors.CallsiteParameter.PROCESS.value: "logger.process_id",
+                    structlog.processors.CallsiteParameter.PROCESS_NAME.value: "logger.process_name",
+                    "logger": "logger.name",
+                },
+            ),
+            structlog.stdlib.add_logger_name,
             # XXX Remove process and thread name from the log message (or format it differently)
             add_log_level_number,
             # XXX Make a version that supports custom log level
-            stdlib.ProcessorFormatter.remove_processors_meta,
+            # Make sure we remove the meta, and some of the standard keys
+            structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            # RemoveKeysProcessor(("pathname", "process", "thread_name", "func_nameXX", "process_name", "thread")),
             PrettyConsoleRenderer(colors=True, event_key="message"),
         ],
         "foreign_pre_chain": std_pre_chain,
@@ -118,26 +173,26 @@ def make_formatter_colored() -> dict[str, Any]:
 
 
 std_pre_chain: Iterable[Processor] = [
-    contextvars.merge_contextvars,
-    stdlib.PositionalArgumentsFormatter(),
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.PositionalArgumentsFormatter(),
     # Add extra attributes of LogRecord objects to the event dictionary
     # so that values passed in the extra parameter of log methods pass
     # through to log output.
-    stdlib.ExtraAdder(),  # XXX RESERVED ATTRIBUTES
-    add_log_level,
-    EventRenamer("message"),
+    structlog.stdlib.ExtraAdder(),  # XXX RESERVED ATTRIBUTES
+    structlog.processors.add_log_level,
+    structlog.processors.EventRenamer("message"),
 ]
 """Processors to be used for logs coming from standard logging."""
 
 
 struct_pre_chain: Iterable[Processor] = [
-    contextvars.merge_contextvars,
-    stdlib.PositionalArgumentsFormatter(),
-    StackInfoRenderer(),
-    add_log_level,
-    EventRenamer("message"),
+    structlog.contextvars.merge_contextvars,
+    structlog.stdlib.PositionalArgumentsFormatter(),
+    structlog.processors.StackInfoRenderer(),
+    structlog.processors.add_log_level,
+    structlog.processors.EventRenamer("message"),
     # Keep this last!
-    stdlib.ProcessorFormatter.wrap_for_formatter,
+    structlog.stdlib.ProcessorFormatter.wrap_for_formatter,
 ]
 """Processors to be used for logs coming from structlog."""
 
@@ -211,13 +266,6 @@ class ActiveConfig:
         return cls._cfg
 
 
-class OurLoggerFactory(stdlib.LoggerFactory):
-    def __call__(self, *args: Any) -> logging.Logger:
-        result = super().__call__(*args)
-        result.trace = partial(result.log, 5)
-        return result
-
-
 def configure_logging(logging_config: LoggingConfig | None = None, print_config_debug: bool = False) -> None:
     """Main function to configure logging.
 
@@ -284,11 +332,10 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
     # XXX Make a custom filterable?
     closest_smaller_log_level = _get_closest_smaller_log_level(logging_config.log_level)
 
-    configure(
+    structlog.configure(
         processors=struct_pre_chain,
-        logger_factory=OurLoggerFactory(),
-        wrapper_class=make_filtering_bound_logger(closest_smaller_log_level),
-        # wrapper_class=structlog._log_levels.(logging_config.log_level),
+        logger_factory=structlog.stdlib.LoggerFactory(),
+        wrapper_class=structlog.make_filtering_bound_logger(closest_smaller_log_level),
         cache_logger_on_first_use=True,
     )
 
@@ -297,10 +344,10 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
         check_duplicate_processors(logging.getLogger())
 
     if logging_config.excepthook:
-        set_excepthook(stdlib.get_logger())
+        set_excepthook(structlog.stdlib.get_logger())
 
     if print_config_debug:
-        logger = stdlib.get_logger()
+        logger = structlog.stdlib.get_logger()
         logger.debug("Logging configured", config=config)
 
 
@@ -310,7 +357,7 @@ def set_formatter(formatter_name: str) -> None:
     handler.setFormatter(logging.Formatter(formatter_name))
 
 
-def set_excepthook(logger: logging.Logger | stdlib.BoundLogger) -> None:
+def set_excepthook(logger: logging.Logger | structlog.stdlib.BoundLogger) -> None:
     """Set the excepthook to log unhandled exceptions with the given logger.
 
     Args:
@@ -347,7 +394,7 @@ def check_duplicate_processors(logger: logging.Logger) -> None:
         if not isinstance(handler, logging.StreamHandler):
             continue
         formatter = handler.formatter
-        if not isinstance(formatter, stdlib.ProcessorFormatter):
+        if not isinstance(formatter, structlog.stdlib.ProcessorFormatter):
             continue
         # print("Formatter", formatter)
         fmt_processors = formatter.processors
@@ -389,15 +436,15 @@ def _get_closest_smaller_log_level(log_level: int) -> int:
 if __name__ == "__main__":
     # Configure the logger with default settings
     configure_logging()
-    stdlib.get_logger("test").warning("hello from structlog", foo="bar")
+    structlog.stdlib.get_logger("test").warning("hello from structlog", foo="bar")
     logging.getLogger("test").warning("hello from logging", extra={"foo": "bar"})
 
-    stdlib.get_logger("test").error("error from structlog", foo="bar")
+    structlog.stdlib.get_logger("test").error("error from structlog", foo="bar")
     logging.getLogger("test").error("error from logging", extra={"foo": "bar"})
     try:
         raise ValueError("test")
     except ValueError:
-        stdlib.get_logger("test").exception("exception from structlog", foo="bar")
+        structlog.stdlib.get_logger("test").exception("exception from structlog", foo="bar")
         logging.getLogger("test").exception("exception from logging", extra={"foo": "bar"})
 
     raise ValueError("Unhandled exception")
