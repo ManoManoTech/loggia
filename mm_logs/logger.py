@@ -77,24 +77,32 @@ def make_formatter_structured(cfg: MMLoggerConfig | None = None) -> dict[str, An
             structlog.stdlib.add_logger_name,
             CustomCallsiteParameterAdder(
                 [
-                    structlog.processors.CallsiteParameter.PATHNAME,
-                    structlog.processors.CallsiteParameter.FUNC_NAME,
                     structlog.processors.CallsiteParameter.LINENO,
                     structlog.processors.CallsiteParameter.THREAD_NAME,
+                    structlog.processors.CallsiteParameter.PROCESS,
+                    structlog.processors.CallsiteParameter.PROCESS_NAME,
+                    structlog.processors.CallsiteParameter.PATHNAME,
+                    structlog.processors.CallsiteParameter.FUNC_NAME,
+                    structlog.processors.CallsiteParameter.THREAD,
                 ],
+                additional_ignores=["mm_logs", "__main__", "loguru_sink", "loguru"],
             ),
             EventAttributeMapper(
                 {
+                    structlog.processors.CallsiteParameter.THREAD.value: "logger.thread_id",
                     structlog.processors.CallsiteParameter.THREAD_NAME.value: "logger.thread_name",
                     structlog.processors.CallsiteParameter.PATHNAME.value: "logger.path_name",
                     structlog.processors.CallsiteParameter.FUNC_NAME.value: "logger.method_name",
                     structlog.processors.CallsiteParameter.LINENO.value: "logger.lineno",
+                    structlog.processors.CallsiteParameter.PROCESS.value: "logger.process_id",
+                    structlog.processors.CallsiteParameter.PROCESS_NAME.value: "logger.process_name",
                     "logger": "logger.name",
                     "level": "status",
                 },
             ),
             ManoManoDataDogAttributesProcessor(),
             structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            RemoveKeysProcessor(("_loguru_record",)),
             # XXX Custom JSON Renderer (more performance?)
             structlog.processors.JSONRenderer(sort_keys=True, ensure_ascii=False, indent=json_indent),
         ],
@@ -122,7 +130,7 @@ def make_formatter_colored(cfg: MMLoggerConfig | None = None) -> dict[str, Any]:
                     structlog.processors.CallsiteParameter.FUNC_NAME,
                     structlog.processors.CallsiteParameter.THREAD,
                 ],
-                additional_ignores=["mm_utils", "__main__", "loguru_sink", "loguru"],
+                additional_ignores=["mm_logs", "__main__", "loguru_sink", "loguru"],
             ),
             EventAttributeMapper(
                 {
