@@ -14,6 +14,7 @@ from typing import TYPE_CHECKING, Any
 import structlog
 from loguru import logger as loguru_logger
 from loguru._recattrs import RecordException, RecordFile, RecordLevel, RecordProcess, RecordThread
+
 from mm_logs.logger import configure_logging
 from mm_logs.loguru_sink import configure_loguru
 from mm_logs.settings import ActiveMMLoggerConfig
