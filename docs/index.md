@@ -1,1 +1,3 @@
-::: mm_utils
+{%
+   include-markdown "../README.md"
+%}
