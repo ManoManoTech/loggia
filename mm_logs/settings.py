@@ -99,6 +99,7 @@ def load_config() -> MMLoggerConfig:
     # Lowercase for ENV
     env: EnvType = os.getenv(PREFIX + "ENV", os.getenv("ENV", "production")).lower()
     log_debug: bool = bool(os.getenv(PREFIX + "LOG_DEBUG", "False").lower() in ["true", "1", "yes"])
+    json_indent: str | None = os.getenv(PREFIX + "LOG_DEBUG_JSON_INDENT", "2" if log_debug else None)
 
     def get_bool_config_log_debug(var_name: str, default: str | None = None) -> bool:
         if default is None:
@@ -115,7 +116,7 @@ def load_config() -> MMLoggerConfig:
         "log_debug": log_debug,
         "log_debug_show_config": get_bool_config_log_debug("LOG_DEBUG_SHOW_CONFIG"),
         "log_debug_show_extra_args": get_bool_config_log_debug("LOG_DEBUG_SHOW_EXTRA_ARGS"),
-        "log_debug_json_indent": int(os.getenv(PREFIX + "LOG_DEBUG_JSON_INDENT", 2 if log_debug else 0)),
+        "log_debug_json_indent": int(json_indent) if json_indent is not None else None,
         "log_debug_raise_on_loguru_reconfiguration": get_bool_config_log_debug("LOG_DEBUG_RAISE_ON_LOGURU_RECONFIGURATION"),
         "log_debug_check_duplicate_processors": get_bool_config_log_debug("LOG_DEBUG_CHECK_DUPLICATE_PROCESSORS"),
     }
