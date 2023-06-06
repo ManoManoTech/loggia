@@ -4,7 +4,7 @@
 
 ```python
 # Setup
-from mm_logs import logger, configure_logging # TODO Change import
+from mm_logs import configure_logging # TODO Change import
 configure_logging()
 
 # Usage
@@ -21,7 +21,7 @@ You can configure it using environment variables. XXX LINK TO CONFIGURATION
 
 ```python
 # Setup
-from mm_utils import logger, configure_logging # TODO Change import
+from mm_utils import configure_logging # TODO Change import
 configuration = ...
 configuratio. # Customize the configuration as you wish
 configure_logging(configuration)

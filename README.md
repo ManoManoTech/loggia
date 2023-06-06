@@ -2,12 +2,29 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/) ![Python 3.11](https://img.shields.io/badge/python-3.11-blue?style=flat) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 
-PDM + Hatch
+## Objective
+
+The objective of this package is to provide a simple and standard way to configure logging in Python projects.
+
+We try to make it as simple as possible, while still providing a good default configuration, that can be customized.
+
+We also try to solve some commons gotchas with structured logging in Python, like:
+- configuring sys.excepthook
+- configuring warnings to use logging
+- configuring the standard logger and loguru to use the same handlers
+
+The package is still in alpha, and we are open to suggestions and contributions.
+
+## Code
+
+We try to follow the best standards. As such, the code should be as typed as possible.
+When only support Python 3.11+, so we can use the latest features.
 
 ## Usage
 
-- Add to your project with XXX
-- Check the mkdocs XXX
+***REMOVED***
+- Read the `Usage` docs
+<!-- XXX Links to docs + review docs -->
 
 
 ## Logging from loguru
