@@ -10,7 +10,8 @@ PDM + Hatch
 - Check the mkdocs XXX
 
 
-# Logging from loguru
+## Logging from loguru
+
 - no trace level by default
 - logger.log(level) needs an int level, not a string
 
@@ -20,12 +21,13 @@ XXX Add a check / warnings when loguru or standar dlogging is reconfigured after
 Explicit is better than implicit: do not use sys.excepthook by default
     Check sys.excepthook with tools like sentry, datadog, loguru...
     Can we detect another sys.excepthook?
-    Check https://github.com/DataDog/dd-trace-py/pull/1307/files
+    Check [Datadog patch](https://github.com/DataDog/dd-trace-py/pull/1307/files)
     Check with ariflow, scrappy, django, click
 
 
 Python logging guidelines:
-- CHeck the common guidelines!
+
+- Check the common guidelines!
 - Do not use custom levels in production (use the standard ones)
 - If you need a trace level, its level number should be 5
 - XXX Should we map non standard levels to standard ones for structured logging?
