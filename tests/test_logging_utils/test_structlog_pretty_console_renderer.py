@@ -2,10 +2,11 @@ import re
 from unittest.mock import MagicMock
 
 import pytest
+from mm_logs.constants import COLORS, PALETTES
+from mm_logs.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
+from mm_logs.utils.colorsutils import html_to_triple_dec
 
-from mm_utils.logging_utils.constants import COLORS, PALETTES
-from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
-from mm_utils.utils.colorsutils import html_to_triple_dec
+# pyright: reportUnusedExpression=false
 
 
 def remove_color_codes(text: str) -> str:

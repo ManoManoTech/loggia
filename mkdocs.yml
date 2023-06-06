@@ -1,7 +1,7 @@
 ---
-site_name: mm_utils Python Docs
+site_name: MM Logs Python
 ***REMOVED***
-***REMOVED***
+repo_name: gabriel.dugny/mm-utils-python
 ***REMOVED***
 theme:
   name: "material"
@@ -41,12 +41,16 @@ extra:
 copyright: Copyright &copy; Colibri SAS
 
 watch:
-  - mm_utils
+  - mm_logs
   - docs
 
 nav:
   - Home:
       - Readme: index.md
+  - Usage and Reference:
+      - Config: config.md
+      - Usage: usage.md
+      - Reference: reference.md
 
 markdown_extensions:
   - abbr
@@ -84,8 +88,9 @@ plugins:
       handlers:
         python:
           import:
-            - https://docs.python.org/3.10/objects.inv
-          paths: [mm_utils]  # search packages in the src folder
+            - url: https://docs.python.org/3.11/objects.inv
+              domains: [std, py, logging]
+          paths: [mm]
           options:
             show_root_heading: false
             show_signature_annotations: true

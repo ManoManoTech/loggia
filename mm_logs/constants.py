@@ -67,3 +67,6 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
     logging.CRITICAL: ("Hot Pink", "Fuchsia", "Pink", "Red"),
 }
 """A dictionary of log levels and their color palettes."""
+
+
+SETTINGS_PREFIX: Final[str] = "MM_LOGGER_"

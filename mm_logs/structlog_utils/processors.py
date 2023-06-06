@@ -1,4 +1,7 @@
-import enum
+"""This module contains processors for structlog.
+
+They are used in the default configuration, but you can also use them in your own configuration.
+"""
 import inspect
 import logging
 import logging.config
@@ -11,16 +14,14 @@ from types import TracebackType
 from typing import Any, Union
 
 import structlog
-from structlog.processors import CallsiteParameter, CallsiteParameterAdder, _find_first_app_frame_and_name
+from structlog.processors import CallsiteParameter, CallsiteParameterAdder, _find_first_app_frame_and_name  # type: ignore[attr-defined]
 from structlog.types import EventDict
-
-# from structlog.typing import EventDict
 
 try:
     import ddtrace
 except ImportError:
-    ddtrace = None  # type: ignore
-# XXX Make sure that all processors types are correct. With processor
+    ddtrace = None
+
 ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
 CONSOLE = True if os.getenv("ENV") == "DEV" else True
 
@@ -112,17 +113,6 @@ def extract_from_record_datadog(_: logging.Logger, __: str, event_dict: EventDic
     return event_dict
 
 
-# def extract_from_record(_, __, event_dict):
-#     """
-#     Extract thread and process names and add them to the event dict.
-#     """
-#     record = event_dict["_record"]
-#     event_dict["thread_name"] = record.threadName
-#     event_dict["process_name"] = record.processName
-
-#     return event_dict
-
-
 def datadog_error_mapping_processor(_: logging.Logger, __: str, event_dict: EventDict) -> EventDict:
     """
     Extracts the exception information from the event dict and adds it to the
@@ -156,7 +146,7 @@ def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
         return v  # type: ignore[return-value]
 
     if v:
-        return sys.exc_info()  # type: ignore[return-value]
+        return sys.exc_info()
 
     return (None, None, None)
 
@@ -164,7 +154,7 @@ def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
 class RemoveKeysProcessor:
     """Removes keys from the event dict, if they are present.
 
-    This very naive code with a loop and pop is quite fast.
+    The very naive code with a loop and pop is quite fast.
 
     Args:
         keys: Keys to remove.
@@ -179,35 +169,15 @@ class RemoveKeysProcessor:
         return event_dict
 
 
-def add_log_level_number(logger: logging.Logger, method_name: str, event_dict: EventDict) -> EventDict:
-    """
-    Add the log level number to the event dict.
-
-    Log level numbers map to the log level names. The Python stdlib uses them
-    for filtering logic. This adds the same numbers so users can leverage
-    similar filtering. Compare::
-
-       level in ("warning", "error", "critical")
-       level_number >= 30
-
-    The mapping of names to numbers is in
-    ``structlog.stdlib._log_levels._NAME_TO_LEVEL``.
-
-    .. versionadded:: 18.2.0
-    """
-    # Supports custom log levels.
-    # event_dict["level_number"] = logger._nameToLevel.get(method_name, 0)  # type: ignore[attr-defined]
-    return event_dict
-
-
-# all_levels = set(logging._nameToLevel.values())  # type: ignore[attr-defined]
-
-# logging.addLevelName(TRACE, "TRACE")
-# logging.getLevelNamesMapping
-
-
 class DataDogTraceInjectionProcessor:
-    """Adapted from the official Datadog documentation https://docs.datadoghq.com/tracing/other_telemetry/connect_logs_and_traces/python/#no-standard-library-logging"""
+    """Adds ddtrace trace and span ids to the event dict, as well as dd.env, dd.service and dd.owner.
+
+    Requires [ddtrace](https://ddtrace.readthedocs.io/en/stable/) to be initialized.
+
+    This processor does **not** configure ddtrace.
+
+    Adapted from the[ official Datadog documentation](https://docs.datadoghq.com/tracing/other_telemetry/connect_logs_and_traces/python/#no-standard-library-logging)
+    """
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         if not ddtrace:
@@ -229,14 +199,6 @@ class DataDogTraceInjectionProcessor:
         event_dict["dd.service"] = self.ddtrace.config.service or ""
         event_dict["dd.version"] = self.ddtrace.config.version or ""
         return event_dict
-
-
-class CustomCallsiteParameter(enum.Enum):
-    FUNCNAME = "logger.method_name"
-
-
-# Define a type alias for convenience
-CallsiteParameterType = CallsiteParameter | CustomCallsiteParameter
 
 
 class CustomCallsiteParameterAdder(CallsiteParameterAdder):

@@ -1,5 +1,5 @@
 # isort: off
-import mm_utils.logging_utils.structlog_utils.log  # noqa
+import mm_logs.logger  # noqa
 
 import os
 

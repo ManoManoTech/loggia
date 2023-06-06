@@ -4,8 +4,7 @@ import sys
 
 import pytest
 import structlog
-
-from mm_utils.logging_utils.structlog_utils.processors import (
+from mm_logs.structlog_utils.processors import (
     EventAttributeMapper,
     ManoManoDataDogAttributesProcessor,
     RemoveKeysProcessor,

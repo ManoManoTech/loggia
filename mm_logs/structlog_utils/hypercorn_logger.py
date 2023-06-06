@@ -5,7 +5,7 @@ import structlog
 from hypercorn.config import Config
 from hypercorn.logging import Logger
 
-from mm_utils.logging_utils.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
+from mm_logs.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 
 if TYPE_CHECKING:
     from hypercorn.typing import ResponseSummary, WWWScope
@@ -57,12 +57,11 @@ class HypercornLogger(Logger):
 
         # atoms["http.url_details"] = request["url_details"]
         self.access_logger.info(
-            "access", **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP}, **headers,
+            "access",
+            **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP},
+            **headers,
         )
 
-    # from ipdb import set_trace
-
-    # set_trace()
     # if isinstance(status, str):
     #     status = status.split(None, 1)[0]
 

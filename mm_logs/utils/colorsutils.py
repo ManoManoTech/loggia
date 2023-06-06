@@ -1,4 +1,4 @@
-from mm_utils.logging_utils.constants import COLORS
+from mm_logs.constants import COLORS
 
 
 def html_to_triple_dec(html_code: str) -> tuple[int, int, int]:
@@ -10,10 +10,10 @@ def ansi_fg(name: str) -> str:
     """Helper function to convert hexadecimal color codes to ANSI color codes.
 
     Args:
-        name (str): Name of a color in [COLORS][mm_utils.logging_utils.colors.COLORS].
+        name (str): Name of a color in [COLORS][mm_logs.constants.COLORS].
 
     Raises:
-        KeyError: If `name` is not a key in [COLORS][mm_utils.logging_utils.colors.COLORS].
+        KeyError: If `name` is not a key in [COLORS][mm_logs.constants.COLORS].
 
     Returns:
         str: ANSI color code.

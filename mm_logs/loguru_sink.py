@@ -12,16 +12,12 @@ If you use primarily use loguru, you should consider using logging or structlog 
 """
 from __future__ import annotations
 
-import logging
-import traceback
-from datetime import timedelta
 from typing import TYPE_CHECKING, Any
 
 import structlog
 from loguru import logger as loguru_logger
-from loguru._recattrs import RecordException, RecordFile, RecordLevel, RecordProcess, RecordThread
 
-from mm_utils.logging_utils.structlog_utils.log import ActiveConfig, configure_logging
+from mm_logs.settings import ActiveMMLoggerConfig, MMLoggerConfig
 
 if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
@@ -30,11 +26,7 @@ if TYPE_CHECKING:
 
 # Custom sink function for Loguru to pass log messages to Structlog
 def loguru_to_structlog_sink(message: LoguruMessage) -> None:
-    """We drop elapsed ( it's time from the start of the program, not the start of the request)
-
-    Args:
-        message (LoguruMessage): _description_
-    """
+    """Custom sink function to adapt Loguru Record to Structlog EventDict"""
     record: LoguruRecord = message.record
 
     # XXX(dugab): should we cache the getLogger? use a wrapped logger?
@@ -46,14 +38,16 @@ def loguru_to_structlog_sink(message: LoguruMessage) -> None:
 
     if "msecs" in record:
         # Duration should be in ns
-        attributes["duration"] = record["msecs"] * 1000000
+        # XXX(dugab): check key actualy exists somewhere?
+        attributes["duration"] = record["msecs"] * 1000000  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
     # We want to pass stack,exc_info and exception to structlog
     if "exception" in record:
         attributes["exc_info"] = record["exception"].value if record["exception"] else None
 
     if "stack" in record:
-        attributes["stack"] = record["stack"]
+        # XXX(dugab): check key actualy exists somewhere?
+        attributes["stack"] = record["stack"]  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
     # if "module" in record:
     #     attributes["module"] = record["module"]
@@ -71,9 +65,9 @@ def loguru_to_structlog_sink(message: LoguruMessage) -> None:
     )
 
 
-def configure_loguru() -> None:
+def configure_loguru(cfg: MMLoggerConfig | None = None) -> None:
     # Remove Loguru's default handler and add the custom sink function
     # XXX Patch loguru.add to raise an error if the sink is changed!
-    cfg = ActiveConfig.get()
+    cfg = ActiveMMLoggerConfig.get() if cfg is None else cfg
     loguru_logger.remove()
     loguru_logger.add(loguru_to_structlog_sink, level=cfg.log_level)

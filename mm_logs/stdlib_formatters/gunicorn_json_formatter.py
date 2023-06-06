@@ -1,14 +1,14 @@
-from logging import Filter, LogRecord
+"""Logging configuration sample, obtained from firefighter"""
+from logging import LogRecord
 from os import getenv
 from typing import Any
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonFormatter
 
-from mm_utils.logging_utils.constants import GUNICORN_HYPERCORN_KEY_RE, HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
-from mm_utils.utils.dictutils import del_if_possible, mv_attr
+from mm_logs.constants import GUNICORN_HYPERCORN_KEY_RE, SAFE_HEADER_ATTRIBUTES
+from mm_logs.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
 
-# pylint:disable=too-many-branches
 class CustomJsonFormatter(JsonFormatter):
     RESERVED_ATTRS = RESERVED_ATTRS
 
@@ -22,8 +22,10 @@ class CustomJsonFormatter(JsonFormatter):
 
         # Normalization: ManoMano attributes
         log_record["owner"] = "pulse"
-        log_record["service"] = getenv("DD_SERVICE", "ms-radiologist-collector-python")
-        log_record["project"] = getenv("PROJECT", "radiologist-collector-python")
+        log_record["service"] = getenv(
+            "DD_SERVICE",
+        )
+        log_record["project"] = getenv("PROJECT")
         log_record["env"] = getenv("ENV", "dev")
 
         # Normalisation: Datadog source code attributes
@@ -40,6 +42,9 @@ class CustomJsonFormatter(JsonFormatter):
             log_record["status"] = log_record["levelname"]
             del log_record["levelname"]
 
+        # Normalisation: Datadog duration (in nanoseconds)
+        log_record["duration"] = record.msecs * 1000000
+
         # Normalization: Datadog stack trace
         if "exc_info" in log_record:
             exc_info_lines = log_record["exc_info"].split("\n")
@@ -49,13 +54,11 @@ class CustomJsonFormatter(JsonFormatter):
                 log_record["error.kind"] = log_record["error.message"].split(":")[0]
             del log_record["exc_info"]
 
-        # Cleanup and expansion of hypercorn specific log attributes
-        if "hypercorn" in log_record["logger.name"]:
+        # Cleanup and expansion of gunicorn specific log attributes
+        if "gunicorn" in log_record["logger.name"]:
             if hasattr(record.args, "items"):
                 for k, v in record.args.items():  # type: ignore
-                    if k in HYPERCORN_ATTRIBUTES_MAP:
-                        log_record[HYPERCORN_ATTRIBUTES_MAP[k]] = v
-                    if "{" not in k or k.startswith("{http_") or "}e" in k:
+                    if "{" not in k or k.startswith("{http_"):
                         continue
                     m = GUNICORN_HYPERCORN_KEY_RE.search(k)
                     if m:
@@ -63,31 +66,38 @@ class CustomJsonFormatter(JsonFormatter):
             else:
                 log_record["args.type"] = str(type(record.args))
                 log_record["args"] = str(record.args)
-        # Normalization: duration in nanoseconds from milliseconds
-        if "duration" in log_record:
-            log_record["duration"] = int(log_record["duration"] * 1000)
+
+        # Normalization: Datadog user
+        mv_attr(log_record, "mm-ff-user-id", "usr.id")
+
         # Normalisation: Datadog HTTP Attributes
         mv_attr(log_record, "raw_uri", "http.uri")
         mv_attr(log_record, "request_method", "http.method")
         mv_attr(log_record, "referer", "http.referer")
-        mv_attr(log_record, "user_agent", "http.user_agent")
+        mv_attr(log_record, "user_agent", "http.useragent")
         mv_attr(log_record, "server_protocol", "http.version")
 
         header_attributes = SAFE_HEADER_ATTRIBUTES
-        xtra_ks = [k for k in log_record.keys() if k.startswith("x-") or k.startswith("sec-")]
+        xtra_ks = [k for k in log_record.keys() if k.startswith("x-") or k.startswith("sec-") or k.startswith("mm-")]
         header_attributes.extend(xtra_ks)
         for header_attr in header_attributes:
             mv_attr(log_record, header_attr, f"http.headers.{header_attr}")
 
-        # XXX Normalisation: Client IP
+        # Normalisation: DataDog Client IP
 
-
-class AccessLogFilter(Filter):
-    def filter(self, record: LogRecord) -> bool:
-        if not record.args:
-            return True
-        raw_uri: str = record.args["U"]  # type: ignore
-        if "api/monitoring/" in raw_uri and record.levelno <= 20:
-            return False
-
-        return True
+        # Cleanup useless attributes
+        del_many_if_possible(
+            log_record,
+            [
+                "gunicorn.socket",
+                "wsgi.file_wrapper",
+                "wsgi.input_terminated",
+                "wsgi.multiprocess",
+                "wsgi.multithread",
+                "wsgi.run_once",
+                "wsgi.url_scheme",
+                "wsgi.version",
+                "wsgi.errors",
+                "wsgi.input",
+            ],
+        )

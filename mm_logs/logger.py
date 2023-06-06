@@ -14,12 +14,13 @@ from typing import TYPE_CHECKING, Any, Literal
 import structlog
 from structlog.typing import Processor
 
-from mm_utils.logging_utils.structlog_utils.processors import (
+from mm_logs.settings import ActiveMMLoggerConfig, load_config
+from mm_logs.settings import MMLoggerConfig as MMLoggerConfig
+from mm_logs.structlog_utils.processors import (
     CustomCallsiteParameterAdder,
     EventAttributeMapper,
     ManoManoDataDogAttributesProcessor,
     RemoveKeysProcessor,
-    add_log_level_number,
     datadog_error_mapping_processor,
 )
 
@@ -28,18 +29,16 @@ if TYPE_CHECKING:
 
 
 def patch_to_add_level(level_number: int, level_name: str) -> None:
-    """Add a new level to structlog.
+    """Add a new level to structlog and the standard logger.
     Sanity check for existing levels is left as an exercise to the user.
+    XXX(dugab): Some of these statements may be redundant.
     """
-
+    # pylint: disable=protected-access
+    # pyright: reportGeneralTypeIssues=false
     level_name_upper = level_name.upper()
     level_name_lower = level_name.lower()
 
     logging.addLevelName(level_number, level_name_upper)
-
-    setattr(structlog.stdlib, level_name_upper, level_number)
-    structlog.stdlib._NAME_TO_LEVEL["level_name"] = level_number
-    structlog.stdlib._LEVEL_TO_NAME[level_number] = "level_name"
 
     setattr(structlog._log_levels, level_name_upper, level_number)
     structlog._log_levels._NAME_TO_LEVEL[level_name_lower] = level_number
@@ -48,7 +47,7 @@ def patch_to_add_level(level_number: int, level_name: str) -> None:
         v: k for k, v in structlog._log_levels._NAME_TO_LEVEL.items() if k not in ("warn", "exception", "notset")
     }
 
-    def new_level(self, msg, *args, **kw):
+    def new_level(self, msg, *args, **kw) -> Any:  # type: ignore[no-untyped-def]
         return self.log(level_number, msg, *args, **kw)
 
     setattr(structlog.stdlib._FixedFindCallerLogger, level_name_lower, new_level)
@@ -69,8 +68,8 @@ patch_to_add_level(5, "trace")
 patch_to_add_level(25, "success")
 
 
-def make_formatter_structured() -> dict[str, Any]:
-    json_indent = int(os.getenv("MM_LOGGING_JSON_INDENT", "0"))
+def make_formatter_structured(cfg: MMLoggerConfig | None = None) -> dict[str, Any]:
+    json_indent = cfg.log_debug_json_indent if cfg else 0
 
     return {
         "()": structlog.stdlib.ProcessorFormatter,
@@ -86,14 +85,6 @@ def make_formatter_structured() -> dict[str, Any]:
                     structlog.processors.CallsiteParameter.LINENO,
                     structlog.processors.CallsiteParameter.THREAD_NAME,
                 ],
-                custom_attribute_names={
-                    structlog.processors.CallsiteParameter.THREAD_NAME: "logger.thread_name",
-                    structlog.processors.CallsiteParameter.PATHNAME: "logger.path_name",
-                    structlog.processors.CallsiteParameter.FUNC_NAME: "logger.method_name",
-                    structlog.processors.CallsiteParameter.LINENO: "logger.lineno",
-                    # "logger": "logger.name",
-                    # "level": "status",
-                },
             ),
             EventAttributeMapper(
                 {
@@ -114,9 +105,9 @@ def make_formatter_structured() -> dict[str, Any]:
     }
 
 
-def make_formatter_colored() -> dict[str, Any]:
+def make_formatter_colored(cfg: MMLoggerConfig | None = None) -> dict[str, Any]:
     # Import here to avoid structlog.dev import in production
-    from mm_utils.logging_utils.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
+    from mm_logs.structlog_utils.pretty_console_renderer import PrettyConsoleRenderer
 
     return {
         "()": structlog.stdlib.ProcessorFormatter,
@@ -135,17 +126,6 @@ def make_formatter_colored() -> dict[str, Any]:
                     structlog.processors.CallsiteParameter.THREAD,
                 ],
                 additional_ignores=["mm_utils", "__main__", "loguru_sink", "loguru"],
-                custom_attribute_names={
-                    # structlog.processors.CallsiteParameter.THREAD: "logger.thread_id",
-                    # structlog.processors.CallsiteParameter.THREAD_NAME: "logger.thread_name",
-                    # structlog.processors.CallsiteParameter.PATHNAME: "logger.path_name",
-                    # structlog.processors.CallsiteParameter.FUNC_NAME: "logger.method_name",
-                    # # structlog.processors.CallsiteParameter.LINENO: "logger.lineno",
-                    # structlog.processors.CallsiteParameter.PROCESS: "logger.process_id",
-                    # structlog.processors.CallsiteParameter.PROCESS_NAME: "logger.process_name",
-                    # # "logger": "logger.name",
-                    # "level": "status",
-                },
             ),
             EventAttributeMapper(
                 {
@@ -161,10 +141,20 @@ def make_formatter_colored() -> dict[str, Any]:
             ),
             structlog.stdlib.add_logger_name,
             # XXX Remove process and thread name from the log message (or format it differently)
-            add_log_level_number,
+            structlog.stdlib.add_log_level_number,
             # XXX Make a version that supports custom log level
             # Make sure we remove the meta, and some of the standard keys
             structlog.stdlib.ProcessorFormatter.remove_processors_meta,
+            RemoveKeysProcessor(
+                (
+                    "logger.method_name",
+                    "logger.path_name",
+                    "logger.process_id",
+                    "logger.process_name",
+                    "logger.thread_id",
+                    "logger.thread_name",
+                )
+            ),
             # RemoveKeysProcessor(("pathname", "process", "thread_name", "func_nameXX", "process_name", "thread")),
             PrettyConsoleRenderer(colors=True, event_key="message"),
         ],
@@ -197,88 +187,18 @@ struct_pre_chain: Iterable[Processor] = [
 """Processors to be used for logs coming from structlog."""
 
 
-class LoggingConfig:
-    """ "
-    Base class for our custom logging configuration.
-    XXX More extensible, maybe dataclass or pydantic?
-    """
-
-    ignore_duplicate_processors: bool = False
-    excepthook: bool = True
-    config: "logging.config._DictConfigArgs" | None
-    formatter_name: str
-    log_level: int
-
-    def __init__(
-        self,
-        log_level: int | None = None,
-        formatter_name: str | None = None,
-        std_logger_config: "logging.config._DictConfigArgs" | None = None,
-    ) -> None:
-        self.log_level: int = get_log_level_number_from_env() if log_level is None else log_level
-        self.formatter_name: str = get_main_formatter_name() if formatter_name is None else formatter_name
-        self.config: "logging.config._DictConfigArgs" | None = None if std_logger_config is None else std_logger_config
-
-    def set_log_level(self, level: int, *_: Any, **__: Any) -> None:
-        self.log_level = level
-
-    def set_formatter(self, formatter_name: str, *_: Any, **__: Any) -> None:
-        self.formatter_name = formatter_name
-
-    def set_config(self, config: "logging.config._DictConfigArgs", *_: Any, **__: Any) -> None:
-        self.config = config
-
-
-def get_main_formatter_name() -> Literal["colored", "structured"]:
-    """Get the main formatter name from the environment variable ENV."""
-    return "colored" if os.getenv("ENV", "").upper() == "DEV" else "structured"
-
-
-def get_log_level_number_from_env(log_level_env: str = "MM_LOGGING_LEVEL") -> int:
-    """Get the log level number from the environment variable LOG_LEVEL, which may be a string or an int.
-    If LOG_LEVEL is not set, return "DEBUG" if ENV is "DEV", otherwise return "INFO".
-    Supports custom log levels, e.g. "TRACE", using getLevelName"""
-    log_level = os.getenv(log_level_env)
-    if log_level is None:
-        return logging.DEBUG if os.getenv("ENV", "").upper() == "DEV" else logging.INFO
-    try:
-        return int(log_level)
-    except ValueError:
-        # Not an int, must be a string
-        val = logging.getLevelName(log_level.upper())
-        if isinstance(val, int):
-            return val
-
-        return logging.DEBUG if os.getenv("ENV", "").upper() == "DEV" else logging.INFO
-
-
-class ActiveConfig:
-    _cfg: LoggingConfig | None = None
-
-    @classmethod
-    def store(cls, cfg: LoggingConfig):
-        cls._cfg = cfg
-
-    @classmethod
-    def get(cls) -> LoggingConfig:
-        if cls._cfg is None:
-            raise RuntimeError("no active config")
-        return cls._cfg
-
-
-def configure_logging(logging_config: LoggingConfig | None = None, print_config_debug: bool = False) -> None:
+def configure_logging(logging_config: MMLoggerConfig | None = None) -> None:
     """Main function to configure logging.
 
     Args:
-        logging_config (LoggingConfig | None, optional): Your custom config. If None, a default config will be used.
-        print_config_debug (bool, optional): Log the config. Defaults to False.
+        logging_config (MMLoggerConfig | None, optional): Your custom config. If None, a default config will be used.
     """
     if logging_config is None:
-        logging_config = LoggingConfig()
+        logging_config = load_config()
 
-    ActiveConfig.store(logging_config)
+    ActiveMMLoggerConfig.store(logging_config)
 
-    default_config: "logging.config._DictConfigArgs" = {
+    default_config: logging.config._DictConfigArgs = {
         "version": 1,
         "disable_existing_loggers": False,
         "formatters": {},
@@ -313,48 +233,44 @@ def configure_logging(logging_config: LoggingConfig | None = None, print_config_
         },
     }
 
-    if logging_config.formatter_name == "structured":
-        default_config["formatters"]["structured"] = make_formatter_structured()
-    elif logging_config.formatter_name == "colored":
+    if logging_config.log_formatter_name == "structured":
+        default_config["formatters"]["structured"] = make_formatter_structured(logging_config)
+    elif logging_config.log_formatter_name == "colored":
         default_config["formatters"]["colored"] = make_formatter_colored()
-    if logging_config.config:
-        config: "logging.config._DictConfigArgs" = {**default_config, **logging_config.config}  # type: ignore[misc]
+    if logging_config.custom_standard_logging_dict_config:
+        config: logging.config._DictConfigArgs = {**default_config, **logging_config.config}  # type: ignore[misc]
     else:
         config = default_config
 
-    config["handlers"]["default"]["formatter"] = logging_config.formatter_name
+    config["handlers"]["default"]["formatter"] = logging_config.log_formatter_name
     config["handlers"]["default"]["level"] = logging_config.log_level
     config["loggers"][""]["level"] = logging_config.log_level
 
     logging.config.dictConfig(config)
-    # FilterBoundLogger only supports basic log levels, so we need to find the closest one.
-    # XXX Make sure we have a filter for the exact number
-    # XXX Make a custom filterable?
+
+    # FilterBoundLogger only supports existing log levels, so we need to find the closest one.
     closest_smaller_log_level = _get_closest_smaller_log_level(logging_config.log_level)
 
     structlog.configure(
         processors=struct_pre_chain,
         logger_factory=structlog.stdlib.LoggerFactory(),
         wrapper_class=structlog.make_filtering_bound_logger(closest_smaller_log_level),
-        cache_logger_on_first_use=True,
+        cache_logger_on_first_use=False,
     )
 
-    if not logging_config.ignore_duplicate_processors:
-        # logging.getLogger().info("Duplicate processors are not ignored")
+    if logging_config.log_debug_check_duplicate_processors:
         check_duplicate_processors(logging.getLogger())
 
-    if logging_config.excepthook:
+    if logging_config.set_excepthook:
+        # set_excepthook(logging.getLogger())
         set_excepthook(structlog.stdlib.get_logger())
 
-    if print_config_debug:
+    if logging_config.capture_warnings:
+        logging.captureWarnings(True)
+
+    if logging_config.log_debug_show_config:
         logger = structlog.stdlib.get_logger()
         logger.debug("Logging configured", config=config)
-
-
-def set_formatter(formatter_name: str) -> None:
-    logger = logging.getLogger()
-    handler = logger.handlers[0]
-    handler.setFormatter(logging.Formatter(formatter_name))
 
 
 def set_excepthook(logger: logging.Logger | structlog.stdlib.BoundLogger) -> None:
@@ -364,23 +280,10 @@ def set_excepthook(logger: logging.Logger | structlog.stdlib.BoundLogger) -> Non
         logger (logging.Logger | stdlib.BoundLogger): The logger to use to log unhandled exceptions
     """
 
-    def excepthook(exc_type: type[BaseException], exc_value: BaseException, exc_traceback: TracebackType | None) -> None:
+    def _excepthook(exc_type: type[BaseException], exc_value: BaseException, exc_traceback: TracebackType | None) -> None:
         logger.critical("Unhandled exception", exc_info=(exc_type, exc_value, exc_traceback))
 
-    sys.excepthook = excepthook
-
-
-# @contextmanager
-# def temporary_log_config(temp_config: LoggingConfig):
-#     original_config = LoggingConfig()
-#     original_config.set_config(logging.getLogger().getEffectiveLevel())
-#     original_config.set_formatter(logging.getLogger().handlers[0].formatter._fmt)
-
-#     configure_logging(temp_config)
-#     try:
-#         yield
-#     finally:
-#         configure_logging(original_config)
+    sys.excepthook = _excepthook
 
 
 def check_duplicate_processors(logger: logging.Logger) -> None:
@@ -403,7 +306,7 @@ def check_duplicate_processors(logger: logging.Logger) -> None:
         processors: Sequence[Processor] = tuple(pre_chain_processors) + tuple(fmt_processors)
         # Not all processors have a __name__ attribute. In that case, use __class__.__name__
         processor_names = [p.__name__ if hasattr(p, "__name__") else p.__class__.__name__ for p in processors]
-        duplicates = set([x for x in processor_names if processor_names.count(x) > 1])
+        duplicates = {x for x in processor_names if processor_names.count(x) > 1}
         if not duplicates:
             continue
         print("Duplicate processors in ProcessorFormatter", duplicates, processor_names)

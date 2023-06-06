@@ -1,16 +1,15 @@
 """From radiologist-python
 
 
-Hypercorn config
+Hypercorn config sample
 
 https://pgjones.gitlab.io/hypercorn/how_to_guides/configuring.html#configuration-options
 """
 # pylint: disable=invalid-name
 from typing import Any
 
-from mm_utils.logging_utils.formatters.base_formatters import CustomJsonEncoder
-from mm_utils.logging_utils.formatters.hypercorn_json_formatter import AccessLogFilter, CustomJsonFormatter
-from mm_utils.logging_utils.loguru_utils.loguru_conf import loguru_production_mode
+from mm_logs.stdlib_formatters.base_formatters import CustomJsonEncoder
+from mm_logs.stdlib_formatters.hypercorn_json_formatter import AccessLogFilter, CustomJsonFormatter
 
 bind = ["0.0.0.0:3000"]
 keep_alive_timeout = 300
@@ -32,7 +31,7 @@ formatter.update(
         "reserved_attrs": attrs,
         "timestamp": True,
     },
-)  # type: ignore
+)
 base_level = loglevel
 logconfig_dict = {
     "version": 1,
@@ -67,5 +66,3 @@ logconfig_dict = {
 
 accesslog = "-"
 errorlog = "-"
-
-loguru_production_mode()

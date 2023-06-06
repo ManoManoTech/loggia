@@ -14,8 +14,8 @@ from typing import TYPE_CHECKING
 from structlog.dev import _EVENT_WIDTH, ConsoleRenderer, Styles, _has_colors, _pad, default_exception_formatter, plain_traceback
 from structlog.processors import _figure_out_exc_info
 
-from mm_utils.logging_utils.constants import PALETTES
-from mm_utils.utils.colorsutils import ansi_fg
+from mm_logs.constants import PALETTES
+from mm_logs.utils.colorsutils import ansi_fg
 
 if TYPE_CHECKING:
     from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
