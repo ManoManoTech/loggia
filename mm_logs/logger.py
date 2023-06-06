@@ -3,19 +3,15 @@ from __future__ import annotations
 
 import logging
 import logging.config
-import os
 import sys
 from collections.abc import Iterable
-from functools import partial
 from types import TracebackType
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any
 
-# from msgspec.json import Encoder as MsgSpecJsonEncoder
 import structlog
 from structlog.typing import Processor
 
-from mm_logs.settings import ActiveMMLoggerConfig, load_config
-from mm_logs.settings import MMLoggerConfig as MMLoggerConfig
+from mm_logs.settings import ActiveMMLoggerConfig, MMLoggerConfig, load_config
 from mm_logs.structlog_utils.processors import (
     CustomCallsiteParameterAdder,
     EventAttributeMapper,
@@ -60,7 +56,8 @@ def patch_to_add_level(level_number: int, level_name: str) -> None:
     )
 
     structlog._log_levels._LEVEL_TO_FILTERING_LOGGER[getattr(structlog._log_levels, level_name_upper)] = getattr(
-        structlog._log_levels, f"BoundLoggerFilteringAt{level_name_upper}"
+        structlog._log_levels,
+        f"BoundLoggerFilteringAt{level_name_upper}",
     )
 
 
@@ -321,7 +318,6 @@ def check_duplicate_processors(logger: logging.Logger) -> None:
 
 def _get_closest_smaller_log_level(log_level: int) -> int:
     """From an arbitrary log level value (not only the default one), get the closest smaller or equal [default log level value](https://docs.python.org/3/library/logging.html#logging-levels).
-
 
     Examples:
 

@@ -15,7 +15,7 @@ authors = [
 dependencies = [
     "structlog>=23.1.0",
 ]
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "MIT" }
 
@@ -55,7 +55,7 @@ cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=mm_uti
 no-cov = "cov --no-cov {args}"
 
 [[tool.hatch.envs.test.matrix]]
-python = ["310", "311"]
+python = ["311"]
 
 [tool.hatch.envs.default.env-vars]
 ***REMOVED***
@@ -117,17 +117,17 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.black]
 line-length = 140
-target-version = ['py310']
+target-version = ['py311']
 
 [tool.isort]
 profile = "black"
-py_version = 310
+py_version = 311
 line_length = 140
 wrap_length = 140
 
 [tool.pylint]
 [tool.pylint.MASTER]
-py-version = "3.10"
+py-version = "3.11"
 ignore = ['__pypackages__', '.git', 'packages', '.venv']
 
 

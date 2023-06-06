@@ -78,7 +78,7 @@ class CustomJsonFormatter(JsonFormatter):
         mv_attr(log_record, "server_protocol", "http.version")
 
         header_attributes = SAFE_HEADER_ATTRIBUTES
-        xtra_ks = [k for k in log_record.keys() if k.startswith("x-") or k.startswith("sec-") or k.startswith("mm-")]
+        xtra_ks = [k for k in log_record.keys() if k.startswith(("x-", "sec-", "mm-"))]
         header_attributes.extend(xtra_ks)
         for header_attr in header_attributes:
             mv_attr(log_record, header_attr, f"http.headers.{header_attr}")

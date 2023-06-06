@@ -26,7 +26,7 @@ if TYPE_CHECKING:
 
 # Custom sink function for Loguru to pass log messages to Structlog
 def loguru_to_structlog_sink(message: LoguruMessage) -> None:
-    """Custom sink function to adapt Loguru Record to Structlog EventDict"""
+    """Custom sink function to adapt Loguru Record to Structlog EventDict."""
     record: LoguruRecord = message.record
 
     # XXX(dugab): should we cache the getLogger? use a wrapped logger?

@@ -47,12 +47,12 @@ class HypercornLogger(Logger):
         atoms["D"] = atoms["D"] * 1e3  # type: ignore
         for key_b, value in request["headers"]:
             key = key_b.decode("latin1").lower()
-            if key in SAFE_HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
+            if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
                 headers["http.headers." + key] = value.decode("latin1")
         # Same for response headers in http.response_headers
         for key_b, value in response["headers"]:
             key = key_b.decode("latin1").lower()
-            if key in SAFE_HEADER_ATTRIBUTES or key.startswith("x-") or key.startswith("sec-"):
+            if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
                 headers["http.response_headers." + key] = value.decode("latin1")
 
         # atoms["http.url_details"] = request["url_details"]

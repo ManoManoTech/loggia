@@ -35,9 +35,7 @@ class _ConfigDict(TypedDict, total=False):
 class MMLoggerConfig:
     """The configuration for the logger. Get the default configuration with [`load_config`][mm_logs.settings.load_config].
 
-
     This is a dataclass, so you can use `dataclasses.asdict` to get a dictionary from it.
-
     """
 
     env: EnvType
@@ -93,6 +91,7 @@ def _get_env_bool(var_name: str, default: str | bool | None) -> bool:
             return False
     else:
         return value.lower() in ["true", "1", "yes"]
+    raise ValueError(f"Invalid value for {var_name}: {value}")
 
 
 def load_config() -> MMLoggerConfig:
