@@ -1,5 +1,5 @@
 # isort: off
-import mm_logs.logger  # noqa
+import mm_logs.logger  # noqa: F401
 
 import os
 
@@ -13,6 +13,7 @@ logging.info("Worker init")
 
 
 def application(environ, start_response):
+    """Sample WSGI application"""
     data = b"Hello, World!\n"
     logger.info("Hello, World!")
     start_response("200 OK", [("Content-Type", "text/plain"), ("Content-Length", str(len(data)))])
@@ -20,7 +21,7 @@ def application(environ, start_response):
 
 
 class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):
-    def __init__(self, app, options):  # noqa: ARG002
+    def __init__(self, app, options):
         self.options = options
         self.app_uri = app
         super().__init__()

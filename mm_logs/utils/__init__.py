@@ -1,3 +1,1 @@
-"""Collection of utils functions.
-Migh be separated in the future.
-"""
+"""Collection of utils functions used in the project."""

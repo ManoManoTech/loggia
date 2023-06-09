@@ -28,16 +28,16 @@ def test_COLORS():
 
 def test_PALETTES():
     assert isinstance(PALETTES, dict)
-    assert all(isinstance(k, int) for k in PALETTES.keys())
+    assert all(isinstance(k, int) for k in PALETTES)
     assert all(len(v) == 4 for v in PALETTES.values())
 
 
-@pytest.fixture
+@pytest.fixture()
 def renderer():
     return PrettyConsoleRenderer()
 
 
-@pytest.fixture
+@pytest.fixture()
 def event_dict():
     return {
         "event": "test_event",

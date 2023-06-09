@@ -7,26 +7,15 @@ This is just a manual test helper for now.
 from __future__ import annotations
 
 import logging
-import traceback
-from datetime import timedelta
-from typing import TYPE_CHECKING, Any
 
-import structlog
+import pytest
 from loguru import logger as loguru_logger
-from loguru._recattrs import RecordException, RecordFile, RecordLevel, RecordProcess, RecordThread
 
 from mm_logs.logger import configure_logging
 from mm_logs.loguru_sink import configure_loguru
-from mm_logs.settings import ActiveMMLoggerConfig
+from mm_logs.settings import MMLogsConfig
 
-if TYPE_CHECKING:
-    from loguru import Message as LoguruMessage
-    from loguru import Record as LoguruRecord
-
-
-def setup() -> None:
-    configure_logging()
-    configure_loguru()
+# ruff: noqa: T201
 
 
 def launch() -> None:
@@ -62,6 +51,19 @@ def launch() -> None:
     loguru_logger.log("WARNING", "Warning log from Loguru, using log method")
 
 
-if __name__ == "__main__":
-    setup()
-    launch()
+def test_disallow_loguru_reconfig():
+    config = MMLogsConfig(debug_disallow_loguru_reconfig=True)
+    configure_logging(config)
+    assert config.debug_disallow_loguru_reconfig
+    configure_loguru(config)
+
+    assert hasattr(loguru_logger, "add_original")
+
+    with pytest.raises(RuntimeError):
+        loguru_logger.add(lambda x: print(x))
+
+    from mm_logs.loguru_sink import _unblock_loguru_reconfiguration
+
+    _unblock_loguru_reconfiguration()
+    test = loguru_logger.add(lambda x: print(x))
+    loguru_logger.remove(test)

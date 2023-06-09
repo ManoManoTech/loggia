@@ -1,5 +1,4 @@
-"""
-Helpers that make development with *structlog* more pleasant.
+"""Helpers that make development with *structlog* more pleasant.
 
 See also the narrative documentation in `development`.
 """
@@ -7,7 +6,6 @@ from __future__ import annotations
 
 import logging
 import warnings
-from collections.abc import Iterable
 from io import StringIO
 from typing import TYPE_CHECKING
 
@@ -18,6 +16,8 @@ from mm_logs.constants import PALETTES
 from mm_logs.utils.colorsutils import ansi_fg
 
 if TYPE_CHECKING:
+    from collections.abc import Iterable
+
     from structlog.typing import EventDict, ExceptionRenderer, WrappedLogger
 
 
@@ -25,11 +25,6 @@ try:
     import colorama
 except ImportError:
     colorama = None
-
-try:
-    import rich
-except ImportError:
-    rich = None  # type: ignore[assignment]
 
 
 if colorama is not None:
@@ -60,8 +55,7 @@ else:
 
 
 class PrettyConsoleRenderer(ConsoleRenderer):
-    """
-    Adapted from structlog.dev.ConsoleRenderer.
+    """Adapted from structlog.dev.ConsoleRenderer.
 
     Render ``event_dict`` nicely aligned, possibly in colors, and ordered.
 
@@ -100,8 +94,9 @@ class PrettyConsoleRenderer(ConsoleRenderer):
     .. _Rich: https://pypi.org/project/rich/
     """
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
+        *,
         pad_event: int = _EVENT_WIDTH,
         colors: bool = _has_colors,
         force_colors: bool = False,
@@ -117,7 +112,12 @@ class PrettyConsoleRenderer(ConsoleRenderer):
         for pal_level, pal_colors in PALETTES.items():
             self.palettes[pal_level] = [ansi_fg(color) for color in pal_colors]
 
-    def __call__(self, logger: WrappedLogger, name: str, event_dict: EventDict) -> str:
+    def __call__(  # noqa: PLR0912, C901 # pylint: disable=too-many-locals
+        self,
+        logger: WrappedLogger,
+        name: str,
+        event_dict: EventDict,
+    ) -> str:
         sio = StringIO()
 
         log_level_number: int = event_dict.pop("level_number", logging.getLevelName(event_dict.get("level", "notset").upper()))
@@ -187,7 +187,7 @@ class PrettyConsoleRenderer(ConsoleRenderer):
         elif exc is not None:
             if self._exception_formatter is not plain_traceback:
                 warnings.warn(
-                    "Remove `format_exc_info` from your processor chain " "if you want pretty exceptions.",
+                    "Remove `format_exc_info` from your processor chain if you want pretty exceptions.",
                     stacklevel=2,
                 )
             sio.write("\n" + exc)

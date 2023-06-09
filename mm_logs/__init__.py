@@ -1,6 +1,4 @@
-"""
-
-Logging utilities for structlog, stdlib, and loguru.
+"""Logging utilities for structlog, stdlib, and loguru.
 
 XXX Links and docs
 """

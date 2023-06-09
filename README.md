@@ -4,42 +4,47 @@
 
 ## Objective
 
-The objective of this package is to provide a simple and standard way to configure logging in Python projects.
+The objective of this package is to provide a simple and standard way to configure logging in Python projects, using [Structlog](https://www.structlog.org/en/stable/).
 
 We try to make it as simple as possible, while still providing a good default configuration, that can be customized.
 
 We also try to solve some commons gotchas with structured logging in Python, like:
-- configuring sys.excepthook
-- configuring warnings to use logging
-- configuring the standard logger and loguru to use the same handlers
 
-The package is still in alpha, and we are open to suggestions and contributions.
+- configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
+- using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
+- configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
 
-## Code
+
+!!! warning
+    The package is still in alpha, and we are open to suggestions and contributions.
+
+    **⚠️ Repository name and interfaces are subject to change.**
+
+## Code standards
 
 We try to follow the best standards. As such, the code should be as typed as possible.
 When only support Python 3.11+, so we can use the latest features.
 
+
+
 ## Usage
 
 ***REMOVED***
-- Read the `Usage` docs
-<!-- XXX Links to docs + review docs -->
+2. Read the [Usage](docs/usage.md) docs
 
+## Roadmap
 
-## Logging from loguru
-
-- no trace level by default
-- logger.log(level) needs an int level, not a string
-
-XXX Rename log to logger (import logger ez)
-XXX Add a check / warnings when loguru or standar dlogging is reconfigured after us!
-
-Explicit is better than implicit: do not use sys.excepthook by default
-    Check sys.excepthook with tools like sentry, datadog, loguru...
-    Can we detect another sys.excepthook?
-    Check [Datadog patch](https://github.com/DataDog/dd-trace-py/pull/1307/files)
-    Check with ariflow, scrappy, django, click
+- [ ] Move to the proper repository
+- [ ] First Artifactory release
+- [ ] Better testing (unit tests, integration tests, e2e tests)
+- [ ] Better documentation
+- [ ] Automated testing of documentation
+- [ ] Review sys.excepthook
+  - Explicit is better than implicit: do not use sys.excepthook by default
+  - Check sys.excepthook with tools like sentry, datadog, loguru...
+  - Can we detect another sys.excepthook?
+  - Check [Datadog patch](https://github.com/DataDog/dd-trace-py/pull/1307/files)
+  - Check with ariflow, scrappy, django, click
 
 
 Python logging guidelines:
@@ -53,3 +58,4 @@ Python logging guidelines:
   - Note: MM utils logger is already configured with structlog + logging, with all the required attributes for ManoMano's use of DataDog.
     - It also comes with configurations ready for Hypercorn, Gunicorn.
     - XXX It supports ddtrace
+

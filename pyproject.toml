@@ -5,29 +5,23 @@ build-backend = "hatchling.build"
 [project]
 name = "manomano-logs"
 dynamic = ["urls"]
-version = "0.0.1"
+version = "0.0.2"
 description = "Common logging configurations for ManoMano Python projects using structlog"
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
-dependencies = [
-    "structlog>=23.1.0",
-]
+dependencies = ["structlog>=23.1.0"]
 requires-python = ">=3.11"
 readme = "README.md"
-license = { text = "MIT" }
+license = { text = "Proprietary" }
 
 
 [project.optional-dependencies]
 pygit2 = ["pygit2"]
-loguru = [
-    "loguru>=0.7.0",
-]
-rich = [
-    "rich>=13.3.4",
-]
+loguru = ["loguru>=0.7.0"]
+rich = ["rich>=13.3.4"]
 
 
 [tool.hatch]
@@ -61,8 +55,34 @@ python = ["311"]
 ***REMOVED***
 
 [tool.pdm]
+
+# Common settings for all scripts
+[tool.pdm.scripts._]
+env_file = ".env"
+
 [tool.pdm.scripts]
-test = "pytest tests"
+# Lint
+lint-pylint = { cmd = "pylint mm_logs", help = "Run pylint" }
+lint-mypy = { shell = "mypy mm_logs --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
+lint-ruff = { cmd = "ruff .", help = "Run ruff linter" }
+lint = { composite = [
+  "lint-ruff",
+  "lint-pylint",
+  "lint-mypy",
+], help = "Run all linters (ruff, pylint, mypy)." }
+# Format
+fmt-black = { cmd = "black .", help = "Run black formatter" }
+fmt-ruff = { cmd = "ruff . --fix --select I001", help = "Run isort-like import sorting with ruff" }
+fmt = { composite = [
+  "fmt-black",
+  "fmt-ruff",
+], help = "Run all formatters (black, isort-like ruff)" }
+# Tests
+test = { cmd = "pytest tests", help = "Run the tests" }
+test-cov = { cmd = "pytest tests --junitxml=pytest-report.xml --cov --cov-report xml:pytest-coverage.xml --cov-fail-under=0 --cov-report html", help = "Run the tests with coverage, and generate reports" }
+# Docs
+docs-serve = { cmd = "mkdocs serve", help = "Serve the docs locally" }
+docs-build = { cmd = "mkdocs build --strict", help = "Build the docs" }
 
 [[tool.pdm.source]]
 name = "pypi"
@@ -73,30 +93,36 @@ verify_ssl = true
 pygit2 = "1.11.1"
 [tool.pdm.dev-dependencies]
 dev = [
-    "pytest>=7.2.0",
-    "black>=22.12.0",
-    "mypy>=1.2",
-    "pylint>=2.15.8",
-    "pytest-cov>=4.0.0",
-    "tox-pdm>=0.6.1",
-    "yamllint>=1.28.0",
-    "hatch-vcs>=0.3.0",
-    "hatchling>=1.12.2",
-    "ipdb>=0.13.13",
-    "rich>=13.3.4",
-    "gunicorn>=20.1.0",
-    "hypercorn>=0.14.3",
-    "ruff>=0.0.262",
-    "python-json-logger>=2.0.7",
+  "pytest>=7.2.0",
+  "black>=22.12.0",
+  "mypy>=1.2",
+  "pylint>=2.15.8",
+  "pytest-cov>=4.0.0",
+  "tox-pdm>=0.6.1",
+  "yamllint>=1.28.0",
+  "hatch-vcs>=0.3.0",
+  "hatchling>=1.12.2",
+  "ipdb>=0.13.13",
+  "rich>=13.3.4",
+  "gunicorn>=20.1.0",
+  "hypercorn>=0.14.3",
+  "ruff>=0.0.262",
+  "python-json-logger>=2.0.7",
+  "pytest-mock>=3.10.0",
+  "pytest-random-order>=1.1.0",
 ]
 doc = [
-  "mkdocs>=1.4.2",
-  "mkdocs-material>=8.5.11",
-  "mkdocs-git-revision-date-plugin>=0.3.2",
-  "mkdocs-include-markdown-plugin>=3.9.1",
-  "mkdocstrings[python]>=0.19.1",
-  "mkdocs-section-index>=0.3.4",
+    "mkdocs>=1.4.2",
+    "mkdocs-material>=8.5.11",
+    "mkdocs-git-revision-date-plugin>=0.3.2",
+    "mkdocs-include-markdown-plugin>=3.9.1",
+    "mkdocstrings[python]>=0.19.1",
+    "mkdocs-section-index>=0.3.4",
+    "mdx-truly-sane-lists>=1.3",
+    "mike>=1.1.2",
 ]
+tests = ["gunicorn>=20.1.0", "hypercorn>=0.14.3"]
+debug = ["ipdb>=0.13.13", "check-wheel-contents>=0.4.0"]
 
 [tool.pytest]
 [tool.pytest.ini_options]
@@ -108,7 +134,7 @@ testpaths = ["tests"]
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = [ "tests/*", "__pypackages__/*", ".venv/*"]
+omit = ["tests/*", "__pypackages__/*", ".venv/*"]
 source = ["mm_logs"]
 
 [tool.coverage.report]
@@ -133,17 +159,76 @@ ignore = ['__pypackages__', '.git', 'packages', '.venv']
 
 [tool.pylint.FORMAT]
 max-line-length = 180
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+  "C",
+  "R0903",
+  "R1735",
+  "W0511",
+  "W0212",
+  "too-many-instance-attributes",
+  "too-many-branches",
+]
 
 [tool.ruff]
 line-length = 140
+target-version = "py311"
 ignore = [
   "E501",   # Line too long
   "ANN101", # Missing type annotation for self in method
-]
+  "ANN102", # Missing type annotation for cls in classmethod
+  "ANN401", # Dynamically typed expressions are disallowed
+  "ARG002", # Unused argument
+  "ARG005", # Unused lambda argument
+  "ERA001", # XXX Enable later, commented code
+  "TD",
+  "SLF001", # Private member accessed
+  "EM102",  # Exception must not use an f-string literal, assign to variable first
+  "C408",   # Unnecessary `dict` call (rewrite as a literal)
+  "D100",   # Missing docstring in public module
 
+  "D102", # Missing docstring in public method
+  "D103", # Missing docstring in public function
+  "D104", # Missing docstring in public package
+  "D105", # Missing docstring in magic method
+
+  "D107",   # Missing docstring in `__init__`
+  "SIM105", # Use `contextlib.suppress(X)` instead of `try`-`except`-`pass`
+  "EM101",  # Exception must not use a string literal, assign to variable first
+  "TRY",    # Avoid specifying long messages outside the exception class
+  "FIX003", # Line contains XXX
+]
+select = ["ALL"]
+[tool.ruff.pydocstyle]
+convention = "google"
+[tool.ruff.flake8-annotations]
+allow-star-arg-any = true
+mypy-init-return = true
+suppress-dummy-args = true
+[tool.ruff.flake8-unused-arguments]
+ignore-variadic-names = true
+[tool.ruff.flake8-tidy-imports]
+ban-relative-imports = "all"
+[tool.ruff.flake8-builtins]
+builtins-ignorelist = ["filter", "format"]
+[tool.ruff.per-file-ignores]
+"tests/fixtures/**/*.py" = ["E402"]
+"tests/**/*.py" = [
+  "S101",
+  "D",
+  "ANN",
+  "B018",
+  "TRY",
+  "EM",
+  "N802",
+  "INP001",
+  "ARG",
+  "PLR2004",
+]
 
 [tool.mypy]
 python_version = "3.11"
+strict = true
 strict_optional = true
 mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
 allow_redefinition = false
