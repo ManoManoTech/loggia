@@ -129,6 +129,9 @@ debug = ["ipdb>=0.13.13", "check-wheel-contents>=0.4.0"]
 minversion = "7.0"
 addopts = "-ra -q"
 testpaths = ["tests"]
+pythonpath = [
+  "."
+]
 
 [tool.coverage]
 [tool.coverage.run]

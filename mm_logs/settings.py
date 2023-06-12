@@ -154,7 +154,7 @@ class MMLogsConfig:
                     field_name=name,
                     set_to_value=value,
                     original_value=old_value,
-                )
+                ),
             )
         # Apply the transformer if exists
         transformer = field.metadata.get("transformer")
