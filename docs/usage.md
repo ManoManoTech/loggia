@@ -8,8 +8,8 @@ By default, the logger outputs JSON structured logs, and it is configured to wor
 
 If you want pretty logs, you can set either:
 
-  - `ENV=dev` or `MM_LOGS_ENV=dev`
-  - `MM_LOGS_LOG_FORMATTER_NAME=colored`
+- `ENV=dev` or `MM_LOGS_ENV=dev`
+- `MM_LOGS_LOG_FORMATTER_NAME=colored`
 
 !!! warning
     This library will not load `.env` files for you.
@@ -98,6 +98,7 @@ Use [HypercornLogger][mm_logs.structlog_utils.hypercorn_logger.HypercornLogger] 
 ### Gunicorn
 
 Use [GunicornLogger][mm_logs.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class.
+
 ## Configure the standard logger
 
 Be careful, the handler is called default
