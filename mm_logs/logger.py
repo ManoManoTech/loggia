@@ -196,7 +196,7 @@ struct_pre_chain: Iterable[Processor] = [
 """Processors to be used for logs coming from structlog."""
 
 
-def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None = None) -> None:
+def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None = None) -> MMLogsConfig:
     """Main function to configure logging.
 
     Args:
@@ -249,6 +249,8 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
     if len(logging_config._configuration_errors) > 0:
         logger = structlog.stdlib.get_logger()
         logger.error("Logging configured with errors", errors=logging_config._configuration_errors)
+
+    return MMLogsConfig
 
 
 def _get_logger_config(custom_config: MMLogsConfig | MMLogsConfigPartial | None) -> MMLogsConfig:
