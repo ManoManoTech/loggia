@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "manomano-logs"
 dynamic = ["urls"]
-version = "0.0.2"
+version = "0.0.3"
 description = "Common logging configurations for ManoMano Python projects using structlog"
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
