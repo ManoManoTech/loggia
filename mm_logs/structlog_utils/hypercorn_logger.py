@@ -24,7 +24,7 @@ class HypercornLogger(Logger):
         self.error_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.error")  # type: ignore[assignment]
         self.access_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.access")  # type: ignore[assignment]
         self.cfg = cfg
-        self.access_log_format = cfg.access_log_format
+        self.access_log_format = cfg.access_log_format.replace("%(t)s ", "").lstrip("- ")
 
     async def access(self, request: "WWWScope", response: "ResponseSummary", request_time: float) -> None:
         # XXX(dugab): Url vs URI?
@@ -46,7 +46,6 @@ class HypercornLogger(Logger):
             key = key_b.decode("latin1").lower()
             if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
                 headers["http.response_headers." + key] = value.decode("latin1")
-
         self.access_logger.info(
             self.access_log_format % atoms,  # noqa: G002
             **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP},
