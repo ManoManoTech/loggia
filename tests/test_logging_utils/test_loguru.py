@@ -12,7 +12,6 @@ import pytest
 from loguru import logger as loguru_logger
 
 from mm_logs.logger import configure_logging
-from mm_logs.loguru_sink import configure_loguru
 from mm_logs.settings import MMLogsConfig
 
 # ruff: noqa: T201
@@ -52,10 +51,10 @@ def launch() -> None:
 
 
 def test_disallow_loguru_reconfig():
-    config = MMLogsConfig(debug_disallow_loguru_reconfig=True)
+    config = MMLogsConfig(debug_disallow_loguru_reconfig=True, capture_loguru=True)
     configure_logging(config)
     assert config.debug_disallow_loguru_reconfig
-    configure_loguru(config)
+    assert config.capture_loguru
 
     assert hasattr(loguru_logger, "add_original")
 

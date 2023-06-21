@@ -12,15 +12,13 @@ def test_usage_with_loguru(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
     from mm_logs.logger import configure_logging
-    from mm_logs.loguru_sink import configure_loguru
     from mm_logs.settings import MMLogsConfig
 
     # Force colored logging, even if environment variables is set
-    log_config = MMLogsConfig()
+    log_config = MMLogsConfig(capture_loguru=True)
     log_config.log_formatter_name = "colored"
 
     configure_logging(log_config)
-    configure_loguru(log_config)
 
     # Use standard logger
     import logging

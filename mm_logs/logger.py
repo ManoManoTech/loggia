@@ -8,13 +8,15 @@ from typing import TYPE_CHECKING, Any, Final
 
 import structlog
 
-from mm_logs.settings import ActiveMMLogsConfig, MMLogsConfig, MMLogsConfigPartial
+from mm_logs.settings import ActiveMMLogsConfig, LoggerConfigurationError, MMLogsConfig, MMLogsConfigPartial
 from mm_logs.structlog_utils.processors import (
     EventAttributeMapper,
     ManoManoDataDogAttributesProcessor,
     RemoveKeysProcessor,
+    RemoveKeysStartingWithProcessor,
     datadog_error_mapping_processor,
 )
+from mm_logs.utils.dictutils import deep_merge_log_config
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -107,7 +109,7 @@ def make_formatter_structured(cfg: MMLogsConfig | None = None) -> dict[str, Any]
             ManoManoDataDogAttributesProcessor(),
             structlog.stdlib.ProcessorFormatter.remove_processors_meta,
             RemoveKeysProcessor(("_loguru_record",)),
-            # XXX Custom JSON Renderer (more performance?)
+            # XXX Custom JSON Renderer (more performance!)
             structlog.processors.JSONRenderer(ensure_ascii=False, indent=json_indent, separators=(",", ":")),
         ],
         "foreign_pre_chain": std_pre_chain,
@@ -162,8 +164,10 @@ def make_formatter_colored(_cfg: MMLogsConfig | None = None) -> dict[str, Any]:
                     "logger.process_name",
                     "logger.thread_id",
                     "logger.thread_name",
+                    "_loguru_record",
                 ),
             ),
+            RemoveKeysStartingWithProcessor(("http.",)),
             # RemoveKeysProcessor(("pathname", "process", "thread_name", "func_nameXX", "process_name", "thread")),
             PrettyConsoleRenderer(colors=True, event_key="message"),
         ],
@@ -203,6 +207,12 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
         custom_config (MMLogsConfig | None, optional): Your custom config. If None, a default config will be used.
     """
     logging_config = _get_logger_config(custom_config)
+    # Merge the custom stdlib logging config with the default
+    if logging_config.custom_stdlib_logging_dict_config is not None:
+        logging_config.stdlib_logging_dict_config = deep_merge_log_config(
+            logging_config.stdlib_logging_dict_config, logging_config.custom_stdlib_logging_dict_config
+        )
+
     ActiveMMLogsConfig.store(logging_config)
 
     stdb_lib_config = logging_config.stdlib_logging_dict_config
@@ -242,6 +252,19 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
     if logging_config.capture_warnings:
         logging.captureWarnings(capture=True)
 
+    if logging_config.capture_loguru:
+        try:
+            from mm_logs.loguru_sink import configure_loguru
+
+            configure_loguru(logging_config)
+        except ImportError as exc:
+            logging_config._configuration_errors.append(
+                LoggerConfigurationError(
+                    msg="Failed to configure loguru! Is is installed?",
+                    exc=exc,
+                )
+            )
+
     if logging_config.debug_show_config:
         logger = structlog.stdlib.get_logger()
         logger.debug("Logging configured", config=logging_config)
@@ -250,7 +273,7 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
         logger = structlog.stdlib.get_logger()
         logger.error("Logging configured with errors", errors=logging_config._configuration_errors)
 
-    return MMLogsConfig
+    return logging_config
 
 
 def _get_logger_config(custom_config: MMLogsConfig | MMLogsConfigPartial | None) -> MMLogsConfig:

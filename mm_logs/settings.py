@@ -33,6 +33,7 @@ class MMLogsConfigPartial(TypedDict, total=False):
     debug_check_duplicate_processors: bool
     debug_disallow_loguru_reconfig: bool
     capture_warnings: bool
+    capture_loguru: bool
     custom_stdlib_logging_dict_config: logging.config._OptionalDictConfigArgs | logging.config._DictConfigArgs | None
 
 
@@ -82,7 +83,7 @@ class MMLogsConfig:
     )
     "The log level value to use. Use the helper to get it from a string."
     log_formatter_name: str = dataclasses.field(
-        metadata=(dict(dyn_default=lambda self: "structured" if self.env == "production" else "colored")),
+        metadata=(dict(dyn_default=lambda self: "structured" if self.env != DEV else "colored")),
     )
     'Which log formatter to use. Available by default are "structured" and "colored". You can also select the name of a custom formatter, which you can add to `extra_log_formatters`.'
 
@@ -92,6 +93,9 @@ class MMLogsConfig:
     capture_warnings: bool = dataclasses.field(metadata=dict(dyn_default=lambda self: True))
     "Should our logger capture warnings from the `warnings` module?"
 
+    capture_loguru: bool = dataclasses.field(metadata=dict(dyn_default=lambda self: False))
+    "XXX Document in mkdocs."
+
     debug: bool = dataclasses.field(metadata=dict(dyn_default=lambda self: False))
     "Turn on all MM Logger debug options. This is a shortcut to turn on all the debug options below."
 
@@ -99,7 +103,7 @@ class MMLogsConfig:
     "Log the logging configuration at the end of `configure_logging()`, as DEBUG."
 
     debug_json_indent: int | None = dataclasses.field(
-        metadata=dict(dyn_default=lambda self: 2 if self.env == "dev" else None),
+        metadata=dict(dyn_default=lambda self: 2 if self.env == "dev" or _true_if_debug(self) else None),
     )
     "Indent JSON logs. Should only be used for debugging, as newlines won't work properly in DataDog."
 
@@ -131,10 +135,6 @@ class MMLogsConfig:
         for field in dataclasses.fields(MMLogsConfig):
             if not field.name.startswith("_"):
                 self._assign_and_validate_field(field, kwargs)
-
-        # Merge the custom stdlib logging config with the default
-        if self.custom_stdlib_logging_dict_config is not None:
-            self.stdlib_logging_dict_config = deep_merge_log_config(self.stdlib_logging_dict_config, self.custom_stdlib_logging_dict_config)
 
         # In case of any error, catch the exception, set the default value and add the error to the list
 
