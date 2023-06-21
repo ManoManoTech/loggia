@@ -66,7 +66,7 @@ This library will automatically add to new log levels to match Loguru configurat
 - `TRACE` (level 5)
 - `SUCCESS` (level 25)
 
-The library also provides a new function [configure_loguru][mm_logs.loguru_sink.configure_loguru] that will patch Loguru to use our logger:
+The library also provides a new parameter [capture_loguru][mm_logs.settings.MMLogsConfig.capture_loguru] that will patch Loguru to use our logger:
 
 You should use it if you or your dependencies use Loguru.
 

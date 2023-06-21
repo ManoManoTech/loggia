@@ -18,6 +18,7 @@ Some settings read from multiple environments variables for convenience, like `M
 | `MM_LOGS_LOG_LEVEL` or `LOG_LEVEL` | [log_level][mm_logs.settings.MMLogsConfig.log_level] |`INFO` | The log level number or name. |
 | `MM_LOGS_LOG_FORMATTER_NAME` | [log_formatter_name][mm_logs.settings.MMLogsConfig.log_formatter_name] | `structured` or `colored` | The log formatter name. |
 | `MM_LOGS_SET_EXCEPTHOOK` | [set_excepthook][mm_logs.settings.MMLogsConfig.set_excepthook] | `True` | Whether the logger should set the `sys.excepthook`. |
+| `MM_LOGS_CAPTURE_LOGURU` | [capture_loguru][mm_logs.settings.MMLogsConfig.capture_loguru] | `True` | Whether the logger should capture logs emitted through loguru. |
 | `MM_LOGS_CAPTURE_WARNINGS` | [capture_warnings][mm_logs.settings.MMLogsConfig.capture_warnings] | `True` | Whether the logger should capture warnings from the `warnings` module. |
 | `MM_LOGS_DEBUG` | [debug][mm_logs.settings.MMLogsConfig.debug] | `False` | Enable or disable all MM Logger debug options. |
 | `MM_LOGS_DEBUG_SHOW_CONFIG` | [debug_show_config][mm_logs.settings.MMLogsConfig.debug_show_config] | `False` | Log the logging configuration at the end of `configure_logging()`, as DEBUG. |

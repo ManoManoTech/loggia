@@ -111,7 +111,7 @@ class MMLogsConfig:
     "Run a sanity check of the structlog configuration to make sure no processors are duplicated, in each chain."
 
     debug_disallow_loguru_reconfig: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
-    "Raise if Loguru is reconfigured (eg. by another lib) after calling [`configure_loguru`][mm_logs.loguru_sink.configure_loguru]."
+    "Raise if Loguru is reconfigured (eg. by another lib) is loguru capture was enabled with [`capture_loguru`][mm_logs.settings.MMLogsConfig.capture_loguru]."
 
     debug_show_extra_args: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
     "Unused."
