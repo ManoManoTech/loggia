@@ -116,7 +116,7 @@ def datadog_error_mapping_processor(_: logging.Logger, __: str, event_dict: Even
             return event_dict
         event_dict["error.stack"] = "".join(traceback.format_exception(exc_type, exc_value, exc_traceback))
         event_dict["error.message"] = str(exc_value)
-        event_dict["error.kind"] = exc_type.__name__
+        event_dict["error.kind"] = exc_type.__module__ + "." + exc_type.__name__
 
     return event_dict
 
@@ -151,6 +151,14 @@ class RemoveKeysProcessor:
         for key in self.keys:
             event_dict.pop(key, None)
         return event_dict
+
+
+class RemoveKeysStartingWithProcessor:
+    def __init__(self, keys_prefix: Iterable[str]) -> None:
+        self.keys_prefix = frozenset(keys_prefix)
+
+    def __call__(self, logger: Any, method_name: str, event_dict: EventDict) -> EventDict:
+        return {k: v for k, v in event_dict.items() if not any(k.startswith(prefix) for prefix in self.keys_prefix)}
 
 
 class DataDogTraceInjectionProcessor:
