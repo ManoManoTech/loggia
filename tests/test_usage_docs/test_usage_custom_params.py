@@ -13,7 +13,6 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     log_config = MMLogsConfig(env="special_env", debug_show_config="invalid_should_be_bool")
     log_config.log_formatter_name = "structured"
     log_config.log_level = 5
-    log_config.debug_check_duplicate_processors = True
 
     configure_logging(log_config)
 
@@ -26,7 +25,6 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
 
     assert log_config.env == "special_env"
     assert log_config.debug_show_config is False  # Default is used instead
-    assert log_config.debug_check_duplicate_processors is True
     assert len(log_config._configuration_errors) == 1
     assert log_config._configuration_errors[0].field_name == "debug_show_config"
 

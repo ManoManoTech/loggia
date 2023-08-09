@@ -58,7 +58,6 @@ def test_MMLogsConfig_default_values(log_level, env):
     assert mm_logger_config.debug is False
     assert mm_logger_config.debug_show_config is False
     assert mm_logger_config.debug_json_indent is None if env != "dev" else 2
-    assert mm_logger_config.debug_check_duplicate_processors is False
     assert mm_logger_config.debug_disallow_loguru_reconfig is False
     assert mm_logger_config.debug_show_extra_args is False
     assert mm_logger_config.custom_stdlib_logging_dict_config is None

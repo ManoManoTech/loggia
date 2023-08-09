@@ -30,7 +30,6 @@ class MMLogsConfigPartial(TypedDict, total=False):
     debug_show_config: bool
     debug_show_extra_args: bool
     debug_json_indent: int | None
-    debug_check_duplicate_processors: bool
     debug_disallow_loguru_reconfig: bool
     capture_warnings: bool
     capture_loguru: bool
@@ -108,9 +107,6 @@ class MMLogsConfig:
         metadata=dict(dyn_default=lambda self: 2 if self.env == "dev" or _true_if_debug(self) else None),
     )
     "Indent JSON logs. Should only be used for debugging, as newlines won't work properly in DataDog."
-
-    debug_check_duplicate_processors: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
-    "Run a sanity check of the structlog configuration to make sure no processors are duplicated, in each chain."
 
     debug_disallow_loguru_reconfig: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
     "Raise if Loguru is reconfigured (eg. by another lib) is loguru capture was enabled with [`capture_loguru`][mm_logger.settings.MMLogsConfig.capture_loguru]."

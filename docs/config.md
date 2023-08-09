@@ -23,7 +23,6 @@ Some settings read from multiple environments variables for convenience, like `M
 | `MM_LOGS_DEBUG` | [debug][mm_logger.settings.MMLogsConfig.debug] | `False` | Enable or disable all MM Logger debug options. |
 | `MM_LOGS_DEBUG_SHOW_CONFIG` | [debug_show_config][mm_logger.settings.MMLogsConfig.debug_show_config] | `False` | Log the logging configuration at the end of `configure_logging()`, as DEBUG. |
 | `MM_LOGS_DEBUG_JSON_INDENT` | [debug_json_indent][mm_logger.settings.MMLogsConfig.debug_json_indent] | `None` | Indent JSON logs. Should only be used for debugging. |
-| `MM_LOGS_DEBUG_CHECK_DUPLICATE_PROCESSORS` | [debug_check_duplicate_processors][mm_logger.settings.MMLogsConfig.debug_check_duplicate_processors] | `False` | Run a sanity check of the structlog configuration to ensure no processors are duplicated. |
 | `MM_LOGS_DEBUG_DISALLOW_LOGURU_RECONFIG` | [debug_disallow_loguru_reconfig][mm_logger.settings.MMLogsConfig.debug_disallow_loguru_reconfig] | `False` | Unused. |
 | `MM_LOGS_DEBUG_SHOW_EXTRA_ARGS` | [debug_show_extra_args][mm_logger.settings.MMLogsConfig.debug_show_extra_args] | `False` | Unused. |
 

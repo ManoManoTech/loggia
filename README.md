@@ -4,8 +4,7 @@
 
 ## Objective
 
-The objective of this package is to provide a simple and standard way to configure logging in Python projects, using [Structlog](https://www.structlog.org/en/stable/).
-
+The objective of this package is to provide a simple and standard way to configure logging in Python projects, using the standard `logging` module, and compatible with loguru.
 We try to make it as simple as possible, while still providing a good default configuration, that can be customized.
 
 We also try to solve some commons gotchas with structured logging in Python, like:
@@ -53,9 +52,11 @@ Python logging guidelines:
 - Do not use custom levels in production (use the standard ones)
 - If you need a trace level, its level number should be 5
 - XXX Should we map non standard levels to standard ones for structured logging?
-- You should use MM-utils for logging (structlog + logging)
+- You should use MM-utils for logging
   - You may use any other logging tool, or make a custom configuration from scratch, but you must follow the guidelines (and thus, have a structured logging)
-  - Note: MM utils logger is already configured with structlog + logging, with all the required attributes for ManoMano's use of DataDog.
+  - Note: MM utils logger is already configured with logging + loguru, with all the required attributes for ManoMano's use of DataDog.
     - It also comes with configurations ready for Hypercorn, Gunicorn.
     - XXX It supports ddtrace
+
+
 
