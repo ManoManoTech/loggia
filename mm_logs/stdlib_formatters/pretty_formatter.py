@@ -10,9 +10,11 @@ from mm_logs.utils.colorsutils import ansi_end, ansi_fg
 
 
 class PrettyFormatter(logging.Formatter):
+    """A custom formatter for logging that uses colors."""
+
     # pylint: disable=protected-access
     def _set_format(self, fmt: str, style: Literal["%"] | Literal["$"] | Literal["{"] = "%") -> None:
-        self._style = logging._STYLES[style][0](fmt)  # type: ignore  # Mysticism 🤔
+        self._style = logging._STYLES[style][0](fmt)  # type: ignore[operator]  # type: ignore[reportGeneralTypeIssues] # Mysticism 🤔
         self._fmt = self._style._fmt
 
     def format(self, record: logging.LogRecord) -> str:

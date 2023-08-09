@@ -4,7 +4,7 @@ import structlog
 from loguru import logger as loguru_logger
 
 from mm_logs.logger import configure_logging
-from mm_logs.loguru_sink import configure_loguru
+from mm_logs.settings import MMLogsConfig
 
 # # Remove Loguru's default handler and add the custom sink function
 # loguru_logger.remove()
@@ -25,17 +25,16 @@ from mm_logs.loguru_sink import configure_loguru
 #     logger_factory=structlog.stdlib.LoggerFactory(),
 #     wrapper_class=structlog.stdlib.BoundLogger,
 # )
-
-configure_logging()
-configure_loguru()
+config = MMLogsConfig(capture_loguru=True)
+configure_logging(config)
 # Test logging with Loguru
 loguru_logger.debug("Debug log from Loguru", argument1="test", argument2="test2")
 loguru_logger.info("Info log from Loguru")
 loguru_logger.warning("Warning log from Loguru")
 loguru_logger.error("Error log from Loguru")
 loguru_logger.critical("Critical log from Loguru", argument1="test", argument2="test2")
-loguru_logger.trace("Trace log from Loguru")  # XXX Is ignored rn
+loguru_logger.trace("Trace log from Loguru")
 loguru_logger.log("CRITICAL", "Critical log from Loguru, using log method")
-loguru_logger.success("Success log from Loguru")  # XXX Is ignored rn
+loguru_logger.success("Success log from Loguru")
 logging.getLogger().info("Test log from logging")
 structlog.getLogger().info("Test log from structlog")

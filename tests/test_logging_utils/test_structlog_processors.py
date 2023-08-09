@@ -20,10 +20,7 @@ structlog.configure(processors=[])
 
 # A helper function to create a test logger
 def create_test_logger():
-    # logger = structlog.stdlib.get_logger()
-    # logger.name = "test"
-    logger = logging.getLogger("test")
-    return logger
+    return logging.getLogger("test")
 
 
 # Test ManoManoDataDogAttributesProcessor
@@ -45,7 +42,7 @@ def test_mm_dd_attributes_processor():
 
 
 @pytest.mark.parametrize(
-    "service_env,owner_env,env_env,project_env",
+    ("service_env", "owner_env", "env_env", "project_env"),
     [
         (None, None, None, None),
         ("DD_SERVICE", None, "DD_ENV", None),
@@ -267,7 +264,10 @@ def test_remove_keys_processor():
 # Test ManoManoDataDogAttributesProcessor with custom attributes
 def test_mm_dd_attributes_processor_custom_attributes():
     processor = ManoManoDataDogAttributesProcessor(
-        service="custom_service", owner="custom_owner", env="custom_env", project="custom_project"
+        service="custom_service",
+        owner="custom_owner",
+        env="custom_env",
+        project="custom_project",
     )
     logger = create_test_logger()
     event_dict = processor(logger, "test", {"key": "value"})

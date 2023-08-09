@@ -9,10 +9,11 @@ from gunicorn.http.wsgi import Response
 
 
 class GunicornLogger:
-    """
+    """Custom Gunicorn logger class, using structlog.
+
     From https://gist.github.com/airhorns/c2d34b2c823541fc0b32e5c853aab7e7
     A stripped down version of https://github.com/benoitc/gunicorn/blob/master/gunicorn/glogging.py to provide structlog logging in gunicorn
-    Modified from http://stevetarver.github.io/2017/05/10/python-falcon-logging.html
+    Modified from http://stevetarver.github.io/2017/05/10/python-falcon-logging.html.
     """
 
     def __init__(self, cfg: GunicornConfig) -> None:
@@ -25,10 +26,9 @@ class GunicornLogger:
             return getattr(self._error_logger, name)
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
-    def access(self, resp: Response, req: Request, environ: dict[str, str], request_time: datetime.timedelta) -> None:
+    def access(self, resp: Response, _req: Request, environ: dict[str, str], request_time: datetime.timedelta) -> None:
         status = resp.status
 
-        # set_trace()
         if isinstance(status, str):
             status = status.split(None, 1)[0]
 

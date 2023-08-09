@@ -38,5 +38,8 @@
     "black"
   ],
   "python.analysis.stubPath": "stubs",
-  "yaml.customTags": ["!reference sequence"]
+  "yaml.customTags": ["!reference sequence"],
+  "python.linting.mypyArgs": [
+    "--enable-incomplete-feature=Unpack"
+  ]
 }

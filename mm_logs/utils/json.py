@@ -1,22 +1,20 @@
+"""JSON encoder to use with the standard library logging module."""
+
 import json
 import re
-from types import _T_contra
-from typing import Any, Protocol
+from typing import Any
 from uuid import UUID
 
 
-class SupportsWrite(Protocol[_T_contra]):
-    def write(self, __s: _T_contra) -> object:
-        ...
-
-
 class JSONEncoder(json.JSONEncoder):
-    def default(self, o: Any) -> str | Any:  # pylint: disable=too-many-return-statements
+    """JSON Encoder that can handle some extra types."""
+
+    def default(self, o: Any) -> str | Any:  # pylint: disable=too-many-return-statements # noqa: PLR0911
         if hasattr(o, "__json__"):
             return o.__json__()
         if hasattr(o, "isoformat") and callable(o.isoformat):
             return o.isoformat()  # datetime and similar
-        if isinstance(o, re.Match):  # XXX should be refactored into models.core.RegexMatch(models.core.Match)
+        if isinstance(o, re.Match):
             return {
                 "match": o.group(),
                 "match_spans": [o.span(i) for i in range(len(o.groups()) + 1)],
@@ -33,7 +31,6 @@ class JSONEncoder(json.JSONEncoder):
         #     return o._attrs  # pylint:disable=protected-access
         if type(o).__name__ == "function":
             # We don't match on callable cause it could catch more than we intend
-            # XXX: Should we warn on this? It's a bit pointless to serialize :/
             return o.__qualname__
         if hasattr(o, "__dataclass_fields__"):
             return o.__dict__

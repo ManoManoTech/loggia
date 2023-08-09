@@ -1,4 +1,5 @@
-import logging
+"""Constants for the mm_logs package."""
+import logging.config
 import re
 from typing import Final
 
@@ -60,6 +61,7 @@ COLORS: Final[dict[str, str]] = {
 
 PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
     logging.NOTSET: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
+    5: ("Pink", "Pink White", "Pink", "Ivory"),  # Trace level
     logging.DEBUG: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
     logging.INFO: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),
     logging.WARNING: ("Nude", "Tan", "Nude", "Sand Dollar"),
@@ -69,4 +71,40 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
 """A dictionary of log levels and their color palettes."""
 
 
-SETTINGS_PREFIX: Final[str] = "MM_LOGGER_"
+SETTINGS_PREFIX: Final[str] = "MM_LOGS_"
+
+
+DEFAULT_STDLIB_DICT_CONFIG: Final["logging.config._DictConfigArgs"] = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {},
+    "handlers": {
+        "default": {
+            "class": "logging.StreamHandler",
+            "formatter": "colored",
+        },
+    },
+    "loggers": {
+        "": {
+            "handlers": ["default"],
+            "propagate": True,
+        },
+        "gunicorn.access": {
+            "handlers": ["default"],
+            "propagate": False,
+        },
+        "gunicorn.error": {
+            "handlers": ["default"],
+            "propagate": False,
+        },
+        "gunicorn.errors": {
+            "handlers": ["default"],
+            "propagate": False,
+        },
+        "hypercorn.error": {
+            "handlers": ["default"],
+            "propagate": False,
+        },
+        "hypercorn.access": {"handlers": ["default"], "propagate": False},
+    },
+}

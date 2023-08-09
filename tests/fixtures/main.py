@@ -16,7 +16,7 @@ def app(environ, start_response):
 
 
 class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):
-    def __init__(self, app, options):  # noqa: ARG002
+    def __init__(self, app, options):
         self.options = options
         self.app_uri = "myapp.app"
         super().__init__()
@@ -27,7 +27,7 @@ class StandaloneApplication(gunicorn.app.wsgiapp.WSGIApplication):
             raise ValueError("cfg is None")
         self.cfg.set("workers", int(os.getenv("GUNICORN_WORKERS", "2")))
         self.cfg.set("bind", "{}:{}".format("0.0.0.0", "8000"))  # noqa: S104
-        self.cfg.set("logger_class", "myapp.gunicorn_logger.GunicornLogger")
+        self.cfg.set("logger_class", "mm_logs.structlog_utils.gunicorn_logger.GunicornLogger")
         if "GUNICORN_TIMEOUT" in os.environ:
             self.cfg.set("timeout", int(os.environ["GUNICORN_TIMEOUT"]))
         self.app_uri = "myapp.app"

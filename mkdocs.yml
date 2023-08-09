@@ -45,8 +45,7 @@ watch:
   - docs
 
 nav:
-  - Home:
-      - Readme: index.md
+  - Readme: index.md
   - Usage and Reference:
       - Config: config.md
       - Usage: usage.md
@@ -75,6 +74,7 @@ markdown_extensions:
   - pymdownx.tasklist:
       custom_checkbox: true
   - attr_list
+  - mdx_truly_sane_lists
   - pymdownx.emoji:
       emoji_index: !!python/name:materialx.emoji.twemoji
       emoji_generator: !!python/name:materialx.emoji.to_svg
