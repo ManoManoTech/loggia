@@ -7,14 +7,26 @@ This is just a manual test helper for now.
 from __future__ import annotations
 
 import logging
+import json
 
 import pytest
 from loguru import logger as loguru_logger
 
-from mm_logs.logger import configure_logging
-from mm_logs.settings import MMLogsConfig
+from mm_logger.logger import configure_logging
+from mm_logger.settings import MMLogsConfig
 
 # ruff: noqa: T201
+
+
+def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
+    configure_logging(MMLogsConfig(capture_loguru=True, set_excepthook=False))
+    loguru_logger.info("test info")
+    captured = capsys.readouterr()
+    errlines = captured.err.split("\n")
+    errlines.remove("")
+    assert len(errlines) == 1
+    record = json.loads(errlines[0])
+    assert record["message"] == "test info"
 
 
 def launch() -> None:
@@ -48,6 +60,7 @@ def launch() -> None:
 
     logger.log(logging.WARNING, "Warning log from standard logging, using log method")
     loguru_logger.log("WARNING", "Warning log from Loguru, using log method")
+    raise RuntimeError("XXX")
 
 
 def test_disallow_loguru_reconfig():
@@ -61,7 +74,7 @@ def test_disallow_loguru_reconfig():
     with pytest.raises(RuntimeError):
         loguru_logger.add(lambda x: print(x))
 
-    from mm_logs.loguru_sink import _unblock_loguru_reconfiguration
+    from mm_logger.loguru_sink import _unblock_loguru_reconfiguration
 
     _unblock_loguru_reconfiguration()
     test = loguru_logger.add(lambda x: print(x))

@@ -1,8 +1,8 @@
 import datetime
+import logging
 import os
 from typing import Any, Literal
 
-import structlog
 from gunicorn.config import Config as GunicornConfig
 from gunicorn.http.message import Request
 from gunicorn.http.wsgi import Response
@@ -17,8 +17,8 @@ class GunicornLogger:
     """
 
     def __init__(self, cfg: GunicornConfig) -> None:
-        self._error_logger: structlog.stdlib.BoundLogger = structlog.get_logger("gunicorn.error")
-        self._access_logger: structlog.stdlib.BoundLogger = structlog.get_logger("gunicorn.access")
+        self._error_logger = logging.getLogger("gunicorn.error")
+        self._access_logger = logging.getLogger("gunicorn.access")
         self.cfg: GunicornConfig = cfg
 
     def __getattr__(self, name: str | Literal["critical", "error", "warning", "info", "debug", "exception", "log"]) -> Any:
@@ -33,10 +33,11 @@ class GunicornLogger:
             status = status.split(None, 1)[0]
 
         duration_ns: float | int = request_time.total_seconds() * 1e9
+        request_time_seconds = "%d.%06d" % (request_time.seconds, request_time.microseconds)
+
         self._access_logger.info(
             "",
-            duration=duration_ns,
-            **{
+            extra={
                 # "http.name": environ["REQUEST_METHOD"],
                 "http.url": environ["RAW_URI"],
                 "http.status_code": status,
@@ -47,8 +48,10 @@ class GunicornLogger:
                 "http.useragent": environ.get("HTTP_USER_AGENT", ""),
                 "logger.pid": os.getpid(),
                 "http.response_length": getattr(resp, "sent", None),
+                "duration": duration_ns,
+                "request_time_seconds": request_time_seconds,
             },
-            request_time_seconds="%d.%06d" % (request_time.seconds, request_time.microseconds),
+
         )
 
     def close_on_exec(self, *args: Any, **kwargs: Any) -> None:

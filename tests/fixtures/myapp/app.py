@@ -1,5 +1,5 @@
 # isort: off
-import mm_logs.logger  # noqa: F401
+import mm_logger.logger  # noqa: F401
 
 import os
 

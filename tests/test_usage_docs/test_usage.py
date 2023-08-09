@@ -4,7 +4,7 @@ import os
 import pytest
 import structlog
 
-from mm_logs.logger import configure_logging
+from mm_logger.logger import configure_logging
 
 
 def test_usage(capsys: pytest.CaptureFixture[str]) -> None:

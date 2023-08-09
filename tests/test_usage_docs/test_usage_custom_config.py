@@ -4,8 +4,8 @@ import pytest
 def test_usage_custom_config(capsys: pytest.CaptureFixture[str]) -> None:
     # <!-- DOC:START -->
     # Setup
-    from mm_logs.logger import configure_logging
-    from mm_logs.settings import MMLogsConfig
+    from mm_logger.logger import configure_logging
+    from mm_logger.settings import MMLogsConfig
 
     # Force colored logging, even if environment variables is set
     log_config = MMLogsConfig(

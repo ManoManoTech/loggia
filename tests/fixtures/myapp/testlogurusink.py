@@ -1,10 +1,9 @@
 import logging
 
-import structlog
 from loguru import logger as loguru_logger
 
-from mm_logs.logger import configure_logging
-from mm_logs.settings import MMLogsConfig
+from mm_logger.logger import configure_logging
+from mm_logger.settings import MMLogsConfig
 
 # # Remove Loguru's default handler and add the custom sink function
 # loguru_logger.remove()

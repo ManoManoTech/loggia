@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from mm_logs.constants import DEFAULT_STDLIB_DICT_CONFIG
-from mm_logs.settings import MMLogsConfig, _log_level_converter, _true_if_debug
+from mm_logger.constants import DEFAULT_STDLIB_DICT_CONFIG
+from mm_logger.settings import MMLogsConfig, _log_level_converter, _true_if_debug
 
 
 # Define some test cases for the _log_level_converter function

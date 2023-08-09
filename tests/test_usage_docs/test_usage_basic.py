@@ -8,7 +8,7 @@ def test_usage_basic(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
 
     # Setup
-    from mm_logs.logger import configure_logging
+    from mm_logger.logger import configure_logging
 
     # One-line setup -- get the default config from environment variables
     configure_logging()

@@ -1,4 +1,4 @@
-"""Constants for the mm_logs package."""
+"""Constants for the mm_logger package."""
 import logging.config
 import re
 from typing import Final
@@ -8,12 +8,16 @@ SAFE_HEADER_ATTRIBUTES: Final[list[str]] = [
     "accept-encoding",
     "accept-language",
     "access-control-allow-origin",
+    "access-control-allow-credentials",
     "cache-control",
     "connection",
-    "content_length",
+    "content-length",
     "content-encoding",
     "content-length",
     "content-type",
+    "content-language",
+    "content-range",
+    "content-disposition",
     "cookie",
     "etag",
     "pragma",
@@ -77,7 +81,11 @@ SETTINGS_PREFIX: Final[str] = "MM_LOGS_"
 DEFAULT_STDLIB_DICT_CONFIG: Final["logging.config._DictConfigArgs"] = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {},
+    "formatters": {
+        "colored": {
+            "class": "mm_logger.stdlib_formatters.pretty_formatter.PrettyFormatter",
+        },
+    },
     "handlers": {
         "default": {
             "class": "logging.StreamHandler",

@@ -3,16 +3,18 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "manomano-logs"
+name = "mm-logger"
 dynamic = ["urls"]
-version = "0.0.3"
-description = "Common logging configurations for ManoMano Python projects using structlog"
+version = "0.1.0"
+description = "Common logging configurations for ManoMano Python projects"
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
-dependencies = ["structlog>=23.1.0"]
+dependencies = [
+    "python-json-logger>=2.0.7",
+]
 requires-python = ">=3.11"
 readme = "README.md"
 license = { text = "Proprietary" }
@@ -27,7 +29,7 @@ rich = ["rich>=13.3.4"]
 [tool.hatch]
 
 [tool.hatch.build]
-include = ["mm_logs"]
+include = ["mm_logger"]
 exclude = []
 # [tool.hatch.version]
 # source = "env"
@@ -37,7 +39,7 @@ allow-direct-references = true
 
 source = "vcs"
 [tool.hatch.build.hooks.vcs]
-version-file = "mm_logs/_version.py"
+version-file = "mm_logger/_version.py"
 [tool.hatch.metadata.hooks.vcs.urls]
 ***REMOVED***
 ***REMOVED***
@@ -62,8 +64,8 @@ env_file = ".env"
 
 [tool.pdm.scripts]
 # Lint
-lint-pylint = { cmd = "pylint mm_logs", help = "Run pylint" }
-lint-mypy = { shell = "mypy mm_logs --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
+lint-pylint = { cmd = "pylint mm_logger", help = "Run pylint" }
+lint-mypy = { shell = "mypy mm_logger --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
 lint-ruff = { cmd = "ruff .", help = "Run ruff linter" }
 lint = { composite = [
   "lint-ruff",
@@ -138,7 +140,7 @@ pythonpath = [
 branch = true
 parallel = true
 omit = ["tests/*", "__pypackages__/*", ".venv/*"]
-source = ["mm_logs"]
+source = ["mm_logger"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]

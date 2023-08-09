@@ -4,16 +4,14 @@ import sys
 from unittest import mock
 
 import pytest
-import structlog
 
-from mm_logs.logger import (
+from mm_logger.logger import (
     _get_logger_config,
-    check_duplicate_processors,
     configure_logging,
     patch_to_add_level,
-    set_excepthook,
+    _set_excepthook,
 )
-from mm_logs.settings import MMLogsConfig, MMLogsConfigPartial
+from mm_logger.settings import MMLogsConfig, MMLogsConfigPartial
 
 
 def test_configure_logging_custom():
@@ -22,7 +20,6 @@ def test_configure_logging_custom():
     logging_config.log_formatter_name = "structured"
     logging_config.log_level = logging.DEBUG
     configure_logging(logging_config)
-    structlog.stdlib.get_logger("test")
     # assert isinstance(logger, structlog.stdlib.BoundLogger)
     # assert logger.isEnabledFor(logging.DEBUG)
 
@@ -32,24 +29,16 @@ custom_config = MMLogsConfig(log_level=logging.DEBUG, log_formatter_name="struct
 
 
 def test_configure_logging():
-    with mock.patch.object(logging.config, "dictConfig") as mock_dict_config, mock.patch.object(structlog, "configure") as mock_configure:
+    with mock.patch.object(logging.config, "dictConfig") as mock_dict_config:
         configure_logging(custom_config)
         assert mock_dict_config.called
-        assert mock_configure.called
 
 
 def test_set_excepthook():
     logger = logging.getLogger("test_logger")
-    set_excepthook(logger)
+    _set_excepthook(logger)
     assert logger is not None
     assert sys.excepthook is not None
-
-
-def test_check_duplicate_processors():
-    logger = logging.getLogger("test_logger")
-    logger.addHandler(logging.StreamHandler())
-    check_duplicate_processors(logger)
-    # The above call should not raise any exceptions
 
 
 def test_patch_to_add_level():
@@ -58,12 +47,9 @@ def test_patch_to_add_level():
     patch_to_add_level(level_number, level_name)
     configure_logging()
     assert logging.getLevelName(level_number) == level_name.upper()
-    assert hasattr(structlog._log_levels, level_name.upper())
-    assert structlog._log_levels._NAME_TO_LEVEL.get(level_name.lower()) == level_number
-    assert structlog._log_levels._LEVEL_TO_NAME.get(level_number) == level_name.lower()
 
     logger = logging.getLogger("test")
-    logger.custom_level("Testing")
+    logger.log(level_number, "Testing")
 
 
 def test_get_logger_config_custom_dict():
@@ -84,7 +70,7 @@ def test_get_logger_config_default():
 
 @pytest.fixture()
 def logger():
-    return structlog.stdlib.get_logger()
+    return logging.get_logger()
 
 
 # def test_check_duplicate_processors_no_duplicates():

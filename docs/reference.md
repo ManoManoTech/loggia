@@ -1,1 +1,1 @@
-::: mm_logs
+::: mm_logger

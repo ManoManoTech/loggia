@@ -9,8 +9,8 @@ from collections.abc import Callable  # noqa: TCH003 # We want all types present
 from copy import deepcopy
 from typing import Any, ClassVar, Final, ForwardRef, TypedDict, Union, Unpack, get_args
 
-from mm_logs.constants import DEFAULT_STDLIB_DICT_CONFIG, SETTINGS_PREFIX
-from mm_logs.utils.dictutils import deep_merge_log_config
+from mm_logger.constants import DEFAULT_STDLIB_DICT_CONFIG, SETTINGS_PREFIX
+from mm_logger.utils.dictutils import deep_merge_log_config
 
 EnvType = str
 DEV: Final[EnvType] = "dev"
@@ -90,6 +90,8 @@ class MMLogsConfig:
     set_excepthook: bool = dataclasses.field(metadata=dict(dyn_default=lambda self: True))
     "Should our logger set the `sys.excepthook`? This is useful for logging uncaught exceptions."
 
+    # XXX sys_breakpointhook too (for non dev/disable+warn)
+
     capture_warnings: bool = dataclasses.field(metadata=dict(dyn_default=lambda self: True))
     "Should our logger capture warnings from the `warnings` module?"
 
@@ -111,7 +113,7 @@ class MMLogsConfig:
     "Run a sanity check of the structlog configuration to make sure no processors are duplicated, in each chain."
 
     debug_disallow_loguru_reconfig: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
-    "Raise if Loguru is reconfigured (eg. by another lib) is loguru capture was enabled with [`capture_loguru`][mm_logs.settings.MMLogsConfig.capture_loguru]."
+    "Raise if Loguru is reconfigured (eg. by another lib) is loguru capture was enabled with [`capture_loguru`][mm_logger.settings.MMLogsConfig.capture_loguru]."
 
     debug_show_extra_args: bool = dataclasses.field(metadata=dict(dyn_default=_true_if_debug))
     "Unused."

@@ -3,7 +3,7 @@ from importlib import reload
 
 import pytest
 
-from mm_logs import logger, structlog_utils
+from mm_logger import logger
 
 os.environ["ENV"] = "test"
 
@@ -14,12 +14,9 @@ def _reload_modules():
     import logging
 
     import loguru
-    import structlog
-    import structlog.stdlib
 
-    import mm_logs.logger
-    import mm_logs.loguru_sink
-    import mm_logs.structlog_utils
+    import mm_logger.logger
+    import mm_logger.loguru_sink
 
     yield
 
@@ -28,17 +25,13 @@ def _reload_modules():
     logging = reload(logging)
     # Reinitialize logging
     logging.basicConfig()
-    mm_logs.loguru_sink._unblock_loguru_reconfiguration()
+    mm_logger.loguru_sink._unblock_loguru_reconfiguration()
 
     loguru.logger.remove()
 
-    structlog = reload(structlog)
-    structlog.stdlib = reload(structlog.stdlib)
-
-    mm_logs = reload(mm_logs)
-    mm_logs.logger = reload(logger)
-    mm_logs.structlog_utils = reload(structlog_utils)
-    mm_logs.loguru_sink = reload(mm_logs.loguru_sink)
+    mm_logger = reload(mm_logger)
+    mm_logger.logger = reload(logger)
+    mm_logger.loguru_sink = reload(mm_logger.loguru_sink)
 
 
 @pytest.fixture(autouse=True)

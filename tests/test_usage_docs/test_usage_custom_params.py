@@ -5,8 +5,8 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
 
-    from mm_logs.logger import configure_logging
-    from mm_logs.settings import MMLogsConfig
+    from mm_logger.logger import configure_logging
+    from mm_logger.settings import MMLogsConfig
 
     # Prepare a configuration
     # Here, debug_show_config will be ignored because it's not a boolean!

@@ -41,7 +41,7 @@ extra:
 copyright: Copyright &copy; Colibri SAS
 
 watch:
-  - mm_logs
+  - mm_logger
   - docs
 
 nav:

@@ -6,9 +6,9 @@ from unittest.mock import patch
 
 import pytest
 
-from mm_logs.constants import DEFAULT_STDLIB_DICT_CONFIG, SETTINGS_PREFIX
-from mm_logs.settings import ActiveMMLogsConfig, MMLogsConfig, _convert, _log_level_converter
-from mm_logs.utils.dictutils import deep_merge_log_config
+from mm_logger.constants import DEFAULT_STDLIB_DICT_CONFIG, SETTINGS_PREFIX
+from mm_logger.settings import ActiveMMLogsConfig, MMLogsConfig, _convert, _log_level_converter
+from mm_logger.utils.dictutils import deep_merge_log_config
 
 # Let's first define the setup and teardown for the tests
 

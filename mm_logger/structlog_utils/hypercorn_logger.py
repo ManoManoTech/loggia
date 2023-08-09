@@ -1,10 +1,10 @@
+from logging import getLogger
 from typing import TYPE_CHECKING
 
-import structlog
 from hypercorn.config import Config
 from hypercorn.logging import Logger
 
-from mm_logs.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
+from mm_logger.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 
 class HypercornLogger(Logger):
-    """Hypercorn logger that uses structlog.
+    """Hypercorn logger that uses standard logging..
 
     From https://gist.github.com/airhorns/c2d34b2c823541fc0b32e5c853aab7e7
     A stripped down version of https://github.com/benoitc/gunicorn/blob/master/gunicorn/glogging.py to provide structlog logging in gunicorn
@@ -21,8 +21,8 @@ class HypercornLogger(Logger):
     """
 
     def __init__(self, cfg: Config):  # pylint: disable=super-init-not-called
-        self.error_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.error")  # type: ignore[assignment]
-        self.access_logger: structlog.stdlib.BoundLogger = structlog.stdlib.get_logger("hypercorn.access")  # type: ignore[assignment]
+        self.error_logger = getLogger("hypercorn.error")  # type: ignore[assignment]
+        self.access_logger = getLogger("hypercorn.access")  # type: ignore[assignment]
         self.cfg = cfg
         self.access_log_format = cfg.access_log_format.replace("%(t)s ", "").lstrip("- ")
 
@@ -48,6 +48,5 @@ class HypercornLogger(Logger):
                 headers["http.response_headers." + key] = value.decode("latin1")
         self.access_logger.info(
             self.access_log_format % atoms,  # noqa: G002
-            **{HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP},
-            **headers,
+            extra={HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP} | headers,
         )
