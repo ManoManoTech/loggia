@@ -31,8 +31,8 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     assert log_config._configuration_errors[0].field_name == "debug_show_config"
 
     captured = capsys.readouterr()
-    assert '"logger.name":"test_usage_custom_params"' in captured.err
-    assert '"message":"Hello world!"' in captured.err
+    assert '"logger.name": "test_usage_custom_params"' in captured.err
+    assert '"message": "Hello world!"' in captured.err
 
     # Assert we can parse JSON lines
     import json

@@ -6,7 +6,8 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Assuming we want a very verbose logger
     from os import environ
-    environ["LOG_LEVEL"] = "TRACE"
+
+    environ["MM_LOGS_LOG_LEVEL"] = "TRACE"
 
     # Setup
     from mm_logger.logger import configure_logging

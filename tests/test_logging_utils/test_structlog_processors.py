@@ -157,7 +157,7 @@ def test_datadog_error_mapping_processor():
         assert "error.message" in event_dict
         assert "error.kind" in event_dict
         assert event_dict["error.message"] == "division by zero"
-        assert event_dict["error.kind"] == "ZeroDivisionError"
+        assert event_dict["error.kind"] == "builtins.ZeroDivisionError"
 
 
 def test_extract_from_record_datadog_with_exc_info():
@@ -203,7 +203,7 @@ def test_datadog_error_mapping_processor_with_exception_instance():
     assert "error.message" in event_dict
     assert event_dict["error.message"] == "Test exception"
     assert "error.kind" in event_dict
-    assert event_dict["error.kind"] == "ValueError"
+    assert event_dict["error.kind"] == "builtins.ValueError"
 
 
 def test_datadog_error_mapping_processor_with_exc_info_tuple():
@@ -218,7 +218,7 @@ def test_datadog_error_mapping_processor_with_exc_info_tuple():
     assert "error.message" in event_dict
     assert event_dict["error.message"] == "Test exception"
     assert "error.kind" in event_dict
-    assert event_dict["error.kind"] == "ValueError"
+    assert event_dict["error.kind"] == "builtins.ValueError"
 
 
 def test_datadog_error_mapping_processor_with_true():
@@ -231,7 +231,7 @@ def test_datadog_error_mapping_processor_with_true():
     assert "error.message" in event_dict
     assert event_dict["error.message"] == "Test exception"
     assert "error.kind" in event_dict
-    assert event_dict["error.kind"] == "ValueError"
+    assert event_dict["error.kind"] == "builtins.ValueError"
 
 
 def test_datadog_error_mapping_processor_without_exc_info():

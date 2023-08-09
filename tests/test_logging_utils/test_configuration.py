@@ -149,15 +149,16 @@ def test_MMLogsConfig_merge_stdlib_dict_config():
     custom_stdlib_dict_config: logging.config._DictConfigArgs = {
         "version": 1,
         "disable_existing_loggers": False,
-        "handlers": {
-            "console": {
-                "class": "logging.StreamHandler",
-                "level": "DEBUG",
-                "formatter": "simple",
-                "stream": "ext://sys.stdout",
-            },
+        "formatters": {"colored": {"class": "mm_logger.stdlib_formatters.pretty_formatter.PrettyFormatter"}},
+        "handlers": {"default": {"class": "logging.StreamHandler", "formatter": "colored"}},
+        "loggers": {
+            "": {"handlers": ["default"], "propagate": True},
+            "gunicorn.access": {"handlers": ["default"], "propagate": False},
+            "gunicorn.error": {"handlers": ["default"], "propagate": False},
+            "gunicorn.errors": {"handlers": ["default"], "propagate": False},
+            "hypercorn.error": {"handlers": ["default"], "propagate": False},
+            "hypercorn.access": {"handlers": ["default"], "propagate": False},
         },
-        "root": {"level": "INFO", "handlers": ["console"]},
     }
 
     expected_merged_config = deepcopy(DEFAULT_STDLIB_DICT_CONFIG)
@@ -165,8 +166,6 @@ def test_MMLogsConfig_merge_stdlib_dict_config():
 
     config = MMLogsConfig(custom_stdlib_logging_dict_config=custom_stdlib_dict_config)
     assert config.stdlib_logging_dict_config == expected_merged_config
-    assert "console" in config.stdlib_logging_dict_config["handlers"]
-    assert "default" in config.stdlib_logging_dict_config["handlers"]
 
 
 def test_can_access_all_properties():

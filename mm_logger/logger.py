@@ -7,8 +7,8 @@ import sys
 from typing import TYPE_CHECKING, Any, Final
 
 from mm_logger.settings import ActiveMMLogsConfig, LoggerConfigurationError, MMLogsConfig, MMLogsConfigPartial
+from mm_logger.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
 from mm_logger.utils.dictutils import deep_merge_log_config
-from mm_logger.stdlib_formatters.json_formatter import CustomJsonFormatter, CustomJsonEncoder
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
@@ -28,6 +28,7 @@ def patch_to_add_level(level_number: int, level_name: str) -> None:
     level_name_upper = level_name.upper()
     level_name_lower = level_name.lower()
     logging.addLevelName(level_number, level_name_upper)
+
 
 patch_to_add_level(5, "trace")
 patch_to_add_level(25, "success")
@@ -104,10 +105,10 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
 
     logger = logging.getLogger()
     if mm_logger_config.debug_show_config:
-        logger.debug("Logging configured", config=mm_logger_config)
+        logger.debug("Logging configured", extra=dict(config=mm_logger_config))
 
     if len(mm_logger_config._configuration_errors) > 0:
-        logger.error("Logging configured with errors", errors=mm_logger_config._configuration_errors)
+        logger.error("Logging configured with errors", extra=dict(errors=mm_logger_config._configuration_errors))
 
     return mm_logger_config
 
