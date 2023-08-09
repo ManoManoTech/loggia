@@ -10,11 +10,11 @@ import sys
 import traceback
 from collections.abc import Iterable, Mapping
 from logging import Logger, LogRecord
-from types import TracebackType, FrameType
+from types import FrameType, TracebackType
 from typing import Any, Union
 
-from structlog.types import EventDict
 from structlog.processors import CallsiteParameterAdder
+from structlog.types import EventDict
 
 try:
     import ddtrace
@@ -156,6 +156,8 @@ class RemoveKeysProcessor:
 
 
 class RemoveKeysStartingWithProcessor:
+    """Removes keys from the event dict, if they start with the given prefix."""
+
     def __init__(self, keys_prefix: Iterable[str]) -> None:
         self.keys_prefix = frozenset(keys_prefix)
 
@@ -198,8 +200,7 @@ class DataDogTraceInjectionProcessor:
 def _find_first_app_frame_and_name(
     additional_ignores: list[str] | None = None,
 ) -> tuple[FrameType, str]:
-    """
-    Remove all intra-structlog calls and return the relevant app frame.
+    """Remove all intra-structlog calls and return the relevant app frame.
 
     :param additional_ignores: Additional names with which the first frame must
         not start.
@@ -219,9 +220,13 @@ def _find_first_app_frame_and_name(
 
 
 class CallsiteParameterAdderWithStacklevel(CallsiteParameterAdder):
-    """ZOR"""
+    """ZOR."""
+
     def __call__(
-        self, logger: logging.Logger, name: str, event_dict: EventDict
+        self,
+        logger: logging.Logger,
+        name: str,
+        event_dict: EventDict,
     ) -> EventDict:
         record: logging.LogRecord | None = event_dict.get("_record")
         from_structlog: bool | None = event_dict.get("_from_structlog")
@@ -229,9 +234,7 @@ class CallsiteParameterAdderWithStacklevel(CallsiteParameterAdder):
         # then the callsite parameters of the record will not be correct.
         if record is not None and not from_structlog:
             for mapping in self._record_mappings:
-                event_dict[mapping.event_dict_key] = record.__dict__[
-                    mapping.record_attribute
-                ]
+                event_dict[mapping.event_dict_key] = record.__dict__[mapping.record_attribute]
         else:
             depth = 1
             if "stacklevel" in event_dict:

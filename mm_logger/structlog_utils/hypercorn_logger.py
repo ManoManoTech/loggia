@@ -1,3 +1,4 @@
+import logging
 from logging import getLogger
 from typing import TYPE_CHECKING
 
@@ -20,9 +21,12 @@ class HypercornLogger(Logger):
     Modified from http://stevetarver.github.io/2017/05/10/python-falcon-logging.html.
     """
 
+    error_logger: logging.Logger
+    access_logger: logging.Logger
+
     def __init__(self, cfg: Config):  # pylint: disable=super-init-not-called
-        self.error_logger = getLogger("hypercorn.error")  # type: ignore[assignment]
-        self.access_logger = getLogger("hypercorn.access")  # type: ignore[assignment]
+        self.error_logger = getLogger("hypercorn.error")
+        self.access_logger = getLogger("hypercorn.access")
         self.cfg = cfg
         self.access_log_format = cfg.access_log_format.replace("%(t)s ", "").lstrip("- ")
 

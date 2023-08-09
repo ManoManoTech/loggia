@@ -1,8 +1,7 @@
 from __future__ import annotations
 
-from collections.abc import Mapping
 import logging
-from typing import Literal
+from typing import Any, Literal
 
 from mm_logger.constants import PALETTES
 from mm_logger.utils.colorsutils import ansi_end, ansi_fg
@@ -13,7 +12,7 @@ from mm_logger.utils.colorsutils import ansi_end, ansi_fg
 class PrettyFormatter(logging.Formatter):
     """A custom formatter for logging that uses colors."""
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._std_fields = set(logging.makeLogRecord({}).__dict__.keys())
 

@@ -7,9 +7,9 @@ import pytest
 
 from mm_logger.logger import (
     _get_logger_config,
+    _set_excepthook,
     configure_logging,
     patch_to_add_level,
-    _set_excepthook,
 )
 from mm_logger.settings import MMLogsConfig, MMLogsConfigPartial
 

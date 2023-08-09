@@ -10,7 +10,6 @@ from copy import deepcopy
 from typing import Any, ClassVar, Final, ForwardRef, TypedDict, Union, Unpack, get_args
 
 from mm_logger.constants import DEFAULT_STDLIB_DICT_CONFIG, SETTINGS_PREFIX
-from mm_logger.utils.dictutils import deep_merge_log_config
 
 EnvType = str
 DEV: Final[EnvType] = "dev"

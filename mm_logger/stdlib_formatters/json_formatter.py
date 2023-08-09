@@ -2,8 +2,6 @@ from __future__ import annotations
 
 import os
 import re
-from contextlib import suppress
-from os import getenv
 from socket import socket
 from typing import TYPE_CHECKING, Any
 
@@ -26,7 +24,6 @@ if DD_TRACE_ENABLED:
 GUNICORN_KEY_RE = re.compile("{([^}]+)}")
 
 
-
 class CustomJsonEncoder(JsonEncoder):
     """Custom JSON encoder for xSGI server logs."""
 
@@ -37,9 +34,11 @@ class CustomJsonEncoder(JsonEncoder):
 
 
 class CustomJsonFormatter(JsonFormatter):
+    """Custom JSON formatter for MM logs."""
+
     RESERVED_ATTRS = RESERVED_ATTRS
 
-    def add_fields(  # noqa: PLR0915
+    def add_fields(
         self,
         log_record: dict[str, Any],
         record: LogRecord,

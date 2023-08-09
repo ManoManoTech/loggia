@@ -12,9 +12,9 @@ If you use primarily use loguru, you should consider using logging or structlog 
 """
 from __future__ import annotations
 
+from logging import getLogger, makeLogRecord
 from typing import TYPE_CHECKING, Any, NoReturn, cast
 
-from logging import getLogger, makeLogRecord
 from loguru import logger as loguru_logger
 
 if TYPE_CHECKING:
@@ -69,16 +69,14 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     # if "module" in record:
     #     attributes
 
-
-
-    loguru_extra: dict = cast(dict, record.pop("extra", {}))
+    loguru_extra = cast(dict[str, Any], record.pop("extra", {}))
     record_dict = dict(__loguru_record=record) | loguru_extra | attributes
 
     # exc_info = extra.pop("exc_info", None)
     # XXX there are more forbidden keys to extra, see logging/__init__.py:1606
 
-    record = makeLogRecord(record_dict)
-    logger.handle(record)
+    log_record = makeLogRecord(record_dict)
+    logger.handle(log_record)
 
 
 def configure_loguru(cfg: MMLogsConfig) -> None:

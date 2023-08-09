@@ -4,15 +4,13 @@ from __future__ import annotations
 import logging
 import logging.config
 import sys
-from typing import TYPE_CHECKING, Any, Final
+from typing import TYPE_CHECKING, Any
 
 from mm_logger.settings import ActiveMMLogsConfig, LoggerConfigurationError, MMLogsConfig, MMLogsConfigPartial
 from mm_logger.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
 from mm_logger.utils.dictutils import deep_merge_log_config
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Sequence
-    from inspect import Traceback
     from types import TracebackType
 
 
@@ -26,7 +24,7 @@ def patch_to_add_level(level_number: int, level_name: str) -> None:
     # pyright: reportGeneralTypeIssues=false
     # ruff: noqa: SLF001
     level_name_upper = level_name.upper()
-    level_name_lower = level_name.lower()
+    level_name.lower()
     logging.addLevelName(level_number, level_name_upper)
 
 
@@ -56,7 +54,7 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
     # Merge the custom stdlib logging config with the default
     if mm_logger_config.custom_stdlib_logging_dict_config is not None:
         mm_logger_config.stdlib_logging_dict_config = deep_merge_log_config(
-            mm_logger_config.stdlib_logging_dict_config, mm_logger_config.custom_stdlib_logging_dict_config
+            mm_logger_config.stdlib_logging_dict_config, mm_logger_config.custom_stdlib_logging_dict_config,
         )
 
     ActiveMMLogsConfig.store(mm_logger_config)

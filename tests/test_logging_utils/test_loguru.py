@@ -6,8 +6,8 @@ This is just a manual test helper for now.
 """
 from __future__ import annotations
 
-import logging
 import json
+import logging
 
 import pytest
 from loguru import logger as loguru_logger
