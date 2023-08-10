@@ -5,10 +5,10 @@
 - [x] Properly configured standard logger either in `pretty` or `structured` mode
 - [x] Basic interop with `loguru`, with `loguru` piping into standard logger
 - [x] First class support for Datadog standard log attributes
-- [ ] Preliminary concept of presets
+- [x] Preliminary concept of presets
 - [ ] (MM-Internal) Artifactory release
 - [x] Most of the code shown in documentation is derived from the test suite
-- [ ] Move Datadog-specific reencoding into a dedicated filter
+- [x] Move Datadog-specific reencoding into a dedicated filter
 - [ ] Move hypercorn/gunicorn reencoding into a dedicated filter
 
 ## 0.2.0

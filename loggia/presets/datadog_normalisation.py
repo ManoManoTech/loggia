@@ -1,12 +1,11 @@
-from logging import LogRecord
 import sys
 import traceback
-from types import FrameType, TracebackType
+from logging import LogRecord
+from types import TracebackType
 from typing import Any, Union
 
 from loggia.base_preset import BasePreset
 from loggia.conf import LoggerConfiguration
-import loggia.utils.logrecordutils as lr
 
 ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
 

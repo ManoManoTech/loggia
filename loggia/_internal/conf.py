@@ -1,12 +1,8 @@
 from collections.abc import Callable
 from os import environ
-from typing import TYPE_CHECKING, NamedTuple, TypeVar, Any
+from typing import Any, NamedTuple, TypeVar
 
 import loggia._internal.env_parsers as ep
-
-if TYPE_CHECKING:
-    from loggia.conf import LoggerConfiguration
-
 
 EnvParser = Callable[[str], list[list[str]]]
 
@@ -29,7 +25,7 @@ def is_truthy_string(s: str) -> bool:
 class EnvironmentLoader:
     _parsers: dict[str, EnvConfigurable]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self._parsers = {}
 
     def register(self,

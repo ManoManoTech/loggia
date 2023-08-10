@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Literal, TypeVar
+from typing import Any, Literal
 
 from loggia.constants import PALETTES
 from loggia.utils.colorsutils import ansi_end, ansi_fg
-from loggia.utils.logrecordutils import popattr, extra_fields
+from loggia.utils.logrecordutils import extra_fields, popattr
 
 # pylint: disable=consider-using-f-string
 

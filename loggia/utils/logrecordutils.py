@@ -1,6 +1,6 @@
 import logging
-from typing import TypeVar, Generator, Any
-
+from collections.abc import Generator
+from typing import Any, TypeVar
 
 STANDARD_FIELDS = set(logging.makeLogRecord({}).__dict__.keys())
 

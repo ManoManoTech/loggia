@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from json import JSONEncoder
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -13,6 +12,7 @@ from loggia.utils.loaderutils import import_all_files
 
 if TYPE_CHECKING:
     import logging.config
+    from json import JSONEncoder
 
 
 env = EnvironmentLoader()
@@ -35,7 +35,7 @@ def get_default_presets() -> list[type[BasePreset]]:
 class LoggerConfiguration:
     """Environment-aware configuration container for loggia."""
 
-    _dictconfig: "logging.config._DictConfigArgs"
+    _dictconfig: logging.config._DictConfigArgs
     setup_excepthook: bool = False
     capture_warnings: bool = False
     capture_loguru: bool = True
