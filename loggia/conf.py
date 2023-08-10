@@ -12,6 +12,7 @@ if TYPE_CHECKING:
 
 class LoggerConfiguration:
     """Environment-aware configuration container for loggia."""
+
     _dictconfig: "logging.config._DictConfigArgs"
     setup_excepthook: bool = False
     capture_warnings: bool = False
@@ -29,14 +30,14 @@ class LoggerConfiguration:
         self._dictconfig = deepcopy(BASE_DICTCONFIG)
 
     @from_env("LOGGIA_LEVEL")
-    def set_general_level(self, level: int|str) -> None:
+    def set_general_level(self, level: int | str) -> None:
         """Set the general, or default, log level."""
         assert "loggers" in self._dictconfig  # noqa: S101
         self._dictconfig["loggers"][""]["level"] = level
 
     # LOGGIA_FORCE_LEVEL=numba:INFO,numpy:TRACE,...
     @from_env("LOGGIA_FORCE_LEVEL", parser=ep.comma_colon)
-    def set_logger_level(self, logger_name: str, level: int|str) -> None:
+    def set_logger_level(self, logger_name: str, level: int | str) -> None:
         """Set a specific log level for a specific logger.
 
         This allows you to fine tune verbosity according to your needs.
@@ -76,7 +77,7 @@ class LoggerConfiguration:
 
     # LOGGIA_JSON_ENCODER=xxx
     @from_env("LOGGIA_JSON_ENCODER")
-    def set_json_encoder(self, encoder: type[JSONEncoder]|str) -> None:
+    def set_json_encoder(self, encoder: type[JSONEncoder] | str) -> None:
         raise NotImplementedError
 
     @from_env("LOGGIA_CAPTURE_LOGURU")
@@ -101,12 +102,19 @@ class LoggerConfiguration:
 
     @from_env("LOGGIA_SET_EXCEPTHOOK")
     def set_excepthook(self, enabled: str) -> None:
+        """Explicitely disable the excepthook.
+
+        When set to true, Loggia will attempt to log unhandled exceptions.
+        """
         self.setup_excepthook = is_truthy_string(enabled)
 
     @from_env("LOGGIA_CAPTURE_WARNINGS")
     def set_capture_warnings(self, enabled: str) -> None:
-        self.setup_excepthook = is_truthy_string(enabled)
+        """Explicitely enable the capture of warnings.
 
+        When set to true, Loggia will attempt to log warnings.
+        """
+        self.capture_warnings = is_truthy_string(enabled)
 
 
 __all__ = ["LoggerConfiguration"]

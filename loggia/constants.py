@@ -75,9 +75,6 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
 """A dictionary of log levels and their color palettes."""
 
 
-SETTINGS_PREFIX: Final[str] = "MM_LOGS_"
-
-
 BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
     "version": 1,
     "disable_existing_loggers": False,

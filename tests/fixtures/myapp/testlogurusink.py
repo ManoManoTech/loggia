@@ -2,8 +2,8 @@ import logging
 
 from loguru import logger as loguru_logger
 
-from loggia.logger import configure_logging
-from loggia.settings import MMLogsConfig
+from loggia.conf import LoggerConfiguration
+from loggia.logger import initialize
 
 # # Remove Loguru's default handler and add the custom sink function
 # loguru_logger.remove()
@@ -24,8 +24,8 @@ from loggia.settings import MMLogsConfig
 #     logger_factory=structlog.stdlib.LoggerFactory(),
 #     wrapper_class=structlog.stdlib.BoundLogger,
 # )
-config = MMLogsConfig(capture_loguru=True)
-configure_logging(config)
+config = LoggerConfiguration({"LOGGIA_CAPTURE_LOGURU": "true"})
+initialize(config)
 # Test logging with Loguru
 loguru_logger.debug("Debug log from Loguru", argument1="test", argument2="test2")
 loguru_logger.info("Info log from Loguru")

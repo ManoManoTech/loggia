@@ -85,7 +85,7 @@ def configure_loguru(cfg: LoggerConfiguration) -> None:
     Remove Loguru's default handler and pass all messages to Structlog.
 
     Args:
-        cfg (MMLogsConfig): Your configuration.
+        cfg (LoggerConfiguration): Your configuration.
     """
     loguru_logger.remove()
     loguru_logger.add(_loguru_to_std_sink, level="INFO")  # XXX NODEPLOY get defaut log level

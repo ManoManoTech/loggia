@@ -6,10 +6,7 @@
 
 By default, the logger outputs JSON structured logs, and it is configured to work with DataDog.
 
-If you want pretty logs, you can set either:
-
-- `ENV=dev` or `MM_LOGS_ENV=dev`
-- `MM_LOGS_LOG_FORMATTER_NAME=colored`
+If you want pretty logs, you can set `LOGGIA_FORMATTER=pretty`.
 
 !!! warning
     This library will not load `.env` files for you.
@@ -44,8 +41,6 @@ You can configure it using environment variables. XXX LINK TO CONFIGURATION
 
 You probably want to configure the standard Python logger as well, eg, to change the log level for some libraries.
 
-Your custom configuration passed with [`custom_stdlib_logging_dict_config`][loggia.settings.MMLogsConfig.custom_stdlib_logging_dict_config] will be merged with the default one.
-
 ```python
 {%
     include "../tests/test_usage_docs/test_usage_custom_config.py"
@@ -66,7 +61,7 @@ This library will automatically add to new log levels to match Loguru configurat
 - `TRACE` (level 5)
 - `SUCCESS` (level 25)
 
-The library also provides a new parameter [capture_loguru][loggia.settings.MMLogsConfig.capture_loguru] that will patch Loguru to use our logger:
+The library also provides a new parameter [capture_loguru][loggia.conf.LoggerConfiguration.set_loguru_capture] that will patch Loguru to use our logger:
 
 You should use it if you or your dependencies use Loguru.
 
