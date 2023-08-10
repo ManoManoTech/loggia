@@ -117,3 +117,4 @@ BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
         "hypercorn.access": {"handlers": ["default"], "propagate": False},
     },
 }
+"""The base dictconfig for loggia."""

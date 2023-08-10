@@ -51,6 +51,7 @@ def prelogger_error(msg, exc=None):
 
 
 def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
+    """Initialize the logging system."""
     if conf is None:
         conf = LoggerConfiguration()
     if isinstance(conf, Mapping):
