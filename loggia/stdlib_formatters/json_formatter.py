@@ -34,7 +34,7 @@ class CustomJsonEncoder(JsonEncoder):
 
 
 class CustomJsonFormatter(JsonFormatter):
-    """Custom JSON formatter for MM logs."""
+    """Custom JSON formatter for Loggia."""
 
     RESERVED_ATTRS = RESERVED_ATTRS
 
