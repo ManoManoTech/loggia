@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
     from loguru import Record as LoguruRecord
 
-    from mm_logger.conf import LoggerConfiguration
+    from loggia.conf import LoggerConfiguration
 
 
 # Custom sink function for Loguru to pass log messages to Structlog

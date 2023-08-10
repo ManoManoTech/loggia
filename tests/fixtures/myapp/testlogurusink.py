@@ -2,8 +2,8 @@ import logging
 
 from loguru import logger as loguru_logger
 
-from mm_logger.logger import configure_logging
-from mm_logger.settings import MMLogsConfig
+from loggia.logger import configure_logging
+from loggia.settings import MMLogsConfig
 
 # # Remove Loguru's default handler and add the custom sink function
 # loguru_logger.remove()

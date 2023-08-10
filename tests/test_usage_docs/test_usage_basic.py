@@ -7,10 +7,10 @@ def test_usage_basic(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
 
     # Setup
-    from mm_logger.logger import initialize
+    from loggia.logger import initialize
 
     # One-line setup -- get the default config from environment variables
-    initialize({"MM_LOGGER_FORMATTER": "pretty"})
+    initialize({"LOGGIA_FORMATTER": "pretty"})
 
     # Use just like the standard logger
     import logging

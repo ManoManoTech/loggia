@@ -12,14 +12,14 @@ import logging
 import pytest
 from loguru import logger as loguru_logger
 
-from mm_logger.logger import initialize
-from mm_logger.conf import LoggerConfiguration
+from loggia.logger import initialize
+from loggia.conf import LoggerConfiguration
 
 # ruff: noqa: T201
 
 
 def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
-    lc = LoggerConfiguration({"MM_LOGGER_CAPTURE_LOGURU": "OUI"})
+    lc = LoggerConfiguration({"LOGGIA_CAPTURE_LOGURU": "OUI"})
     initialize(lc)
     loguru_logger.info("test info")
     captured = capsys.readouterr()
@@ -76,7 +76,7 @@ def test_disallow_loguru_reconfig():
     with pytest.raises(RuntimeError):
         loguru_logger.add(lambda x: print(x))
 
-    from mm_logger.loguru_sink import _unblock_loguru_reconfiguration
+    from loggia.loguru_sink import _unblock_loguru_reconfiguration
 
     _unblock_loguru_reconfiguration()
     test = loguru_logger.add(lambda x: print(x))

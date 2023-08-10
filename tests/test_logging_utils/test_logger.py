@@ -5,8 +5,8 @@ from unittest import mock
 
 import pytest
 
-from mm_logger.conf import LoggerConfiguration as LC
-from mm_logger.logger import (
+from loggia.conf import LoggerConfiguration as LC
+from loggia.logger import (
     _set_excepthook,
     initialize,
     patch_to_add_level,

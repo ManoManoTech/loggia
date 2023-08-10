@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from hypercorn.config import Config
 from hypercorn.logging import Logger
 
-from mm_logger.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
+from loggia.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 
 if TYPE_CHECKING:
     from collections.abc import Mapping

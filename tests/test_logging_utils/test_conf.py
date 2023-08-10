@@ -5,9 +5,9 @@ from unittest.mock import patch
 
 import pytest
 
-from mm_logger.conf import LoggerConfiguration as LC
-from mm_logger._internal.conf import apply_env
-from mm_logger.constants import BASE_DICTCONFIG
+from loggia.conf import LoggerConfiguration as LC
+from loggia._internal.conf import apply_env
+from loggia.constants import BASE_DICTCONFIG
 # Let's first define the setup and teardown for the tests
 
 
@@ -41,13 +41,13 @@ def test_log_level_setting():
 
 def test_log_level_setting_through_env():
     try:
-        os.environ["MM_LOGGER_LEVEL"] = "CRITICAL"
-        os.environ["MM_LOGGER_FORCE_LEVEL"] = "numba:WARNING,numpy:DEBUG"
+        os.environ["LOGGIA_LEVEL"] = "CRITICAL"
+        os.environ["LOGGIA_FORCE_LEVEL"] = "numba:WARNING,numpy:DEBUG"
         conf = LC()
         assert conf._dictconfig["loggers"][""]["level"] == "CRITICAL"
         assert conf._dictconfig["loggers"]["numba"]["level"] == "WARNING"
         assert conf._dictconfig["loggers"]["numpy"]["level"] == "DEBUG"
         assert "numba" not in BASE_DICTCONFIG["loggers"], "deepcopy wasnt done"
     finally:
-        del os.environ["MM_LOGGER_LEVEL"]
-        del os.environ["MM_LOGGER_FORCE_LEVEL"]
+        del os.environ["LOGGIA_LEVEL"]
+        del os.environ["LOGGIA_FORCE_LEVEL"]

@@ -3,7 +3,7 @@ from importlib import reload
 
 import pytest
 
-from mm_logger import logger
+from loggia import logger
 
 os.environ["ENV"] = "test"
 
@@ -15,8 +15,8 @@ def _reload_modules():
 
     import loguru
 
-    import mm_logger.logger
-    import mm_logger.loguru_sink
+    import loggia.logger
+    import loggia.loguru_sink
 
     yield
 
@@ -25,13 +25,13 @@ def _reload_modules():
     logging = reload(logging)
     # Reinitialize logging
     logging.basicConfig()
-    mm_logger.loguru_sink._unblock_loguru_reconfiguration()
+    loggia.loguru_sink._unblock_loguru_reconfiguration()
 
     loguru.logger.remove()
 
-    mm_logger = reload(mm_logger)
-    mm_logger.logger = reload(logger)
-    mm_logger.loguru_sink = reload(mm_logger.loguru_sink)
+    loggia = reload(loggia)
+    loggia.logger = reload(logger)
+    loggia.loguru_sink = reload(loggia.loguru_sink)
 
 
 @pytest.fixture(autouse=True)

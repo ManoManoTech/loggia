@@ -1,62 +1,39 @@
-# MM Logs Python
+# Loggia
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/) ![Python 3.11](https://img.shields.io/badge/python-3.11-blue?style=flat) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 
 ## Objective
 
-The objective of this package is to provide a simple and standard way to configure logging in Python projects, using the standard `logging` module, and compatible with loguru.
-We try to make it as simple as possible, while still providing a good default configuration, that can be customized.
+The objective of this package is to provide a simple and standard way to configure logging in Python projects, using the standard `logging` module, and compatible with [loguru](https://loguru.readthedocs.io/en/stable/index.html).
 
-We also try to solve some commons gotchas with structured logging in Python, like:
+We aim for a batteries-included, no configuration required, delightful out-of-the box experience.
 
-- configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
-- using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
-- configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
-
+The bundled configuration is opinionated and suits our purposes well, but we recognize your opinion will differ and provide various mechanisms of increasing complexity to tune logging to your liking.
 
 !!! warning
-    The package is still in alpha, and we are open to suggestions and contributions.
+    While this package is in an early 0.x release, it's built upon years of
+    development and production usage in various projects.
 
-    **⚠️ Repository name and interfaces are subject to change.**
-
-## Code standards
-
-We try to follow the best standards. As such, the code should be as typed as possible.
-When only support Python 3.11+, so we can use the latest features.
-
-
+    Loggia as a logging configuration bundle is young, but the configuration
+    itself is what we most enjoyed working with for some time now.
 
 ## Usage
 
 ***REMOVED***
 2. Read the [Usage](docs/usage.md) docs
 
-## Roadmap
+## Features
 
-- [ ] Move to the proper repository
-- [ ] First Artifactory release
-- [ ] Better testing (unit tests, integration tests, e2e tests)
-- [ ] Better documentation
-- [ ] Automated testing of documentation
-- [ ] Review sys.excepthook
-  - Explicit is better than implicit: do not use sys.excepthook by default
-  - Check sys.excepthook with tools like sentry, datadog, loguru...
-  - Can we detect another sys.excepthook?
-  - Check [Datadog patch](https://github.com/DataDog/dd-trace-py/pull/1307/files)
-  - Check with ariflow, scrappy, django, click
+- Delightful standard logging configuration in `pretty` or `structured` mode
+- Compatibility with `loguru` (WIP) - you can keep using Loguru's API as much as you like or need it, while Loggia takes care of all the other standard-logging based loggers.
+- configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
+- using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
+- configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
 
 
-Python logging guidelines:
+## Code standards
 
-- Check the common guidelines!
-- Do not use custom levels in production (use the standard ones)
-- If you need a trace level, its level number should be 5
-- XXX Should we map non standard levels to standard ones for structured logging?
-- You should use MM-utils for logging
-  - You may use any other logging tool, or make a custom configuration from scratch, but you must follow the guidelines (and thus, have a structured logging)
-  - Note: MM utils logger is already configured with logging + loguru, with all the required attributes for ManoMano's use of DataDog.
-    - It also comes with configurations ready for Hypercorn, Gunicorn.
-    - XXX It supports ddtrace
+This is currently a very typed Python 3.11 codebase, with a various assortments
+of linters.
 
-
-
+We plan on retrofitting support for 3.10 and possibly 3.9 i.e. we will endeavor to support either the last 3 or 4 stable Python releases.

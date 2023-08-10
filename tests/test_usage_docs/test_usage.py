@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from mm_logger.logger import initialize
+from loggia.logger import initialize
 
 
 def test_usage(capsys: pytest.CaptureFixture[str]) -> None:

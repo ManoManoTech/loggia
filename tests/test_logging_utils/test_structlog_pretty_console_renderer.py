@@ -1,6 +1,6 @@
 
-from mm_logger.constants import COLORS, PALETTES
-from mm_logger.utils.colorsutils import html_to_triple_dec
+from loggia.constants import COLORS, PALETTES
+from loggia.utils.colorsutils import html_to_triple_dec
 
 # pyright: reportUnusedExpression=false
 

@@ -44,7 +44,7 @@ You can configure it using environment variables. XXX LINK TO CONFIGURATION
 
 You probably want to configure the standard Python logger as well, eg, to change the log level for some libraries.
 
-Your custom configuration passed with [`custom_stdlib_logging_dict_config`][mm_logger.settings.MMLogsConfig.custom_stdlib_logging_dict_config] will be merged with the default one.
+Your custom configuration passed with [`custom_stdlib_logging_dict_config`][loggia.settings.MMLogsConfig.custom_stdlib_logging_dict_config] will be merged with the default one.
 
 ```python
 {%
@@ -66,7 +66,7 @@ This library will automatically add to new log levels to match Loguru configurat
 - `TRACE` (level 5)
 - `SUCCESS` (level 25)
 
-The library also provides a new parameter [capture_loguru][mm_logger.settings.MMLogsConfig.capture_loguru] that will patch Loguru to use our logger:
+The library also provides a new parameter [capture_loguru][loggia.settings.MMLogsConfig.capture_loguru] that will patch Loguru to use our logger:
 
 You should use it if you or your dependencies use Loguru.
 
@@ -93,11 +93,11 @@ The logger are already configured for DataDog, and they support JSON structured 
 
 ### Hypercorn
 
-Use [HypercornLogger][mm_logger.structlog_utils.hypercorn_logger.HypercornLogger] as the logger class.
+Use [HypercornLogger][loggia.structlog_utils.hypercorn_logger.HypercornLogger] as the logger class.
 
 ### Gunicorn
 
-Use [GunicornLogger][mm_logger.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class.
+Use [GunicornLogger][loggia.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class.
 
 ## Configure the standard logger
 

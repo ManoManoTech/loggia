@@ -3,8 +3,8 @@ from __future__ import annotations
 import logging
 from typing import Literal, Any, TypeVar
 
-from mm_logger.constants import PALETTES
-from mm_logger.utils.colorsutils import ansi_end, ansi_fg
+from loggia.constants import PALETTES
+from loggia.utils.colorsutils import ansi_end, ansi_fg
 
 # pylint: disable=consider-using-f-string
 

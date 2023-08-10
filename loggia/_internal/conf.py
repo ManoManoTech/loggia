@@ -2,10 +2,10 @@ from collections.abc import Callable
 from os import environ
 from typing import TYPE_CHECKING, NamedTuple, Any
 
-import mm_logger._internal.env_parsers as ep
+import loggia._internal.env_parsers as ep
 
 if TYPE_CHECKING:
-    from mm_logger.conf import LoggerConfiguration
+    from loggia.conf import LoggerConfiguration
 
 
 EnvParser = Callable[[str], list[list[str]]]
@@ -21,7 +21,7 @@ _ENV_PARSERS: dict[str, EnvConfigurable] = {}
 
 FALSY_STRINGS={"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "BY CHTULU, NO!"}
 def is_truthy_string(s: str) -> bool:
-    if s and s not in FALSY_STRINGS:
+    if s and s.upper() not in FALSY_STRINGS:
         return True
     return False
 

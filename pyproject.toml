@@ -3,10 +3,10 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "mm-logger"
+name = "loggia"
 dynamic = ["urls"]
 version = "0.1.0"
-description = "Common logging configurations for ManoMano Python projects"
+description = "A convenient logging configuration manager for Python's standard logging library and Loguru."
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },

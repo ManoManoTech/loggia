@@ -1,7 +1,7 @@
 ---
-site_name: MM Logs Python
+site_name: Loggia
 ***REMOVED***
-repo_name: gabriel.dugny/mm-utils-python
+repo_name: component-python/pkgs/loggia
 ***REMOVED***
 theme:
   name: "material"
@@ -41,15 +41,16 @@ extra:
 copyright: Copyright &copy; Colibri SAS
 
 watch:
-  - mm_logger
+  - loggia
   - docs
 
 nav:
-  - Readme: index.md
+  - Intro: index.md
   - Usage and Reference:
       - Config: config.md
       - Usage: usage.md
       - Reference: reference.md
+  - Roadmap: roadmap.md
 
 markdown_extensions:
   - abbr

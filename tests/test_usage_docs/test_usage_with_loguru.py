@@ -5,16 +5,16 @@ import pytest
 def test_usage_with_loguru(capsys: pytest.CaptureFixture[str]):
     import loguru
 
-    from mm_logger.loguru_sink import _unblock_loguru_reconfiguration
+    from loggia.loguru_sink import _unblock_loguru_reconfiguration
 
     # If another test did not properly teardown, we need to unblock loguru
     _unblock_loguru_reconfiguration()
     # <!-- DOC:START -->
     # Setup
-    from mm_logger.logger import initialize
+    from loggia.logger import initialize
 
     # Force colored logging, even if environment variables is set
-    initialize({"MM_LOGGER_FORMATTER": "pretty"})
+    initialize({"LOGGIA_FORMATTER": "pretty"})
 
     # Use standard logger
     import logging

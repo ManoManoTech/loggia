@@ -7,8 +7,8 @@ import logging.config
 import sys
 from typing import TYPE_CHECKING, Any
 
-from mm_logger.stdlib_formatters.json_formatter import CustomJsonFormatter, CustomJsonEncoder
-from mm_logger.conf import LoggerConfiguration
+from loggia.stdlib_formatters.json_formatter import CustomJsonFormatter, CustomJsonEncoder
+from loggia.conf import LoggerConfiguration
 
 
 if TYPE_CHECKING:
@@ -63,7 +63,7 @@ def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
     assert "formatters" in conf._dictconfig  # noqa: S101
     conf._dictconfig["formatters"]["structured"] = _build_json_formatter()
 
-    if conf.set_excepthook:
+    if conf.setup_excepthook:
         _set_excepthook(logging.getLogger())
 
     # XXX sys.unraisablehook
@@ -77,7 +77,7 @@ def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
 
     if conf.capture_loguru:
         try:
-            from mm_logger.loguru_sink import configure_loguru
+            from loggia.loguru_sink import configure_loguru
             configure_loguru(conf)
         except ImportError as e:
             prelogger_error("Failed to configure loguru! Is is installed?", e)

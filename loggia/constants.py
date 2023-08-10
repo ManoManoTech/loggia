@@ -1,4 +1,4 @@
-"""Constants for the mm_logger package."""
+"""Constants for the loggia package."""
 import logging.config
 import re
 from typing import Final
@@ -84,7 +84,7 @@ BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
     "formatters": {
         "structured": "!!! programatically set in logger.py !!!",
         "pretty": {
-            "class": "mm_logger.stdlib_formatters.pretty_formatter.PrettyFormatter",
+            "class": "loggia.stdlib_formatters.pretty_formatter.PrettyFormatter",
         },
     },
     "handlers": {

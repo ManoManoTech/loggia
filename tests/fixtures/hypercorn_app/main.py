@@ -2,8 +2,8 @@ from hypercorn.asyncio import serve
 from hypercorn.config import Config
 
 from hypercorn_app.app import app
-from mm_logger.logger import configure_logging
-from mm_logger.structlog_utils.hypercorn_logger import HypercornLogger
+from loggia.logger import configure_logging
+from loggia.structlog_utils.hypercorn_logger import HypercornLogger
 
 
 async def main():

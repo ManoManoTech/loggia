@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
-from mm_logger.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
+from loggia.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
 if TYPE_CHECKING:
     from logging import LogRecord
