@@ -32,8 +32,14 @@ class LoggerConfiguration:
     @from_env("LOGGIA_LEVEL")
     def set_general_level(self, level: int | str) -> None:
         """Set the general, or default, log level."""
+        # XXX(dugab): does not handle lowercase `trace`
+        # XXX(dugab): does not handle log int (eg. 5)
         assert "loggers" in self._dictconfig  # noqa: S101
         self._dictconfig["loggers"][""]["level"] = level
+
+    @property
+    def log_level(self) -> int | str:
+        return self._dictconfig["loggers"][""]["level"]
 
     # LOGGIA_FORCE_LEVEL=numba:INFO,numpy:TRACE,...
     @from_env("LOGGIA_FORCE_LEVEL", parser=ep.comma_colon)

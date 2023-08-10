@@ -88,7 +88,7 @@ def configure_loguru(cfg: LoggerConfiguration) -> None:
         cfg (LoggerConfiguration): Your configuration.
     """
     loguru_logger.remove()
-    loguru_logger.add(_loguru_to_std_sink, level="INFO")  # XXX NODEPLOY get defaut log level
+    loguru_logger.add(_loguru_to_std_sink, level=cfg.log_level)  # XXX NODEPLOY get defaut log level
 
     if cfg.disallow_loguru_reconfig:
         _block_loguru_reconfiguration()

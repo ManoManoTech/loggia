@@ -68,6 +68,7 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
     5: ("Pink", "Pink White", "Pink", "Ivory"),  # Trace level
     logging.DEBUG: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
     logging.INFO: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),
+    25: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),  # Success level
     logging.WARNING: ("Nude", "Tan", "Nude", "Sand Dollar"),
     logging.ERROR: ("Hot Pink", "Fuchsia", "Pink", "Red"),
     logging.CRITICAL: ("Hot Pink", "Fuchsia", "Pink", "Red"),
