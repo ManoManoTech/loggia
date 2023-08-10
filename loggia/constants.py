@@ -91,6 +91,7 @@ BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
             "formatter": "structured",
         },
     },
+    "filters": { },
     "loggers": {
         "": {
             "handlers": ["default"],

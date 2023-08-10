@@ -69,3 +69,6 @@
 - Auto generate configuration docs using our decorators and an mkdocs plugin
 - Move monkey patches else where into a custom LogRecordFactory and LoggerFactory
 - All code shown in documentation is derived from the test suite
+- Remove dependency on `pythonjsonlogger`
+- Ensure all dependencies are strictly optional - Loggia should bring no dependencies at all to respect our minimalist friends' sensibilities.
+- Introduce a decent exception hierarchy - no more `RuntimeError`

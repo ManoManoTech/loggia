@@ -7,6 +7,7 @@ Almost all configuration can and should be passed through environment variables,
 | Variable name(s) | From python | Default value | Description |
 |------------------|---|------------|-------------|
 | `LOGGIA_LEVEL` | [set_general_level][loggia.conf.LoggerConfiguration.set_general_level] |`INFO` | The log level number or name. |
+| `LOGGIA_SUB_LEVEL` | [set_logger_level][loggia.conf.LoggerConfiguration.set_logger_level] |`INFO` | The log level number or name for any given named logger. |
 | `LOGGIA_FORMATTER` | [set_default_formatter][loggia.conf.LoggerConfiguration.set_default_formatter] | `structured` | The log formatter name (`pretty` or `structured`). |
 | `LOGGIA_SET_EXCEPTHOOK` | [set_excepthook][loggia.conf.LoggerConfiguration.set_excepthook] | `True` | Whether the logger should set the `sys.excepthook`. |
 | `LOGGIA_CAPTURE_LOGURU` | [capture_loguru][loggia.conf.LoggerConfiguration.set_loguru_capture] | `True` | Whether the logger should capture logs emitted through loguru. |

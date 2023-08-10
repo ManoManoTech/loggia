@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from os import environ
-from typing import TYPE_CHECKING, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple, TypeVar, Any
 
 import loggia._internal.env_parsers as ep
 
@@ -16,8 +16,8 @@ class EnvConfigurable(NamedTuple):
     method: Callable
 
 
-_ENV_PARSERS: dict[str, EnvConfigurable] = {}
-
+_ALL_ENV_KEYS: set[str] = set()
+T = TypeVar("T")
 
 FALSY_STRINGS={"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "BY CHTULU, NO!"}
 def is_truthy_string(s: str) -> bool:
@@ -26,37 +26,43 @@ def is_truthy_string(s: str) -> bool:
     return False
 
 
-def from_env(env_var_name: str, *, parser: EnvParser = ep.default):
-    """Enable a configuration classmethod to be invoked by setting an environment variable.
+class EnvironmentLoader:
+    _parsers: dict[str, EnvConfigurable]
 
-    This annotation mostly registers the intent, the actual parsing of environment
-    variable and configuration loading is done in apply_env(...)
-    """
-    def decorator(fn):
-        if env_var_name in _ENV_PARSERS:
-            raise RuntimeError(f"Cannot use the same environment binding twice: {env_var_name}")
+    def __init__(self):
+        self._parsers = {}
 
-        # XXX check fn signature, and cast to int if requested and/or possible
+    def register(self,
+                 env_var_name: str, *,
+                 parser: EnvParser = ep.default):
+        """Enable a configuration classmethod to be invoked by setting an environment variable.
 
-        _ENV_PARSERS[env_var_name] = EnvConfigurable(parser, fn)
-        def decorated_fn(*args, **kwargs):
-            return fn(*args, **kwargs)
-        return decorated_fn
-    return decorator
+        This annotation mostly registers the intent, the actual parsing of environment
+        variable and configuration loading is done in apply_env(...)
+        """
+        def decorator(fn: T) -> T:
+            if env_var_name in _ALL_ENV_KEYS:
+                raise RuntimeError(f"Cannot use the same environment binding twice: {env_var_name}")
+            # XXX check fn signature, and cast to int if requested and/or possible
+            _ALL_ENV_KEYS.add(env_var_name)
+            self._parsers[env_var_name] = EnvConfigurable(parser, fn)
+            return fn
+        return decorator
 
+    def apply_env(self,
+                  configurable: Any,
+                  env: dict[str, str] | None = None) -> None:
+        """Parse environment values into a logger configuration.
 
-def apply_env(logger_configuration: "LoggerConfiguration", env: dict[str, str] | None = None) -> None:
-    """Parse environment values into a logger configuration.
+        Browse an environment dict for supported environment variables, parse the values
+        of the variables, and use the parsed output as the function args on the configuration.
+        """
+        if env is None:
+            env = environ
 
-    Browse an environment dict for supported environment variables, parse the values
-    of the variables, and use the parsed output as the function args on the configuration.
-    """
-    if env is None:
-        env = environ
-
-    for env_key, (parser, method) in _ENV_PARSERS.items():
-        if env_key in env:
-            value = env[env_key]
-            parsed_values = parser(value)
-            for pv in parsed_values:
-                method(logger_configuration, *pv)
+        for env_key, (parser, method) in self._parsers.items():
+            if env_key in env:
+                value = env[env_key]
+                parsed_values = parser(value)
+                for pv in parsed_values:
+                    method(configurable, *pv)

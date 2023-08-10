@@ -5,16 +5,9 @@ from typing import Any, Literal, TypeVar
 
 from loggia.constants import PALETTES
 from loggia.utils.colorsutils import ansi_end, ansi_fg
+from loggia.utils.logrecordutils import popattr, extra_fields
 
 # pylint: disable=consider-using-f-string
-
-T = TypeVar("T")
-def _popattr(record: logging.LogRecord, attr: str, default: T) -> T:
-    if not hasattr(record, attr):
-        return default
-    result = getattr(record, attr)
-    delattr(record, attr)
-    return result
 
 std_log = logging.Logger._log
 def patched_log(*args, **kwargs):
@@ -34,7 +27,6 @@ class PrettyFormatter(logging.Formatter):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self._std_fields = set(logging.makeLogRecord({}).__dict__.keys())
 
     # pylint: disable=protected-access
     def _set_format(self, fmt: str, style: Literal["%"] | Literal["$"] | Literal["{"] = "%") -> None:
@@ -43,13 +35,12 @@ class PrettyFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         # Reference attributes: https://docs.python.org/3/library/logging.html#logrecord-attributes
-        with_filename = _popattr(record, "_fmt_with_filename", False)
+        with_filename = popattr(record, "_fmt_with_filename", default=False)
         palette = PALETTES.get(record.levelno, PALETTES[logging.DEBUG])
 
         pretty_extra = "\n  ".join(
             f"{ansi_fg(palette[2])}{k}{ansi_end()}={ansi_fg(palette[3])}{v}"
-            for k, v in record.__dict__.items()
-            if k not in self._std_fields
+            for k, v in extra_fields(record)
         )
 
         if pretty_extra:

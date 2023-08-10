@@ -9,7 +9,7 @@ def test_usage_custom_config(capsys: pytest.CaptureFixture[str]) -> None:
 
     # Force colored logging, even if environment variables is set
     log_config = LoggerConfiguration({
-        "LOGGIA_FORCE_LEVEL": "test.warn_only:WARNING",
+        "LOGGIA_SUB_LEVEL": "test.warn_only:WARNING",
         "LOGGIA_FORMATTER": "pretty",
     })
     initialize(log_config)
