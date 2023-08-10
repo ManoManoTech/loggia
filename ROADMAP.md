@@ -9,7 +9,8 @@
 - [ ] (MM-Internal) Artifactory release
 - [x] Most of the code shown in documentation is derived from the test suite
 - [x] Move Datadog-specific reencoding into a dedicated filter
-- [ ] Move hypercorn/gunicorn reencoding into a dedicated filter
+- [x] Move hypercorn/gunicorn reencoding into a dedicated filter
+- [ ] `dev` and `prod` presets in the `main` slot
 
 ## 0.2.0
 

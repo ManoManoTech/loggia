@@ -12,23 +12,18 @@ def test_usage_with_loguru(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
     from loggia.logger import initialize
-
-    # Force colored logging, even if environment variables is set
-    initialize({"LOGGIA_FORMATTER": "pretty"})
-
-    # Use standard logger
-    import logging
-
-    logger = logging.getLogger()
-    logger.info("Hello world std_lib!")
+    initialize()
 
     # Use loguru
     import loguru
-
     loguru.logger.info("Hello world loguru!")
+
+    # Using standard logger should still work uniformly
+    import logging
+    logger = logging.getLogger()
+    logger.info("Hello world std_lib!")
     # <!-- DOC:END -->
 
     captured = capsys.readouterr()
-
     assert "Hello world std_lib!" in captured.err
     assert "Hello world loguru!" in captured.err

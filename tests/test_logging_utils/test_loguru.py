@@ -19,7 +19,7 @@ from loggia.logger import initialize
 
 
 def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
-    lc = LoggerConfiguration({"LOGGIA_CAPTURE_LOGURU": "OUI"})
+    lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
     initialize(lc)
     loguru_logger.info("test info")
     captured = capsys.readouterr()

@@ -1,4 +1,3 @@
-
 import pytest
 
 
@@ -9,7 +8,7 @@ def test_usage_basic(capsys: pytest.CaptureFixture[str]):
     from loggia.logger import initialize
 
     # One-line setup -- get the default config from environment variables
-    initialize({"LOGGIA_FORMATTER": "pretty"})
+    initialize()
 
     # Use just like the standard logger
     import logging

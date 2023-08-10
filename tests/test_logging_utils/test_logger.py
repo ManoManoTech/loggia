@@ -13,8 +13,7 @@ from loggia.logger import (
 
 def test_configure_logging_custom():
     """Tests that the logger is correctly configured with custom settings."""
-    logging_config = LC()
-    logging_config.set_default_formatter("pretty")
+    logging_config = LC(presets="dev")
     logging_config.set_general_level("DEBUG")
     initialize(logging_config)
     logger = logging.getLogger("test")

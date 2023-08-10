@@ -11,7 +11,6 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     # Prepare a configuration
     # Here, debug_show_config will be ignored because it's not a boolean!
     log_config = LoggerConfiguration()
-    log_config.set_default_formatter("structured")  # This is already the default
     log_config.set_general_level(5)  # This is the numerical level for 'TRACE'
 
     initialize(log_config)

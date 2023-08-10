@@ -1,35 +1,23 @@
 from __future__ import annotations
 
 from copy import deepcopy
-from pathlib import Path
-from typing import TYPE_CHECKING
+from os import getenv
+from typing import TYPE_CHECKING, Literal
 
 import loggia._internal.env_parsers as ep
 from loggia._internal.conf import EnvironmentLoader, is_truthy_string
-from loggia.base_preset import BasePreset
+from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
-from loggia.utils.loaderutils import import_all_files
+
 
 if TYPE_CHECKING:
     import logging.config
     from json import JSONEncoder
 
 
+
+
 env = EnvironmentLoader()
-
-
-def get_default_presets() -> list[type[BasePreset]]:
-    base_dir = (Path(__file__).parent / "..").resolve()
-    all_preset_modules = import_all_files("loggia/presets", base_dir=base_dir)
-    results: list[type[BasePreset]] = []
-    for mod in all_preset_modules:
-        for thing_name in dir(mod):
-            thing = getattr(mod, thing_name)
-            if isinstance(thing, type) and \
-               issubclass(thing, BasePreset) and \
-               thing is not BasePreset:
-                results.append(thing)
-    return results
 
 
 class LoggerConfiguration:
@@ -41,23 +29,30 @@ class LoggerConfiguration:
     capture_loguru: bool = True
     disallow_loguru_reconfig: bool = True
 
-    def __init__(self,
-                 overrides: dict[str, str] | None = None,
-                 presets: list[BasePreset] | None = None):
+    def __init__(self, *,
+                 settings: dict[str, str] | None = None,
+                 presets: str | list[str] | None = None):
+        # XXX Well put docstring!
+
         self.reset_dictconfig()
 
-        # load presets (overrides defaults only / provides new defaults)
-        # XXX: better specify default presets
-        for preset_type in get_default_presets():
+        # load presets
+        presets = presets or getenv("LOGGIA_PRESETS")
+        if isinstance(presets, str):
+            presets = presets.split(",")
+        preset_bank = Presets(presets)
+
+        # instanciate presets (overrides defaults only / provides new defaults)
+        for preset_type in preset_bank.available:
             preset = preset_type()
             env_loader = preset_type.env_loader()
             if env_loader:
-                env_loader.apply_env(preset, overrides)
+                env_loader.apply_env(preset, settings)
             preset.apply(self)
 
         # constructor parameter overrides defaults, presets
-        if overrides:
-            env.apply_env(self, overrides)
+        if env:
+            env.apply_env(self, settings)
 
         # environment variables overrides defaults, presets and constructor params
         env.apply_env(self)
@@ -87,36 +82,21 @@ class LoggerConfiguration:
         This allows you to fine tune verbosity according to your needs.
         """
         assert "loggers" in self._dictconfig  # noqa: S101
-        if logger_name not in self._dictconfig["loggers"]:
-            self._dictconfig["loggers"][logger_name] = {}
-            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
+        self._enforce_logger(logger_name)
         self._dictconfig["loggers"][logger_name]["level"] = level
 
     @env.register("LOGGIA_SUB_PROPAGATION", parser=ep.comma_colon)
     def set_logger_propagation(self, logger_name: str, does_propagate: str) -> None:
         assert "loggers" in self._dictconfig  # noqa: S101
-        if logger_name not in self._dictconfig["loggers"]:
-            self._dictconfig["loggers"][logger_name] = {}
-            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
-        does_propagate_b = is_truthy_string(does_propagate)
-        self._dictconfig["loggers"][logger_name]["propagate"] = does_propagate_b
-
+        self._enforce_logger(logger_name)
+        self._dictconfig["loggers"][logger_name]["propagate"] = is_truthy_string(does_propagate)
 
     # LOGGIA_EXTRA_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
-    def add_log_filter(self, logger_name: str, filter_fqn: str) -> None:
-        assert "filters" in self._dictconfig  # noqa: S101
-
-        # XXX: changing the way we derive IDs will prevent conflicts to ever happen
-        filter_id = filter_fqn.split(".")[-1]
-
-        if filter_id not in self._dictconfig["filters"]:
-            self._dictconfig["filters"][filter_id] = {"class": filter_fqn}
-        else:
-            registered_filter_fqn = self._dictconfig["filters"][filter_id]["class"]
-            if registered_filter_fqn != filter_fqn:
-                raise RuntimeError(f"Filter {filter_fqn} conflicts with {registered_filter_fqn}")
-
+    def add_log_filter(self, logger_name: str, filter_: str | dict) -> None:
+        assert "loggers" in self._dictconfig  # noqa: S101
+        filter_id = self._register("filters", filter_)
+        self._enforce_logger(logger_name)
         logger_config = self._dictconfig["loggers"][logger_name]
         if "filters" not in logger_config:
             logger_config["filters"] = []
@@ -130,13 +110,11 @@ class LoggerConfiguration:
 
     # LOGGIA_DEV_FORMATTER=prettyformatter|simpleformatter
     @env.register("LOGGIA_FORMATTER")
-    def set_default_formatter(self, formatter: str) -> None:
+    def set_default_formatter(self, formatter: str|dict) -> None:
         """Sets the default formatter."""
-        # XXX formatter registry
-        # XXX formatter FQN
-        # XXX throw if formatter doesn't exist
         assert "handlers" in self._dictconfig  # noqa: S101
-        self._dictconfig["handlers"]["default"]["formatter"] = formatter
+        formatter_id = self._register("formatters", formatter)
+        self._dictconfig["handlers"]["default"]["formatter"] = formatter_id
 
     # LOGGIA_PALETTE=dark256|classic16
     @env.register("LOGGIA_PRETTY_PALETTE")
@@ -183,6 +161,36 @@ class LoggerConfiguration:
         When set to true, Loggia will attempt to log warnings.
         """
         self.capture_warnings = is_truthy_string(enabled)
+
+    def _enforce_logger(self, logger_name: str) -> None:
+        assert "loggers" in self._dictconfig  # noqa: S101
+        if logger_name not in self._dictconfig["loggers"]:
+            self._dictconfig["loggers"][logger_name] = {}
+            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
+
+    def _register(self,
+                  kind: Literal["filters"] | Literal["formatters"],
+                  thing: str | dict) -> str:
+
+        fqn = thing if isinstance(thing, str) else \
+            thing.__class__.__module__ + "." + thing.__class__.__name__
+
+        # XXX: changing the way we derive IDs will prevent conflicts to ever happen
+        key = fqn.split(".")[-1]
+
+        self._dictconfig[kind] = self._dictconfig.get(kind, {})
+        assert kind in self._dictconfig  # noqa: S101
+        if key not in self._dictconfig[kind]:
+            if isinstance(thing, str):
+                self._dictconfig[kind][key] = {"class": fqn}
+            else:
+                self._dictconfig[kind][key] = thing
+        else:
+            registered_thing = self._dictconfig[kind][key]["class"]
+            if (isinstance(fqn, str) and registered_thing != fqn):
+                # XXX dict compare for objects
+                raise RuntimeError(f"{kind} {fqn} conflicts with {registered_thing}")
+        return key
 
 
 __all__ = ["LoggerConfiguration"]

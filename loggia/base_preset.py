@@ -18,7 +18,8 @@ class BasePreset(ABC):
     def apply(self, conf: LoggerConfiguration) -> None:
         ...
 
-    def slots(self) -> list[str]:
+    @classmethod
+    def slots(cls) -> list[str]:
         """Override the slots method to indicate mutually incompatible presets.
 
         Mutually incompatible presets should have at least one slot in common.

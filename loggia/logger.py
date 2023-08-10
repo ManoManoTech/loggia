@@ -3,12 +3,13 @@ from __future__ import annotations
 
 import logging
 import logging.config
+from os import getenv
 import sys
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
 from loggia.conf import LoggerConfiguration
-from loggia.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
+from loggia._internal.bootstrap_logger import BootstrapLogger
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -32,36 +33,16 @@ patch_to_add_level(5, "trace")
 patch_to_add_level(25, "success")
 
 
-def _build_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
-    attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
-    attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
-    return {
-        "()": CustomJsonFormatter,
-        "json_indent": None,
-        "json_encoder": CustomJsonEncoder,
-        "reserved_attrs": attrs,
-        "timestamp": True,
-    }
-
-
-def prelogger_error(msg, exc=None):
-    print(msg)
-    if exc:
-        print(exc)
-
-
-def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
+def initialize(conf: LoggerConfiguration | Mapping | None = None,
+               presets: str | list[str] | None = None) -> None:
     """Initialize the logging system."""
     if conf is None:
-        conf = LoggerConfiguration()
+        conf = LoggerConfiguration(presets=presets)
     if isinstance(conf, Mapping):
-        conf = LoggerConfiguration(conf)
+        conf = LoggerConfiguration(conf, presets=presets)
     if not isinstance(conf, LoggerConfiguration):
         raise TypeError("initialize() accepts LoggerConfiguration "
                         "instances or mappings (like a dict).")
-
-    assert "formatters" in conf._dictconfig  # noqa: S101
-    conf._dictconfig["formatters"]["structured"] = _build_json_formatter()
 
     if conf.setup_excepthook:
         _set_excepthook(logging.getLogger())
@@ -80,7 +61,7 @@ def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
             from loggia.loguru_sink import configure_loguru
             configure_loguru(conf)
         except ImportError as e:
-            prelogger_error("Failed to configure loguru! Is is installed?", e)
+            BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
 
     logging.config.dictConfig(conf._dictconfig)
 

@@ -79,25 +79,18 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
 BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "structured": "!!! programatically set in logger.py !!!",
-        "pretty": {
-            "class": "loggia.stdlib_formatters.pretty_formatter.PrettyFormatter",
-        },
-    },
     "handlers": {
         "default": {
             "class": "logging.StreamHandler",
             "formatter": "structured",
         },
     },
-    "filters": { },
     "loggers": {
         "": {
             "handlers": ["default"],
             "propagate": True,
             "level": "INFO",
-        }
+        },
     },
 }
 """The base dictconfig for loggia."""
