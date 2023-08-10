@@ -3,8 +3,6 @@ import logging.config
 import sys
 from unittest import mock
 
-import pytest
-
 from loggia.conf import LoggerConfiguration as LC
 from loggia.logger import (
     _set_excepthook,

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Literal, Any, TypeVar
+from typing import Any, Literal, TypeVar
 
 from loggia.constants import PALETTES
 from loggia.utils.colorsutils import ansi_end, ansi_fg

@@ -1,15 +1,14 @@
 """Main module for logging configuration, using standard logging."""
 from __future__ import annotations
-from collections.abc import Mapping
 
 import logging
 import logging.config
 import sys
+from collections.abc import Mapping
 from typing import TYPE_CHECKING, Any
 
-from loggia.stdlib_formatters.json_formatter import CustomJsonFormatter, CustomJsonEncoder
 from loggia.conf import LoggerConfiguration
-
+from loggia.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
 
 if TYPE_CHECKING:
     from types import TracebackType

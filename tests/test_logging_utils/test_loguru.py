@@ -12,8 +12,8 @@ import logging
 import pytest
 from loguru import logger as loguru_logger
 
-from loggia.logger import initialize
 from loggia.conf import LoggerConfiguration
+from loggia.logger import initialize
 
 # ruff: noqa: T201
 

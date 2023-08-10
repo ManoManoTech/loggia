@@ -5,8 +5,8 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
 
-    from loggia.logger import initialize
     from loggia.conf import LoggerConfiguration
+    from loggia.logger import initialize
 
     # Prepare a configuration
     # Here, debug_show_config will be ignored because it's not a boolean!

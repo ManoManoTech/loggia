@@ -1,13 +1,10 @@
-from copy import deepcopy
 import os
-from copy import deepcopy
-from unittest.mock import patch
 
 import pytest
 
 from loggia.conf import LoggerConfiguration as LC
-from loggia._internal.conf import apply_env
 from loggia.constants import BASE_DICTCONFIG
+
 # Let's first define the setup and teardown for the tests
 
 

@@ -2,9 +2,9 @@ from copy import deepcopy
 from json import JSONEncoder
 from typing import TYPE_CHECKING
 
-from loggia.constants import BASE_DICTCONFIG
 import loggia._internal.env_parsers as ep
-from loggia._internal.conf import from_env, apply_env, is_truthy_string
+from loggia._internal.conf import apply_env, from_env, is_truthy_string
+from loggia.constants import BASE_DICTCONFIG
 
 if TYPE_CHECKING:
     import logging.config
@@ -52,12 +52,12 @@ class LoggerConfiguration:
     # LOGGIA_EXTRA_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @from_env("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
     def add_log_filter(self, logger_name: str, filter: str) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     # LOGGIA_SKIP_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @from_env("LOGGIA_DISABLED_FILTERS", parser=ep.comma_colon)
     def remove_log_filter(self, logger_name: str, filter: str) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     # LOGGIA_DEV_FORMATTER=prettyformatter|simpleformatter
     @from_env("LOGGIA_FORMATTER")
@@ -72,12 +72,12 @@ class LoggerConfiguration:
     # LOGGIA_PALETTE=dark256|classic16
     @from_env("LOGGIA_PRETTY_PALETTE")
     def set_pretty_formatter_palette(self, palette: str) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     # LOGGIA_JSON_ENCODER=xxx
     @from_env("LOGGIA_JSON_ENCODER")
     def set_json_encoder(self, encoder: type[JSONEncoder]|str) -> None:
-        raise NotImplementedError()
+        raise NotImplementedError
 
     @from_env("LOGGIA_CAPTURE_LOGURU")
     def set_loguru_capture(self, enabled: str) -> None:

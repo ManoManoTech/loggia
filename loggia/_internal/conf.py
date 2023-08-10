@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from os import environ
-from typing import TYPE_CHECKING, NamedTuple, Any
+from typing import TYPE_CHECKING, NamedTuple
 
 import loggia._internal.env_parsers as ep
 
