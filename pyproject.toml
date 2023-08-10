@@ -29,7 +29,7 @@ rich = ["rich>=13.3.4"]
 [tool.hatch]
 
 [tool.hatch.build]
-include = ["mm_logger"]
+include = ["loggia"]
 exclude = []
 # [tool.hatch.version]
 # source = "env"
@@ -39,7 +39,7 @@ allow-direct-references = true
 
 source = "vcs"
 [tool.hatch.build.hooks.vcs]
-version-file = "mm_logger/_version.py"
+version-file = "loggia/_version.py"
 [tool.hatch.metadata.hooks.vcs.urls]
 ***REMOVED***
 ***REMOVED***
@@ -64,8 +64,8 @@ env_file = ".env"
 
 [tool.pdm.scripts]
 # Lint
-lint-pylint = { cmd = "pylint mm_logger", help = "Run pylint" }
-lint-mypy = { shell = "mypy mm_logger --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
+lint-pylint = { cmd = "pylint loggia", help = "Run pylint" }
+lint-mypy = { shell = "mypy loggia --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
 lint-ruff = { cmd = "ruff .", help = "Run ruff linter" }
 lint = { composite = [
   "lint-ruff",
@@ -140,7 +140,7 @@ pythonpath = [
 branch = true
 parallel = true
 omit = ["tests/*", "__pypackages__/*", ".venv/*"]
-source = ["mm_logger"]
+source = ["loggia"]
 
 [tool.coverage.report]
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
