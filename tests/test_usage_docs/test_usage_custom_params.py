@@ -5,31 +5,28 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
 
-    from mm_logger.logger import configure_logging
-    from mm_logger.settings import MMLogsConfig
+    from mm_logger.logger import initialize
+    from mm_logger.conf import LoggerConfiguration
 
     # Prepare a configuration
     # Here, debug_show_config will be ignored because it's not a boolean!
-    log_config = MMLogsConfig(env="special_env", debug_show_config="invalid_should_be_bool")
-    log_config.log_formatter_name = "structured"
-    log_config.log_level = 5
+    log_config = LoggerConfiguration()
+    log_config.set_default_formatter("structured")  # This is already the default
+    log_config.set_general_level(5)  # This is the numerical level for 'TRACE'
 
-    configure_logging(log_config)
+    initialize(log_config)
 
     # Use just like the standard logger
     import logging
 
     logger = logging.getLogger(__name__)
     logger.info("Hello world!")
+
+    logger.log(5, "Hello trace")  # Sending a trace with typings OK
     # <!-- DOC:END -->
 
-    assert log_config.env == "special_env"
-    assert log_config.debug_show_config is False  # Default is used instead
-    assert len(log_config._configuration_errors) == 1
-    assert log_config._configuration_errors[0].field_name == "debug_show_config"
-
+    # XXX caplog
     captured = capsys.readouterr()
-    assert '"logger.name": "test_usage_custom_params"' in captured.err
     assert '"message": "Hello world!"' in captured.err
 
     # Assert we can parse JSON lines
@@ -40,8 +37,14 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
     # Remove the last empty line
     lines.pop()
     # Parse each line
+    messages: list[str] = []
     for line in lines:
-        json.loads(line)
-        assert "logger.name" in line
-        assert "status" in line
-        assert "message" in line
+        parsed_line = json.loads(line)
+        assert "logger.name" in parsed_line
+        assert "status" in parsed_line
+        assert "message" in parsed_line
+        messages.append(parsed_line["message"])
+
+
+    assert "Hello world!" in messages
+    assert "Hello trace" in messages

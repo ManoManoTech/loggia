@@ -4,14 +4,13 @@ import pytest
 
 
 def test_usage_basic(capsys: pytest.CaptureFixture[str]):
-    os.environ["ENV"] = "dev"
     # <!-- DOC:START -->
 
     # Setup
-    from mm_logger.logger import configure_logging
+    from mm_logger.logger import initialize
 
     # One-line setup -- get the default config from environment variables
-    configure_logging()
+    initialize({"MM_LOGGER_FORMATTER": "pretty"})
 
     # Use just like the standard logger
     import logging

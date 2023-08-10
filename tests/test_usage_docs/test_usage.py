@@ -3,13 +3,13 @@ import os
 
 import pytest
 
-from mm_logger.logger import configure_logging
+from mm_logger.logger import initialize
 
 
 def test_usage(capsys: pytest.CaptureFixture[str]) -> None:
     # Configure the logger with default settings
     os.environ["ENV"] = "dev"
-    configure_logging()
+    initialize()
 
     logging.getLogger("test").warning("hello from logging", extra={"foo": "bar"})
 

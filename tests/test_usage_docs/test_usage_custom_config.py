@@ -4,22 +4,15 @@ import pytest
 def test_usage_custom_config(capsys: pytest.CaptureFixture[str]) -> None:
     # <!-- DOC:START -->
     # Setup
-    from mm_logger.logger import configure_logging
-    from mm_logger.settings import MMLogsConfig
+    from mm_logger.logger import initialize
+    from mm_logger.conf import LoggerConfiguration
 
     # Force colored logging, even if environment variables is set
-    log_config = MMLogsConfig(
-        custom_stdlib_logging_dict_config={
-            "loggers": {
-                "test.warn_only": {
-                    "level": "WARNING",
-                },
-            },
-        },
-    )
-    log_config.log_formatter_name = "colored"
-
-    configure_logging(log_config)
+    log_config = LoggerConfiguration({
+        "MM_LOGGER_FORCE_LEVEL": "test.warn_only:WARNING",
+        "MM_LOGGER_FORMATTER": "pretty",
+    })
+    initialize(log_config)
 
     ## Use just like the standard logger
     import logging
@@ -31,6 +24,7 @@ def test_usage_custom_config(capsys: pytest.CaptureFixture[str]) -> None:
     logger.warning("Warning are shown")
     # <!-- DOC:END -->
 
+    # XXX try to use caplog instead
     captured = capsys.readouterr()
     assert "Hello world first!" in captured.err
     assert "Hello world bis is not shown" not in captured.err

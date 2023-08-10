@@ -78,24 +78,26 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
 SETTINGS_PREFIX: Final[str] = "MM_LOGS_"
 
 
-DEFAULT_STDLIB_DICT_CONFIG: Final["logging.config._DictConfigArgs"] = {
+BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "colored": {
+        "structured": "!!! programatically set in logger.py !!!",
+        "pretty": {
             "class": "mm_logger.stdlib_formatters.pretty_formatter.PrettyFormatter",
         },
     },
     "handlers": {
         "default": {
             "class": "logging.StreamHandler",
-            "formatter": "colored",
+            "formatter": "structured",
         },
     },
     "loggers": {
         "": {
             "handlers": ["default"],
             "propagate": True,
+            "level": "INFO",
         },
         "gunicorn.access": {
             "handlers": ["default"],

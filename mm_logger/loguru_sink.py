@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
     from loguru import Record as LoguruRecord
 
-    from mm_logger.settings import MMLogsConfig
+    from mm_logger.conf import LoggerConfiguration
 
 
 # Custom sink function for Loguru to pass log messages to Structlog
@@ -70,7 +70,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     #     attributes
 
     loguru_extra = cast(dict[str, Any], record.pop("extra", {}))
-    record_dict = dict(__loguru_record=record) | loguru_extra | attributes
+    record_dict = loguru_extra | attributes
 
     # exc_info = extra.pop("exc_info", None)
     # XXX there are more forbidden keys to extra, see logging/__init__.py:1606
@@ -79,7 +79,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     logger.handle(log_record)
 
 
-def configure_loguru(cfg: MMLogsConfig) -> None:
+def configure_loguru(cfg: LoggerConfiguration) -> None:
     """Configure Loguru to use our logger.
 
     Remove Loguru's default handler and pass all messages to Structlog.
@@ -88,9 +88,9 @@ def configure_loguru(cfg: MMLogsConfig) -> None:
         cfg (MMLogsConfig): Your configuration.
     """
     loguru_logger.remove()
-    loguru_logger.add(_loguru_to_std_sink, level=cfg.log_level)
+    loguru_logger.add(_loguru_to_std_sink, level="INFO")  # XXX NODEPLOY get defaut log level
 
-    if cfg.debug_disallow_loguru_reconfig:
+    if cfg.disallow_loguru_reconfig:
         _block_loguru_reconfiguration()
 
 

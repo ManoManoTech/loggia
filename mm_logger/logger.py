@@ -1,14 +1,15 @@
 """Main module for logging configuration, using standard logging."""
 from __future__ import annotations
+from collections.abc import Mapping
 
 import logging
 import logging.config
 import sys
 from typing import TYPE_CHECKING, Any
 
-from mm_logger.settings import ActiveMMLogsConfig, LoggerConfigurationError, MMLogsConfig, MMLogsConfigPartial
-from mm_logger.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
-from mm_logger.utils.dictutils import deep_merge_log_config
+from mm_logger.stdlib_formatters.json_formatter import CustomJsonFormatter, CustomJsonEncoder
+from mm_logger.conf import LoggerConfiguration
+
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -32,7 +33,7 @@ patch_to_add_level(5, "trace")
 patch_to_add_level(25, "success")
 
 
-def _get_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
+def _build_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
     attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
     attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
     return {
@@ -44,37 +45,25 @@ def _get_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
     }
 
 
-def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None = None) -> MMLogsConfig:
-    """Main function to configure logging.
+def prelogger_error(msg, exc=None):
+    print(msg)
+    if exc:
+        print(exc)
 
-    Args:
-        custom_config (MMLogsConfig | None, optional): Your custom config. If None, a default config will be used.
-    """
-    mm_logger_config = _get_logger_config(custom_config)
-    # Merge the custom stdlib logging config with the default
-    if mm_logger_config.custom_stdlib_logging_dict_config is not None:
-        mm_logger_config.stdlib_logging_dict_config = deep_merge_log_config(
-            mm_logger_config.stdlib_logging_dict_config, mm_logger_config.custom_stdlib_logging_dict_config,
-        )
 
-    ActiveMMLogsConfig.store(mm_logger_config)
+def initialize(conf: LoggerConfiguration | Mapping | None = None) -> None:
+    if conf is None:
+        conf = LoggerConfiguration()
+    if isinstance(conf, Mapping):
+        conf = LoggerConfiguration(conf)
+    if not isinstance(conf, LoggerConfiguration):
+        raise TypeError("initialize() accepts LoggerConfiguration "
+                        "instances or mappings (like a dict).")
 
-    config = mm_logger_config.stdlib_logging_dict_config  # XXX deepcopy
-    config["formatters"]["structured"] = _get_json_formatter()
+    assert "formatters" in conf._dictconfig  # noqa: S101
+    conf._dictconfig["formatters"]["structured"] = _build_json_formatter()
 
-    # Assert for type checking only
-    assert "handlers" in config, "Missing 'handlers' key in stdlib_logging_dict_config"  # noqa: S101
-    assert "loggers" in config, "Missing 'loggers' key in stdlib_logging_dict_config"  # noqa: S101
-    assert "formatters" in config, "Missing 'formatters' key in stdlib_logging_dict_config"  # noqa: S101
-    assert isinstance(config["handlers"], dict)  # noqa: S101
-    assert isinstance(config["loggers"], dict)  # noqa: S101
-    assert isinstance(config["formatters"], dict)  # noqa: S101
-
-    config["handlers"]["default"]["formatter"] = mm_logger_config.log_formatter_name
-    config["handlers"]["default"]["level"] = mm_logger_config.log_level
-    config["loggers"][""]["level"] = mm_logger_config.log_level
-
-    if mm_logger_config.set_excepthook:
+    if conf.set_excepthook:
         _set_excepthook(logging.getLogger())
 
     # XXX sys.unraisablehook
@@ -82,45 +71,18 @@ def configure_logging(custom_config: MMLogsConfig | MMLogsConfigPartial | None =
     # XXX asyncio bullshit?
     # XXX audit subsystem bridge
 
-    if mm_logger_config.capture_warnings:
+    if conf.capture_warnings:
         # XXX test
         logging.captureWarnings(capture=True)
 
-    if mm_logger_config.capture_loguru:
+    if conf.capture_loguru:
         try:
             from mm_logger.loguru_sink import configure_loguru
+            configure_loguru(conf)
+        except ImportError as e:
+            prelogger_error("Failed to configure loguru! Is is installed?", e)
 
-            configure_loguru(mm_logger_config)
-        except ImportError as exc:
-            mm_logger_config._configuration_errors.append(
-                LoggerConfigurationError(
-                    msg="Failed to configure loguru! Is is installed?",
-                    exc=exc,
-                ),
-            )
-
-    logging.config.dictConfig(config)
-
-    logger = logging.getLogger()
-    if mm_logger_config.debug_show_config:
-        logger.debug("Logging configured", extra=dict(config=mm_logger_config))
-
-    if len(mm_logger_config._configuration_errors) > 0:
-        logger.error("Logging configured with errors", extra=dict(errors=mm_logger_config._configuration_errors))
-
-    return mm_logger_config
-
-
-def _get_logger_config(custom_config: MMLogsConfig | MMLogsConfigPartial | None) -> MMLogsConfig:
-    """Create a config if none is provided, or merge the default config (dataclass) with the custom one (Partial typed dict) into the final config (dataclass)."""
-    if custom_config is None:
-        logging_config = MMLogsConfig()
-    elif isinstance(custom_config, dict):
-        logging_config = MMLogsConfig(**custom_config)
-    elif isinstance(custom_config, MMLogsConfig):
-        logging_config = custom_config
-
-    return logging_config
+    logging.config.dictConfig(conf._dictconfig)
 
 
 def _set_excepthook(logger: logging.Logger) -> None:

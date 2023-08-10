@@ -12,19 +12,21 @@ import logging
 import pytest
 from loguru import logger as loguru_logger
 
-from mm_logger.logger import configure_logging
-from mm_logger.settings import MMLogsConfig
+from mm_logger.logger import initialize
+from mm_logger.conf import LoggerConfiguration
 
 # ruff: noqa: T201
 
 
 def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
-    configure_logging(MMLogsConfig(capture_loguru=True, set_excepthook=False))
+    lc = LoggerConfiguration({"MM_LOGGER_CAPTURE_LOGURU": "OUI"})
+    initialize(lc)
     loguru_logger.info("test info")
     captured = capsys.readouterr()
     errlines = captured.err.split("\n")
     errlines.remove("")
     assert len(errlines) == 1
+    print(errlines[0])
     record = json.loads(errlines[0])
     assert record["message"] == "test info"
 
@@ -64,9 +66,9 @@ def launch() -> None:
 
 
 def test_disallow_loguru_reconfig():
-    config = MMLogsConfig(debug_disallow_loguru_reconfig=True, capture_loguru=True)
-    configure_logging(config)
-    assert config.debug_disallow_loguru_reconfig
+    config = LoggerConfiguration()
+    initialize()
+    assert config.disallow_loguru_reconfig
     assert config.capture_loguru
 
     assert hasattr(loguru_logger, "add_original")
