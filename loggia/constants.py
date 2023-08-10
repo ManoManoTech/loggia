@@ -97,24 +97,7 @@ BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
             "handlers": ["default"],
             "propagate": True,
             "level": "INFO",
-        },
-        "gunicorn.access": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "gunicorn.error": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "gunicorn.errors": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "hypercorn.error": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "hypercorn.access": {"handlers": ["default"], "propagate": False},
+        }
     },
 }
 """The base dictconfig for loggia."""

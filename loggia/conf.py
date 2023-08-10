@@ -88,11 +88,19 @@ class LoggerConfiguration:
         """
         assert "loggers" in self._dictconfig  # noqa: S101
         if logger_name not in self._dictconfig["loggers"]:
-            self._dictconfig["loggers"][logger_name] = dict(
-                handlers=["default"],
-                propagate=True,
-            )
+            self._dictconfig["loggers"][logger_name] = {}
+            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
         self._dictconfig["loggers"][logger_name]["level"] = level
+
+    @env.register("LOGGIA_SUB_PROPAGATION", parser=ep.comma_colon)
+    def set_logger_propagation(self, logger_name: str, does_propagate: str) -> None:
+        assert "loggers" in self._dictconfig  # noqa: S101
+        if logger_name not in self._dictconfig["loggers"]:
+            self._dictconfig["loggers"][logger_name] = {}
+            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
+        does_propagate_b = is_truthy_string(does_propagate)
+        self._dictconfig["loggers"][logger_name]["propagate"] = does_propagate_b
+
 
     # LOGGIA_EXTRA_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
