@@ -10,7 +10,13 @@
 - [x] Most of the code shown in documentation is derived from the test suite
 - [x] Move Datadog-specific reencoding into a dedicated filter
 - [x] Move hypercorn/gunicorn reencoding into a dedicated filter
-- [ ] `dev` and `prod` presets in the `main` slot
+- [x] `dev` and `prod` presets in the `main` slot
+- [ ] Rename internals to have legible documentation
+- [ ] Clean up mkdocs settings for the reference part
+- [ ] Load preset through FQN in `LOGGIA_PRESETS`
+- [ ] Write preset tests
+- [ ] Write built-in preset override tests
+- [ ] Make environment variable parsing type aware and document it
 
 ## 0.2.0
 
@@ -30,6 +36,7 @@
 - Preset auto-activation based on feature/package detection
 - Provide type stubs that help language servers recognize extensions to the logger
 - Document and test `__json__` on our bundled `CustomJSONEncoder`
+- Capture ANSI output in usage tests, render it with `ansi2html` and include it in the documentation
 
 ### Make Loggia more configurable
 

@@ -1,7 +1,7 @@
 import pytest
 
 
-def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
+def test_usage_api_trace(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
 
@@ -20,8 +20,8 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
 
     logger = logging.getLogger(__name__)
     logger.info("Hello world!")
-
     logger.log(5, "Hello trace")  # Sending a trace with typings OK
+    logger.log(4, "Hello? Hello?")  # This will not show up
     # <!-- DOC:END -->
 
     # XXX caplog
@@ -47,3 +47,4 @@ def test_usage_custom_params(capsys: pytest.CaptureFixture[str]):
 
     assert "Hello world!" in messages
     assert "Hello trace" in messages
+    assert "Hello? Hello?" not in messages

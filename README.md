@@ -10,6 +10,8 @@ We aim for a batteries-included, no configuration required, delightful out-of-th
 
 The bundled configuration is opinionated and suits our purposes well, but we recognize your opinion will differ and provide various mechanisms of increasing complexity to tune logging to your liking.
 
+Loggia is **not** a new Python logger - it's a nice way to configure - and share configuration - for Python's standard logging and as well as loguru.
+
 !!! warning
     While this package is in an early 0.x release, it's built upon years of
     development and production usage in various projects.
@@ -20,7 +22,8 @@ The bundled configuration is opinionated and suits our purposes well, but we rec
 ## Usage
 
 ***REMOVED***
-2. Read the [Usage](docs/usage.md) docs
+2. `from loggia.logger import initialize; initialize()` is a strong starting point
+3. Read the [Usage](docs/usage.md) docs should you need to tune things.
 
 ## Features
 

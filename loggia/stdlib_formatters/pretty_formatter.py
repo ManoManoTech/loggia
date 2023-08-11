@@ -21,6 +21,7 @@ def patched_log(*args, **kwargs):
     std_log(*args, **kwargs)
 logging.Logger._log = patched_log
 
+
 class PrettyFormatter(logging.Formatter):
     """A custom formatter for logging that uses colors."""
     default_time_format = "%H:%M:%S"

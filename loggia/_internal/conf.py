@@ -29,14 +29,19 @@ class EnvironmentLoader:
         self._parsers = {}
 
     def register(self,
-                 env_var_name: str, *,
+                 env_var_name: str | None = None, *,
                  parser: EnvParser = ep.default):
         """Enable a configuration classmethod to be invoked by setting an environment variable.
 
         This annotation mostly registers the intent, the actual parsing of environment
         variable and configuration loading is done in apply_env(...)
         """
-        def decorator(fn: T) -> T:
+        def decorator(fn: Callable) -> Callable:
+            nonlocal env_var_name
+
+            if env_var_name is None:
+                env_var_name = fn.__name__.upper()
+
             if env_var_name in _ALL_ENV_KEYS:
                 raise RuntimeError(f"Cannot use the same environment binding twice: {env_var_name}")
             # XXX check fn signature, and cast to int if requested and/or possible

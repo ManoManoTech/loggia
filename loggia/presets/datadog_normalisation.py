@@ -31,6 +31,11 @@ def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
 
 
 class DatadogNormalisation(BasePreset):
+    @classmethod
+    def slots(cls) -> list[str]:
+        return ["normalization"]
+
+
     def apply(self, conf: LoggerConfiguration) -> None:
         # XXX: self.__something__ ?
         conf.add_log_filter("", "loggia.presets.DatadogNormalisation")

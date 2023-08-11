@@ -34,15 +34,16 @@ class LoggerConfiguration:
                  presets: str | list[str] | None = None):
         # XXX Well put docstring!
 
-        self.reset_dictconfig()
+        # Base configuration is static:
+        self._dictconfig = deepcopy(BASE_DICTCONFIG)
 
-        # load presets
+        # Load presets according to preferences
         presets = presets or getenv("LOGGIA_PRESETS")
         if isinstance(presets, str):
             presets = presets.split(",")
         preset_bank = Presets(presets)
 
-        # instanciate presets (overrides defaults only / provides new defaults)
+        # Instanciate presets (overrides defaults only and may provide new defaults
         for preset_type in preset_bank.available:
             preset = preset_type()
             env_loader = preset_type.env_loader()
@@ -50,17 +51,16 @@ class LoggerConfiguration:
                 env_loader.apply_env(preset, settings)
             preset.apply(self)
 
-        # constructor parameter overrides defaults, presets
+        # Constructor parameters overrides anything in defaults or presets
         if env:
             env.apply_env(self, settings)
 
-        # environment variables overrides defaults, presets and constructor params
+        # Environment variables overrides defaults, presets and constructor params
         env.apply_env(self)
 
-        # procedural edits override everything
+        # Whatever you do to LoggerConfiguration after it's initialized has the
+        # last word. Enjoy.
 
-    def reset_dictconfig(self) -> None:
-        self._dictconfig = deepcopy(BASE_DICTCONFIG)
 
     @env.register("LOGGIA_LEVEL")
     def set_general_level(self, level: int | str) -> None:

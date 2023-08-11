@@ -47,6 +47,7 @@ watch:
 nav:
   - Intro: index.md
   - Usage and Reference:
+      - Presets: presets.md
       - Config: config.md
       - Usage: usage.md
       - Reference: reference.md
