@@ -50,7 +50,7 @@ class HypercornLogger(Logger):
             key = key_b.decode("latin1").lower()
             if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
                 headers["http.response_headers." + key] = value.decode("latin1")
-        self.access_logger.info(
+        self.access_logger.info(  # pylint: disable=logging-not-lazy
             self.access_log_format % atoms,  # noqa: G002
             extra={HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP} | headers,
         )

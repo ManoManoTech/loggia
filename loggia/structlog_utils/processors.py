@@ -11,10 +11,12 @@ import traceback
 from collections.abc import Iterable, Mapping
 from logging import Logger, LogRecord
 from types import FrameType, TracebackType
-from typing import Any, Union
+from typing import Any
 
 from structlog.processors import CallsiteParameterAdder
 from structlog.types import EventDict
+
+from loggia.presets.datadog_normalisation import _figure_out_exc_info
 
 try:
     import ddtrace
@@ -22,7 +24,7 @@ except ImportError:
     ddtrace = None
 
 ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
-CONSOLE = True if os.getenv("ENV") == "DEV" else True
+CONSOLE = bool(os.getenv("ENV") == "DEV")
 
 
 class ManoManoDataDogAttributesProcessor:
@@ -121,20 +123,6 @@ def datadog_error_mapping_processor(_: logging.Logger, __: str, event_dict: Even
         event_dict["error.kind"] = exc_type.__module__ + "." + exc_type.__name__
 
     return event_dict
-
-
-def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
-    """Depending on the Python version will try to do the smartest thing possible to transform *v* into an ``exc_info`` tuple."""
-    if isinstance(v, BaseException):
-        return (v.__class__, v, v.__traceback__)
-
-    if isinstance(v, tuple):
-        return v  # type: ignore[return-value]
-
-    if v:
-        return sys.exc_info()
-
-    return (None, None, None)
 
 
 class RemoveKeysProcessor:

@@ -168,7 +168,7 @@ class LoggerConfiguration:
         # XXX: changing the way we derive IDs will prevent conflicts to ever happen
         key = fqn.split(".")[-1]
 
-        self._dictconfig[kind] = self._dictconfig.get(kind, {})
+        self._dictconfig[kind] = self._dictconfig.get(kind, {})  # type: ignore[typeddict-item]
         assert kind in self._dictconfig  # noqa: S101
         if key not in self._dictconfig[kind]:
             if isinstance(thing, str):
@@ -176,7 +176,7 @@ class LoggerConfiguration:
             else:
                 self._dictconfig[kind][key] = thing
         else:
-            registered_thing = self._dictconfig[kind][key]["class"]
+            registered_thing = self._dictconfig[kind][key]["class"]  # type: ignore[typeddict-item]
             if isinstance(fqn, str) and registered_thing != fqn:
                 # XXX dict compare for objects
                 raise RuntimeError(f"{kind} {fqn} conflicts with {registered_thing}")

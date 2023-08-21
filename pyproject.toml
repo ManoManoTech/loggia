@@ -228,6 +228,7 @@ builtins-ignorelist = ["filter", "format"]
   "ARG",
   "PLR2004",
 ]
+"loggia/presets/*.py" = ["D101"]
 
 [tool.mypy]
 python_version = "3.11"

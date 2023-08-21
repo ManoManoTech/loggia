@@ -1,12 +1,12 @@
-"""This modules provide a custom sink function for Loguru to pass log messages to Structlog.
+"""This modules provide a custom sink function for Loguru to pass log messages to standard logging.
 
 It is an experimental feature and is not recommended for production use.
 
-It should help if libraries use Loguru for logging and you want to use Structlog for your application.
+It should help if libraries use Loguru for logging and you want to use standard logging for your application.
 
 It is not recommended to use it if your application primiraly uses Loguru for logging.
 
-If you use primarily use loguru, you should consider using logging or structlog instead.
+If you use primarily use loguru, you should consider using logging.
 
 
 """

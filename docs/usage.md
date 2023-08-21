@@ -10,10 +10,6 @@ encouraged to modify the environment at runtime, and instead to use
 the usual mechanisms, like `.env` files, CI variables, shell initialization
 files, Kubernetes settings or what have you.
 
-!!! warning
-    This library will not load `.env` files for you.
-    You are responsible for loading them yourself, using `source .env` or your favorite library.
-    Possible libraries are [python-dotenv](https://pypi.org/project/python-dotenv/) or [python-decouple](https://pypi.org/project/python-decouple/) to load your `.env` files.
 
 ## Simplest usage
 
@@ -28,12 +24,12 @@ files, Kubernetes settings or what have you.
 
 With this setup, you get a default logger, with a default configuration.
 It supports JSON structured logging, and it is configured to work with DataDog.
-You can configure it using environment variables. XXX LINK TO CONFIGURATION
+You can configure it using environment variables.
 
 ## Use with Loguru
 
 !!! note
-    You do not have to use Loguru - but if you already adopted it, Loggia will
+    You do not have to use Loguru --- but if you already adopted it, Loggia will
     configure it to interop with Python's standard logging library.
 
 This library will automatically add to new log levels to match Loguru configuration:
@@ -55,7 +51,7 @@ You can opt out of this interop through the [capture_loguru][loggia.conf.LoggerC
 
 !!! warning
     While we try to have the same log management for loguru and standard logging, there are some differences.
-    Even in this example, you can notice the name of the loggers are different.
+    Even in this example, you can notice the name of the loggers is different.
 
 
 ## Make the output pretty using the `dev` preset
@@ -69,7 +65,7 @@ You can opt out of this interop through the [capture_loguru][loggia.conf.LoggerC
 %}
 ```
 
-See the [Presets documentation](/presets) for more information.
+See the [Presets documentation](presets.md) for more information.
 
 ## Set level to TRACE using the API
 

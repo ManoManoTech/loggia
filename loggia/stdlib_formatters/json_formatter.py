@@ -55,7 +55,6 @@ class CustomJsonFormatter(JsonFormatter):
             span = tracer.current_span()
             trace_id, span_id = (span.trace_id, span.span_id) if span else (None, None)
 
-            # add ids to structlog event dictionary
             log_record["dd.trace_id"] = str(trace_id or 0)
             log_record["dd.span_id"] = str(span_id or 0)
 
