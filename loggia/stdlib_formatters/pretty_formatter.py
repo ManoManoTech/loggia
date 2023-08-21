@@ -10,7 +10,7 @@ from loggia.utils.logrecordutils import extra_fields, popattr
 # pylint: disable=consider-using-f-string
 
 std_log = logging.Logger._log
-def patched_log(*args, **kwargs):
+def patched_log(*args: list[Any], **kwargs: dict[str, Any]) -> Any:
     if "stacklevel" in kwargs:
         kwargs["stacklevel"] += 1
         if "extra" not in kwargs:
@@ -18,7 +18,7 @@ def patched_log(*args, **kwargs):
         kwargs["extra"]["_fmt_with_filename"] = True
     else:
         kwargs["stacklevel"] = 2
-    std_log(*args, **kwargs)
+    return std_log(*args, **kwargs)
 logging.Logger._log = patched_log
 
 

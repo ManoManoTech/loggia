@@ -17,7 +17,7 @@ class Dev(BasePreset):
         return ["main"]
 
     @env.register(parser=ep.single_boolean_string)
-    def set_add_filename_to_logs_with_modified_stack(self, value: bool):  # noqa:FBT001
+    def set_add_filename_to_logs_with_modified_stack(self, value: bool) -> None:  # noqa=FBT001
         self.add_filename_to_logs_with_modified_stack = value
 
     def apply(self, conf: LoggerConfiguration) -> None:

@@ -6,16 +6,16 @@ class BootstrapLogger:
     """
 
     @classmethod
-    def warn(cls, msg: str, exc=None) -> None:
+    def warn(cls, msg: str, exc: Exception|None = None) -> None:
         cls.log("warn", msg, exc)
 
     @classmethod
-    def error(cls, msg: str, exc=None) -> None:
+    def error(cls, msg: str, exc: Exception|None = None) -> None:
         cls.log("error", msg, exc)
 
     @classmethod
-    def log(cls, level: str, msg: str, exc=None) -> None:
+    def log(cls, level: str, msg: str, exc: Exception|None = None) -> None:
         # XXX implement a proper prelogger
-        print(f"[{level.upper()}] {msg}")
+        print(f"[{level.upper()}] {msg}")  # noqa: T201
         if exc:
-            print(exc)
+            print(exc)  # noqa: T201
