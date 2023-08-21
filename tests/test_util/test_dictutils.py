@@ -1,6 +1,6 @@
 import logging.config  # noqa: TCH003
 
-from mm_logs.utils.dictutils import deep_merge_log_config, del_if_possible, del_many_if_possible, mv_attr
+from loggia.utils.dictutils import deep_merge_log_config, del_if_possible, del_many_if_possible, mv_attr
 
 
 def test_mv_attr():

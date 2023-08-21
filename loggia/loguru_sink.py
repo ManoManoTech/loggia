@@ -12,72 +12,85 @@ If you use primarily use loguru, you should consider using logging or structlog 
 """
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any, NoReturn
+from logging import getLogger, makeLogRecord
+from typing import TYPE_CHECKING, Any, NoReturn, cast
 
-import structlog
 from loguru import logger as loguru_logger
 
 if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
     from loguru import Record as LoguruRecord
 
-    from mm_logs.settings import MMLogsConfig
+    from loggia.conf import LoggerConfiguration
 
 
 # Custom sink function for Loguru to pass log messages to Structlog
-def loguru_to_structlog_sink(message: LoguruMessage) -> None:
+def _loguru_to_std_sink(message: LoguruMessage) -> None:
     """Custom sink function to adapt Loguru Record to Structlog EventDict."""
     record: LoguruRecord = message.record
 
     # XXX(dugab): should we cache the getLogger? use a wrapped logger?
-    structlog_logger: structlog.stdlib.BoundLogger = structlog.getLogger(record["name"])
+    logger = getLogger(record["name"])
 
     # XXX test with loguru.log
 
-    attributes: dict[str, Any] = {}
+    ct = record["time"].timestamp()
+    attributes: dict[str, Any] = {
+        "created": ct,
+        "msecs": int((ct - int(ct)) * 1000) + 0.0,  # see gh-89047
+        "name": record["name"],
+        "levelname": record["level"].name,
+        "levelno": record["level"].no,
+        "pathname": record["file"].path,
+        "filename": record["file"].name,
+        "module": record["module"],
+        "msg": record["message"],
+        "lineno": record["line"],
+        "funcName": record["function"],
+        "thread": record["thread"].id,
+        "threadName": record["thread"].name,
+        "process": record["process"].id,
+        "processName": record["process"].name,
+    }
 
     if "msecs" in record:
         # Duration should be in ns
         # XXX(dugab): check key actualy exists somewhere?
         attributes["duration"] = record["msecs"] * 1000000  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
-    # We want to pass stack,exc_info and exception to structlog
-    if "exception" in record:
-        attributes["exc_info"] = record["exception"].value if record["exception"] else None
+    # We want to pass stack,exc_info and exception
+    if record["exception"]:
+        attributes["exc_info"] = record["exception"].value
 
     if "stack" in record:
         # XXX(dugab): check key actualy exists somewhere?
         attributes["stack"] = record["stack"]  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
     # if "module" in record:
-    #     attributes["module"] = record["module"]
-    if "line" in record:
-        attributes["lineno"] = record["line"]
-    if "function" in record:
-        attributes["func_name"] = record["function"]
+    #     attributes
 
-    # XXX What about exc_info?
-    structlog_logger.log(
-        level=record["level"].no,
-        event=record["message"],
-        _loguru_record=record,
-        **record["extra"],
-        **attributes,
-    )
+    loguru_extra = cast(dict[str, Any], record.pop("extra", {}))
+    record_dict = loguru_extra | attributes
+
+    # exc_info = extra.pop("exc_info", None)
+    # XXX there are more forbidden keys to extra, see logging/__init__.py:1606
+
+    log_record = makeLogRecord(record_dict)
+    logger.handle(log_record)
 
 
-def configure_loguru(cfg: MMLogsConfig) -> None:
+def configure_loguru(cfg: LoggerConfiguration) -> None:
     """Configure Loguru to use our logger.
 
     Remove Loguru's default handler and pass all messages to Structlog.
 
     Args:
-        cfg (MMLogsConfig): Your configuration.
+        cfg (LoggerConfiguration): Your configuration.
     """
     loguru_logger.remove()
-    loguru_logger.add(loguru_to_structlog_sink, level=cfg.log_level)
+    loguru_logger.add(_loguru_to_std_sink, level=cfg.log_level)  # XXX NODEPLOY get defaut log level
 
-    if cfg.debug_disallow_loguru_reconfig:
+    if cfg.disallow_loguru_reconfig:
         _block_loguru_reconfiguration()
 
 

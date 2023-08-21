@@ -1,4 +1,4 @@
-"""Constants for the mm_logs package."""
+"""Constants for the loggia package."""
 import logging.config
 import re
 from typing import Final
@@ -8,12 +8,16 @@ SAFE_HEADER_ATTRIBUTES: Final[list[str]] = [
     "accept-encoding",
     "accept-language",
     "access-control-allow-origin",
+    "access-control-allow-credentials",
     "cache-control",
     "connection",
-    "content_length",
+    "content-length",
     "content-encoding",
     "content-length",
     "content-type",
+    "content-language",
+    "content-range",
+    "content-disposition",
     "cookie",
     "etag",
     "pragma",
@@ -64,6 +68,7 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
     5: ("Pink", "Pink White", "Pink", "Ivory"),  # Trace level
     logging.DEBUG: ("Blue Gray", "Sky", "Stone Blue", "White Blue"),
     logging.INFO: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),
+    25: ("Forest Green", "Lint", "Emerald Green", "Pale Lint"),  # Success level
     logging.WARNING: ("Nude", "Tan", "Nude", "Sand Dollar"),
     logging.ERROR: ("Hot Pink", "Fuchsia", "Pink", "Red"),
     logging.CRITICAL: ("Hot Pink", "Fuchsia", "Pink", "Red"),
@@ -71,40 +76,28 @@ PALETTES: Final[dict[int, tuple[str, str, str, str]]] = {
 """A dictionary of log levels and their color palettes."""
 
 
-SETTINGS_PREFIX: Final[str] = "MM_LOGS_"
-
-
-DEFAULT_STDLIB_DICT_CONFIG: Final["logging.config._DictConfigArgs"] = {
+BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {},
     "handlers": {
         "default": {
             "class": "logging.StreamHandler",
-            "formatter": "colored",
+            "formatter": "structured",
         },
     },
     "loggers": {
         "": {
             "handlers": ["default"],
             "propagate": True,
+            "level": "INFO",
         },
-        "gunicorn.access": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "gunicorn.error": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "gunicorn.errors": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "hypercorn.error": {
-            "handlers": ["default"],
-            "propagate": False,
-        },
-        "hypercorn.access": {"handlers": ["default"], "propagate": False},
     },
 }
+"""The base dictconfig for loggia.
+
+See [standard logging.config.dictConfig][logging.config.dictConfig] for details about this.
+
+NB: We do not encourage you to modify the base dictconfig, but it is the ultimate escape hatch,
+where anything standard logging can do, you can do too. Remember anything put inside that dict
+has the lowest precedence over any kind of configuration in Loggia.
+"""

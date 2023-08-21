@@ -2,45 +2,57 @@
 
 Almost all configuration can and should be passed through environment variables, to follow the [12-factor app](https://12factor.net/) principles.
 
-Some settings read from multiple environments variables for convenience, like `MM_LOGS_ENV` which reads `ENV` as a fallback. If both are set, the one with the custom prefix is used.
+## Common Environment variables
+
+| Variable name(s) | From python | Default value | Description |
+|------------------|---|------------|-------------|
+| `LOGGIA_LEVEL` | [`set_general_level`][loggia.conf.LoggerConfiguration.set_general_level] |`INFO` | The log level number or name. See [log levels](/log_levels) |
+| `LOGGIA_SUB_LEVEL` | [`set_logger_level`][loggia.conf.LoggerConfiguration.set_logger_level] |`INFO` | The log level number or name for any given named logger. |
+| `LOGGIA_PRESETS` | [`set_logger_level`][loggia.conf.LoggerConfiguration.set_logger_level] | `prod` | Preferences for Loggia [Presets](/presets) |
+
+## Advanced Environment variables
+
+These variables are not commonly modified, and changing them requires a good
+understanding of Loggia's internals - at least while the documentation remains
+sparse.
+
+| Variable name(s) | From python | Default value | Description |
+|------------------|---|------------|-------------|
+| `LOGGIA_FORMATTER` | [`set_default_formatter`][loggia.conf.LoggerConfiguration.set_default_formatter] | (unset) | The fully qualified name of a `logging.Formatter` - see `loggia.formatters` for available options.  |
+| `LOGGIA_SET_EXCEPTHOOK` | [`set_excepthook`][loggia.conf.LoggerConfiguration.set_excepthook] | `True` | Whether the logger should set the `sys.excepthook`. |
+| `LOGGIA_CAPTURE_WARNINGS` | [`capture_warnings`][loggia.conf.LoggerConfiguration.set_capture_warnings] | `True` | Whether the logger should capture warnings from the `warnings` module. |
+| `LOGGIA_CAPTURE_LOGURU` | [`capture_loguru`][loggia.conf.LoggerConfiguration.set_loguru_capture] | `True` | Whether the logger should capture logs emitted through loguru. |
+
+## Environment variable parsers
 
 !!! note
-    For convenience, some values default change depending on the environment or the debug flag:
+    For boolean values coming from the environment, most values are truthy, and a few
+    values are falsy: `FALSE`, `0`, `F`, `NO` and `DISABLED` will be intepreted as `False`.
 
-    - [log_formatter_name][mm_logs.settings.MMLogsConfig.log_formatter_name] will be `colored` if [env][mm_logs.settings.MMLogsConfig.env] is `dev`, and will be `structured` otherwise.
-    - All `debug_*` settings will be `True` if [debug][mm_logs.settings.MMLogsConfig.debug] is `True`, and will be `False` otherwise.
+    The falsy values are case-insentive, i.e. `disabled` is also `False`.
 
-## Environment variables
+## Configuration precedence
 
-| Variable name(s) | Python setting | Default value | Description |
-|------------------|---|------------|-------------|
-| `MM_LOGS_ENV` or `ENV` | [env][mm_logs.settings.MMLogsConfig.env] | `production` | The environment name. |
-| `MM_LOGS_LOG_LEVEL` or `LOG_LEVEL` | [log_level][mm_logs.settings.MMLogsConfig.log_level] |`INFO` | The log level number or name. |
-| `MM_LOGS_LOG_FORMATTER_NAME` | [log_formatter_name][mm_logs.settings.MMLogsConfig.log_formatter_name] | `structured` or `colored` | The log formatter name. |
-| `MM_LOGS_SET_EXCEPTHOOK` | [set_excepthook][mm_logs.settings.MMLogsConfig.set_excepthook] | `True` | Whether the logger should set the `sys.excepthook`. |
-| `MM_LOGS_CAPTURE_LOGURU` | [capture_loguru][mm_logs.settings.MMLogsConfig.capture_loguru] | `True` | Whether the logger should capture logs emitted through loguru. |
-| `MM_LOGS_CAPTURE_WARNINGS` | [capture_warnings][mm_logs.settings.MMLogsConfig.capture_warnings] | `True` | Whether the logger should capture warnings from the `warnings` module. |
-| `MM_LOGS_DEBUG` | [debug][mm_logs.settings.MMLogsConfig.debug] | `False` | Enable or disable all MM Logger debug options. |
-| `MM_LOGS_DEBUG_SHOW_CONFIG` | [debug_show_config][mm_logs.settings.MMLogsConfig.debug_show_config] | `False` | Log the logging configuration at the end of `configure_logging()`, as DEBUG. |
-| `MM_LOGS_DEBUG_JSON_INDENT` | [debug_json_indent][mm_logs.settings.MMLogsConfig.debug_json_indent] | `None` | Indent JSON logs. Should only be used for debugging. |
-| `MM_LOGS_DEBUG_CHECK_DUPLICATE_PROCESSORS` | [debug_check_duplicate_processors][mm_logs.settings.MMLogsConfig.debug_check_duplicate_processors] | `False` | Run a sanity check of the structlog configuration to ensure no processors are duplicated. |
-| `MM_LOGS_DEBUG_DISALLOW_LOGURU_RECONFIG` | [debug_disallow_loguru_reconfig][mm_logs.settings.MMLogsConfig.debug_disallow_loguru_reconfig] | `False` | Unused. |
-| `MM_LOGS_DEBUG_SHOW_EXTRA_ARGS` | [debug_show_extra_args][mm_logs.settings.MMLogsConfig.debug_show_extra_args] | `False` | Unused. |
+Loggia is configured through four different ways ([see how](loggia.conf.LoggerConfiguration.__init__)), each overriding the previous one.
+
+``` mermaid
+
+stateDiagram-v2
+defaults : Loggia default dictconfig
+presets: Presets
+args : LoggerConfiguration.__init__ API
+env : Environment
+calls : LoggerConfiguration API
 
 
-## Settings that can only be set in Python
+defaults --> presets
+presets --> args
+args --> env
+env --> calls
+```
 
-| Python setting | Default value | Description |
-|----------------|---------------|-------------|
-| [custom_stdlib_logging_dict_config][mm_logs.settings.MMLogsConfig.custom_stdlib_logging_dict_config] | `{}` | A custom dict config for the standard library logger, to be merged with the logger default config. See [Python logging dict configuration schema]([#python-logging-configuration](https://docs.python.org/3/library/logging.config.html#dictionary-schema-details)). |
-
-## Config module
-
-::: mm_logs.settings
-    options:
-        show_source: false
-        show_signature: false
-        show_signature_annotations: false
-        <!-- members:
-          - MMLogsConfig
-          - load_config -->
+ 1. The static base configuration (XXX: coderef). NB: We go with only one handler to stdout in true cloud-native fashion.
+ 2. Presets are loaded according to preferences (see [Presets](/presets))
+ 3. Options passed to the `LoggerConfiguration` constructor override the above (if any)
+ 4. Environment variables override the above (if any)
+ 5. Methods called on a `LoggerConfiguration` instance in Python have the last word.

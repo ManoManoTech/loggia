@@ -6,15 +6,29 @@ This is just a manual test helper for now.
 """
 from __future__ import annotations
 
+import json
 import logging
 
 import pytest
 from loguru import logger as loguru_logger
 
-from mm_logs.logger import configure_logging
-from mm_logs.settings import MMLogsConfig
+from loggia.conf import LoggerConfiguration
+from loggia.logger import initialize
 
 # ruff: noqa: T201
+
+
+def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
+    lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
+    initialize(lc)
+    loguru_logger.info("test info")
+    captured = capsys.readouterr()
+    errlines = captured.err.split("\n")
+    errlines.remove("")
+    assert len(errlines) == 1
+    print(errlines[0])
+    record = json.loads(errlines[0])
+    assert record["message"] == "test info"
 
 
 def launch() -> None:
@@ -48,12 +62,13 @@ def launch() -> None:
 
     logger.log(logging.WARNING, "Warning log from standard logging, using log method")
     loguru_logger.log("WARNING", "Warning log from Loguru, using log method")
+    raise RuntimeError("XXX")
 
 
 def test_disallow_loguru_reconfig():
-    config = MMLogsConfig(debug_disallow_loguru_reconfig=True, capture_loguru=True)
-    configure_logging(config)
-    assert config.debug_disallow_loguru_reconfig
+    config = LoggerConfiguration()
+    initialize()
+    assert config.disallow_loguru_reconfig
     assert config.capture_loguru
 
     assert hasattr(loguru_logger, "add_original")
@@ -61,7 +76,7 @@ def test_disallow_loguru_reconfig():
     with pytest.raises(RuntimeError):
         loguru_logger.add(lambda x: print(x))
 
-    from mm_logs.loguru_sink import _unblock_loguru_reconfiguration
+    from loggia.loguru_sink import _unblock_loguru_reconfiguration
 
     _unblock_loguru_reconfiguration()
     test = loguru_logger.add(lambda x: print(x))

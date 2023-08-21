@@ -2,6 +2,7 @@
 
 They are used in the default configuration, but you can also use them in your own configuration.
 """
+import inspect
 import logging
 import logging.config
 import os
@@ -9,9 +10,10 @@ import sys
 import traceback
 from collections.abc import Iterable, Mapping
 from logging import Logger, LogRecord
-from types import TracebackType
+from types import FrameType, TracebackType
 from typing import Any, Union
 
+from structlog.processors import CallsiteParameterAdder
 from structlog.types import EventDict
 
 try:
@@ -154,6 +156,8 @@ class RemoveKeysProcessor:
 
 
 class RemoveKeysStartingWithProcessor:
+    """Removes keys from the event dict, if they start with the given prefix."""
+
     def __init__(self, keys_prefix: Iterable[str]) -> None:
         self.keys_prefix = frozenset(keys_prefix)
 
@@ -190,4 +194,56 @@ class DataDogTraceInjectionProcessor:
         event_dict["dd.env"] = self.ddtrace.config.env or ""
         event_dict["dd.service"] = self.ddtrace.config.service or ""
         event_dict["dd.version"] = self.ddtrace.config.version or ""
+        return event_dict
+
+
+def _find_first_app_frame_and_name(
+    additional_ignores: list[str] | None = None,
+) -> tuple[FrameType, str]:
+    """Remove all intra-structlog calls and return the relevant app frame.
+
+    :param additional_ignores: Additional names with which the first frame must
+        not start.
+
+    :returns: tuple of (frame, name)
+    """
+    ignores = ["structlog"] + (additional_ignores or [])
+    f = sys._getframe()
+    name = f.f_globals.get("__name__") or "?"
+    while any(tuple(name.startswith(i) for i in ignores)):
+        if f.f_back is None:
+            name = "?"
+            break
+        f = f.f_back
+        name = f.f_globals.get("__name__") or "?"
+    return f, name
+
+
+class CallsiteParameterAdderWithStacklevel(CallsiteParameterAdder):
+    """ZOR."""
+
+    def __call__(
+        self,
+        logger: logging.Logger,
+        name: str,
+        event_dict: EventDict,
+    ) -> EventDict:
+        record: logging.LogRecord | None = event_dict.get("_record")
+        from_structlog: bool | None = event_dict.get("_from_structlog")
+        # If the event dictionary has a record, but it comes from structlog,
+        # then the callsite parameters of the record will not be correct.
+        if record is not None and not from_structlog:
+            for mapping in self._record_mappings:
+                event_dict[mapping.event_dict_key] = record.__dict__[mapping.record_attribute]
+        else:
+            depth = 1
+            if "stacklevel" in event_dict:
+                depth = int(event_dict["stacklevel"])
+
+            frame, module = _find_first_app_frame_and_name(
+                additional_ignores=self._additional_ignores,
+            )
+            frame_info = inspect.getframeinfo(frame, depth)
+            for parameter, handler in self._active_handlers:
+                event_dict[parameter.value] = handler(module, frame_info)
         return event_dict

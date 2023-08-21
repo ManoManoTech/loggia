@@ -1,25 +1,22 @@
-import os
-
 import pytest
 
 
 def test_usage_basic(capsys: pytest.CaptureFixture[str]):
-    os.environ["ENV"] = "dev"
     # <!-- DOC:START -->
 
     # Setup
-    from mm_logs.logger import configure_logging
+    from loggia.logger import initialize
 
     # One-line setup -- get the default config from environment variables
-    configure_logging()
+    initialize()
 
-    # Use just like the standard logger
+    # Using the standard logger will now benefit from Loggia configuration
     import logging
-
     logger = logging.getLogger(__name__)
     logger.info("Hello world!")
 
     # <!-- DOC:END -->
+
     captured = capsys.readouterr()
     assert "INFO" in captured.err
     assert "test_usage_basic" in captured.err
