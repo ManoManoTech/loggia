@@ -11,7 +11,7 @@ configuration possible in a one size fits all spirit.
 
 ## Loaded presets
 
-Loggia loads all the presets in `loggia.presets` by default.
+Loggia loads all the presets in [`loggia.presets`][loggia.presets] by default.
 
 Presets that may conflict with each other are handling through "preset slots", as described
 below.
@@ -28,16 +28,16 @@ A way to express a concern where only one preset may apply.
 For instance, the `main` slot currently has a `prod` and a `dev` preset, that configure
 structured and pretty output formats, respectively.
 
-| Slot             | Available implementations  |
-|------------------|----------------------------|
-| `main`           | [`dev`](loggia.presets.dev.Dev) ; [`prod`](loggia.presets.prod.Prod)
-| `normalization`  | [`datadog`](loggia.presets.datadog_normalization.DatadogNormalization) ; `otel` (in ROADMAP)
+| Slot            | Available implementations                                               |
+| --------------- | ----------------------------------------------------------------------- |
+| `main`          | [`dev`][loggia.presets.dev] ; [`prod`][loggia.presets.prod]             |
+| `normalization` | [`datadog`][loggia.presets.datadog_normalisation] ; `otel` (in ROADMAP) |
 
 ### Preset Preferences
 
 When multiple presets are available for a given slot, something needs to decide which preset
 to use. This is controlled by the `LOGGIA_PRESETS` environment variable, as well as the `presets`
-argument to the [LoggerConfiguration](loggia.conf.LoggerConfiguration.__init__) constructor.
+argument to the [LoggerConfiguration][loggia.conf.LoggerConfiguration] constructor.
 
 It is expected to be a comma separated string of preset names, identifying which preset wins
 for each of the slots.

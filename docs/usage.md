@@ -97,9 +97,12 @@ You probably want to configure the standard Python logger as well, eg, to change
 
 ## Configure Hypercorn or Gunicorn xSGI servers
 
+XXX Documentation
+<!--
 Pass the Logger classes in your Hypercorn or Gunicorn configuration.
 
 The logger are already configured for DataDog, and they support JSON structured logging for access logs.
+
 
 ### Hypercorn
 
@@ -107,7 +110,7 @@ Use [HypercornLogger][loggia.structlog_utils.hypercorn_logger.HypercornLogger] a
 
 ### Gunicorn
 
-Use [GunicornLogger][loggia.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class.
+Use [GunicornLogger][loggia.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class. -->
 
 ## Configure the standard logger
 
