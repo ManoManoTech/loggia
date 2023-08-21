@@ -56,15 +56,3 @@ env --> calls
  3. Options passed to the `LoggerConfiguration` constructor override the above (if any)
  4. Environment variables override the above (if any)
  5. Methods called on a `LoggerConfiguration` instance in Python have the last word.
-
-
-## Config module
-
-::: loggia.conf
-    options:
-        show_source: false
-        show_signature: false
-        show_signature_annotations: false
-        <!-- members:
-          - LoggerConfiguration
-          - load_config -->

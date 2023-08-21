@@ -6,19 +6,21 @@
 - [x] Basic interop with `loguru`, with `loguru` piping into standard logger
 - [x] First class support for Datadog standard log attributes
 - [x] Preliminary concept of presets
-- [ ] (MM-Internal) Artifactory release
 - [x] Most of the code shown in documentation is derived from the test suite
 - [x] Move Datadog-specific reencoding into a dedicated filter
 - [x] Move hypercorn/gunicorn reencoding into a dedicated filter
 - [x] `dev` and `prod` presets in the `main` slot
-- [ ] Rename internals to have legible documentation
-- [ ] Clean up mkdocs settings for the reference part
-- [ ] Load preset through FQN in `LOGGIA_PRESETS`
-- [ ] Write preset tests
-- [ ] Write built-in preset override tests
-- [ ] Make environment variable parsing type aware and document it
+- [x] Rename internals to have legible documentation
+- [x] Clean up mkdocs settings for the reference part
+- [x] Write preset tests
 
 ## 0.2.0
+
+- [ ] (MM-Internal) Artifactory release
+- [ ] Load preset through FQN in `LOGGIA_PRESETS`
+- [ ] Write built-in preset override tests
+- [ ] Make environment variable parsing type aware and document it
+- (And more! Let us know what you'd like next.)
 
 ## Later
 

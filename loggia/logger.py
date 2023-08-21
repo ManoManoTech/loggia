@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from types import TracebackType
 
 
-def patch_to_add_level(level_number: int, level_name: str) -> None:
+def _patch_to_add_level(level_number: int, level_name: str) -> None:
     """Add a new level to the standard logger.
 
     Sanity check for existing levels is left as an exercise to the user.
@@ -27,10 +27,6 @@ def patch_to_add_level(level_number: int, level_name: str) -> None:
     level_name_upper = level_name.upper()
     level_name.lower()
     logging.addLevelName(level_number, level_name_upper)
-
-
-patch_to_add_level(5, "trace")
-patch_to_add_level(25, "success")
 
 
 def initialize(conf: LoggerConfiguration | Mapping | None = None,
@@ -60,6 +56,8 @@ def initialize(conf: LoggerConfiguration | Mapping | None = None,
         try:
             from loggia.loguru_sink import configure_loguru
             configure_loguru(conf)
+            _patch_to_add_level(5, "trace")
+            _patch_to_add_level(25, "success")
         except ImportError as e:
             BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
 

@@ -93,4 +93,11 @@ BASE_DICTCONFIG: Final["logging.config._DictConfigArgs"] = {
         },
     },
 }
-"""The base dictconfig for loggia."""
+"""The base dictconfig for loggia.
+
+See [standard logging.config.dictConfig][logging.config.dictConfig] for details about this.
+
+NB: We do not encourage you to modify the base dictconfig, but it is the ultimate escape hatch,
+where anything standard logging can do, you can do too. Remember anything put inside that dict
+has the lowest precedence over any kind of configuration in Loggia.
+"""

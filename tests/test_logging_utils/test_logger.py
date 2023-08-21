@@ -7,7 +7,7 @@ from loggia.conf import LoggerConfiguration as LC
 from loggia.logger import (
     _set_excepthook,
     initialize,
-    patch_to_add_level,
+    _patch_to_add_level,
 )
 
 
@@ -37,7 +37,7 @@ def test_set_excepthook_on():
 def test_patch_to_add_level():
     level_number = 35
     level_name = "custom_level"
-    patch_to_add_level(level_number, level_name)
+    _patch_to_add_level(level_number, level_name)
     initialize()
     assert logging.getLevelName(level_number) == level_name.upper()
 

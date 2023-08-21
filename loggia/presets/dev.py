@@ -1,3 +1,4 @@
+"""Dev is the overarching preset for a delightful development experience."""
 from loggia.base_preset import BasePreset
 from loggia.conf import LoggerConfiguration
 from loggia.stdlib_formatters.pretty_formatter import PrettyFormatter
@@ -8,8 +9,7 @@ import loggia._internal.env_parsers as ep
 env = EnvironmentLoader()
 
 
-class Dev(BasePreset):
-    """An overarching preset for a delightful development experience."""
+class Dev(BasePreset):    
     def __init__(self) -> None:
         self.add_filename_to_logs_with_modified_stack = True
 

@@ -1,3 +1,4 @@
+"""An overarching preset for a no-frills JSON production logger to stdout."""
 from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
@@ -22,8 +23,7 @@ def _build_json_formatter() -> dict[str, type[Formatter] | Any]:
     }
 
 
-class Prod(BasePreset):
-    """An overarching preset for a no-frills JSON production logger to stdout."""
+class Prod(BasePreset):    
     @classmethod
     def slots(cls) -> list[str]:
         return ["main"]

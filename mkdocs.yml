@@ -94,7 +94,7 @@ plugins:
               domains: [std, py, logging]
           paths: [mm]
           options:
-            show_root_heading: false
+            show_root_heading: true
             show_signature_annotations: true
             show_if_no_docstring: false
             separate_signature: true

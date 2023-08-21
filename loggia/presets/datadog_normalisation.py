@@ -1,3 +1,5 @@
+"""Remap anything to Datadog standard and common attributes."""
+
 import sys
 import traceback
 from logging import LogRecord
@@ -30,7 +32,7 @@ def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
     return (None, None, None)
 
 
-class DatadogNormalisation(BasePreset):
+class DatadogNormalisation(BasePreset):    
     @classmethod
     def slots(cls) -> list[str]:
         return ["normalization"]
