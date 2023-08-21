@@ -1,4 +1,6 @@
-FALSY_STRINGS={"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "BY CHTULU, NO!"}
+from loggia.constants import FALSY_STRINGS
+
+
 def _is_truthy_string(s: str) -> bool:
     if s and s.upper() not in FALSY_STRINGS:
         return True

@@ -12,14 +12,17 @@ def test_usage_with_loguru(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Setup
     from loggia.logger import initialize
+
     initialize()
 
     # Use loguru
     import loguru
+
     loguru.logger.info("Hello world loguru!")
 
     # Using standard logger should still work uniformly
     import logging
+
     logger = logging.getLogger()
     logger.info("Hello world std_lib!")
     # <!-- DOC:END -->

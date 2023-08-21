@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 
-def import_fqn(fully_qualified_name: str, ensure_instance_of: type|None = None, *, ensure_callable: bool = False) -> Any:
+def import_fqn(fully_qualified_name: str, ensure_instance_of: type | None = None, *, ensure_callable: bool = False) -> Any:
     """_summary_.
 
     Args:

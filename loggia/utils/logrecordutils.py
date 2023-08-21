@@ -6,6 +6,8 @@ STANDARD_FIELDS = set(logging.makeLogRecord({}).__dict__.keys())
 
 
 T = TypeVar("T")
+
+
 def popattr(record: logging.LogRecord, attr: str, default: T) -> T:
     """Behaves like dict.pop() but for random attributes on any object."""
     if not hasattr(record, attr):

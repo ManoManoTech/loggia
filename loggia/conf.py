@@ -14,8 +14,6 @@ if TYPE_CHECKING:
     from json import JSONEncoder
 
 
-
-
 env = EnvironmentLoader()
 
 
@@ -28,9 +26,7 @@ class LoggerConfiguration:
     capture_loguru: bool = True
     disallow_loguru_reconfig: bool = True
 
-    def __init__(self, *,
-                 settings: dict[str, str] | None = None,
-                 presets: str | list[str] | None = None):
+    def __init__(self, *, settings: dict[str, str] | None = None, presets: str | list[str] | None = None):
         # XXX Well put docstring!
 
         # Base configuration is static:
@@ -59,7 +55,6 @@ class LoggerConfiguration:
 
         # Whatever you do to LoggerConfiguration after it's initialized has the
         # last word. Enjoy.
-
 
     @env.register("LOGGIA_LEVEL")
     def set_general_level(self, level: int | str) -> None:
@@ -109,7 +104,7 @@ class LoggerConfiguration:
 
     # LOGGIA_DEV_FORMATTER=prettyformatter|simpleformatter
     @env.register("LOGGIA_FORMATTER")
-    def set_default_formatter(self, formatter: str|dict) -> None:
+    def set_default_formatter(self, formatter: str | dict) -> None:
         """Sets the default formatter."""
         assert "handlers" in self._dictconfig  # noqa: S101
         formatter_id = self._register("formatters", formatter)
@@ -167,12 +162,8 @@ class LoggerConfiguration:
             self._dictconfig["loggers"][logger_name] = {}
             self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
 
-    def _register(self,
-                  kind: Literal["filters"] | Literal["formatters"],
-                  thing: str | dict) -> str:
-
-        fqn = thing if isinstance(thing, str) else \
-            thing.__class__.__module__ + "." + thing.__class__.__name__
+    def _register(self, kind: Literal["filters"] | Literal["formatters"], thing: str | dict) -> str:
+        fqn = thing if isinstance(thing, str) else thing.__class__.__module__ + "." + thing.__class__.__name__
 
         # XXX: changing the way we derive IDs will prevent conflicts to ever happen
         key = fqn.split(".")[-1]
@@ -186,7 +177,7 @@ class LoggerConfiguration:
                 self._dictconfig[kind][key] = thing
         else:
             registered_thing = self._dictconfig[kind][key]["class"]
-            if (isinstance(fqn, str) and registered_thing != fqn):
+            if isinstance(fqn, str) and registered_thing != fqn:
                 # XXX dict compare for objects
                 raise RuntimeError(f"{kind} {fqn} conflicts with {registered_thing}")
         return key

@@ -5,9 +5,9 @@ from unittest import mock
 
 from loggia.conf import LoggerConfiguration as LC
 from loggia.logger import (
+    _patch_to_add_level,
     _set_excepthook,
     initialize,
-    _patch_to_add_level,
 )
 
 

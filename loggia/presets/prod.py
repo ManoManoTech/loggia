@@ -11,6 +11,7 @@ if TYPE_CHECKING:
 
     from loggia.conf import LoggerConfiguration
 
+
 def _build_json_formatter() -> dict[str, type[Formatter] | Any]:
     attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
     attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]

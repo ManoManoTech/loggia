@@ -51,7 +51,6 @@ class GunicornLogger:
                 "duration": duration_ns,
                 "request_time_seconds": request_time_seconds,
             },
-
         )
 
     def close_on_exec(self, *args: Any, **kwargs: Any) -> None:

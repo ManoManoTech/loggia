@@ -20,6 +20,7 @@ class Presets:
     - Slots resolution
     - deal with LOGIA_PRESETS
     """
+
     available: list[type[BasePreset]]
 
     def __init__(self, preset_preferences: Iterable[str] | None = None):
@@ -55,17 +56,21 @@ class Presets:
 
             if len(solutions) == 0:
                 solution = sorted(indexed_preset_keys)[0]
-                logger.warn(f"Preset slot '{slot}' has several presets available "
-                            f"({', '.join(indexed_preset_keys)}) but no preference is set. "
-                            "Use LOGGIA_PRESETS to force one over the others. We "
-                            f"are defaulting to the '{solution}' preset.")
+                logger.warn(
+                    f"Preset slot '{slot}' has several presets available "
+                    f"({', '.join(indexed_preset_keys)}) but no preference is set. "
+                    "Use LOGGIA_PRESETS to force one over the others. We "
+                    f"are defaulting to the '{solution}' preset.",
+                )
             elif len(solutions) > 1:
                 solution = sorted(solutions)[0]
-                logger.warn(f"Preset slot '{slot}' has several presets available "
-                            f"({', '.join(indexed_preset_keys)}) and preferences ("
-                            f"{', '.join(solutions)}) are themselves ambiguous. "
-                            "Use LOGGIA_PRESETS to force one over the others. We "
-                            f"are defaulting to the '{solution}' one.")
+                logger.warn(
+                    f"Preset slot '{slot}' has several presets available "
+                    f"({', '.join(indexed_preset_keys)}) and preferences ("
+                    f"{', '.join(solutions)}) are themselves ambiguous. "
+                    "Use LOGGIA_PRESETS to force one over the others. We "
+                    f"are defaulting to the '{solution}' one.",
+                )
             else:
                 solution = solutions.pop()
             selected_slotted_presets[slot] = indexed_presets[solution]
@@ -74,7 +79,6 @@ class Presets:
         unslotted_presets.extend(selected_slotted_presets.values())
         self.available = unslotted_presets
 
-
     def _load_builtins(self) -> list[type[BasePreset]]:
         base_dir = (Path(__file__).parent / "../..").resolve()
         all_preset_modules = import_all_files("loggia/presets", base_dir=base_dir)
@@ -82,8 +86,6 @@ class Presets:
         for mod in all_preset_modules:
             for thing_name in dir(mod):
                 thing = getattr(mod, thing_name)
-                if isinstance(thing, type) and \
-                   issubclass(thing, BasePreset) and \
-                   thing is not BasePreset:
+                if isinstance(thing, type) and issubclass(thing, BasePreset) and thing is not BasePreset:
                     results.append(thing)
         return results

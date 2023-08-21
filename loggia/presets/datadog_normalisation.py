@@ -37,7 +37,6 @@ class DatadogNormalisation(BasePreset):
     def slots(cls) -> list[str]:
         return ["normalization"]
 
-
     def apply(self, conf: LoggerConfiguration) -> None:
         # XXX: self.__something__ ?
         conf.add_log_filter("", "loggia.presets.DatadogNormalisation")

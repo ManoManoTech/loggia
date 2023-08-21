@@ -10,6 +10,8 @@ from loggia.utils.logrecordutils import extra_fields, popattr
 # pylint: disable=consider-using-f-string
 
 std_log = logging.Logger._log
+
+
 def patched_log(*args: list[Any], **kwargs: dict[str, Any]) -> Any:
     if "stacklevel" in kwargs:
         kwargs["stacklevel"] += 1
@@ -19,11 +21,14 @@ def patched_log(*args: list[Any], **kwargs: dict[str, Any]) -> Any:
     else:
         kwargs["stacklevel"] = 2
     return std_log(*args, **kwargs)
+
+
 logging.Logger._log = patched_log
 
 
 class PrettyFormatter(logging.Formatter):
     """A custom formatter for logging that uses colors."""
+
     default_time_format = "%H:%M:%S"
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -39,29 +44,31 @@ class PrettyFormatter(logging.Formatter):
         with_filename = popattr(record, "_fmt_with_filename", default=False)
         palette = PALETTES.get(record.levelno, PALETTES[logging.DEBUG])
 
-        pretty_extra = "\n  ".join(
-            f"{ansi_fg(palette[2])}{k}{ansi_end()}={ansi_fg(palette[3])}{v}"
-            for k, v in extra_fields(record)
-        )
+        pretty_extra = "\n  ".join(f"{ansi_fg(palette[2])}{k}{ansi_end()}={ansi_fg(palette[3])}{v}" for k, v in extra_fields(record))
 
         if pretty_extra:
             pretty_extra = f"\n  {pretty_extra}"
+        pretty_extra = ""
 
         if with_filename:
-            fmt = (f"{ansi_fg(palette[0])}%(asctime)s "
-                   f"{ansi_fg(palette[1])}%(levelname)-8s "
-                   f"{ansi_fg(palette[2])}%(name)s "
-                   f"{ansi_fg(palette[2])}%(filename)s:%(lineno)d "
-                   f"{ansi_fg(palette[3])}%(message)s"
-                   f"{pretty_extra}"
-                   f"{ansi_end()}")
+            fmt = (
+                f"{ansi_fg(palette[0])}%(asctime)s "
+                f"{ansi_fg(palette[1])}%(levelname)-8s "
+                f"{ansi_fg(palette[2])}%(name)s "
+                f"{ansi_fg(palette[2])}%(filename)s:%(lineno)d "
+                f"{ansi_fg(palette[3])}%(message)s"
+                f"{pretty_extra}"
+                f"{ansi_end()}"
+            )
         else:
-            fmt = (f"{ansi_fg(palette[0])}%(asctime)s "
-                   f"{ansi_fg(palette[1])}%(levelname)-8s "
-                   f"{ansi_fg(palette[2])}%(name)s:%(lineno)d "
-                   f"{ansi_fg(palette[3])}%(message)s"
-                   f"{pretty_extra}"
-                   f"{ansi_end()}")
+            fmt = (
+                f"{ansi_fg(palette[0])}%(asctime)s "
+                f"{ansi_fg(palette[1])}%(levelname)-8s "
+                f"{ansi_fg(palette[2])}%(name)s:%(lineno)d "
+                f"{ansi_fg(palette[3])}%(message)s"
+                f"{pretty_extra}"
+                f"{ansi_end()}"
+            )
 
         self._set_format(fmt)
         return super().format(record)

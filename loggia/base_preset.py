@@ -14,6 +14,7 @@ class BasePreset(ABC):
     Loggia presets are a very thin abstraction that allow bundling of settings
     that address a similar concern.
     """
+
     @abstractmethod
     def apply(self, conf: LoggerConfiguration) -> None:
         ...

@@ -12,6 +12,7 @@ def test_usage_basic(capsys: pytest.CaptureFixture[str]):
 
     # Using the standard logger will now benefit from Loggia configuration
     import logging
+
     logger = logging.getLogger(__name__)
     logger.info("Hello world!")
 

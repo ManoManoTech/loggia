@@ -9,9 +9,11 @@ def test_usage_preset_env(capsys: pytest.CaptureFixture[str]) -> None:
     with_env("LOGGIA_PRESETS", "dev")
 
     from loggia.logger import initialize
+
     initialize()
 
     from logging import getLogger
+
     getLogger("test").warning("hello from logging")  # Will show up colored
     # <!-- DOC:END -->
 

@@ -11,10 +11,12 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
 
     # Setup
     from loggia.logger import initialize
+
     initialize()
 
     # Use standard logger
     from logging import getLogger
+
     logger = getLogger()
 
     # Use the added trace level

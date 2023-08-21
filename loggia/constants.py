@@ -101,3 +101,6 @@ NB: We do not encourage you to modify the base dictconfig, but it is the ultimat
 where anything standard logging can do, you can do too. Remember anything put inside that dict
 has the lowest precedence over any kind of configuration in Loggia.
 """
+
+
+FALSY_STRINGS = {"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "BY CHTULU, NO!"}

@@ -44,7 +44,6 @@ def test_usage_api_trace(capsys: pytest.CaptureFixture[str]):
         assert "message" in parsed_line
         messages.append(parsed_line["message"])
 
-
     assert "Hello world!" in messages
     assert "Hello trace" in messages
     assert "Hello? Hello?" not in messages
