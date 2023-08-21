@@ -4,9 +4,9 @@ from collections import defaultdict
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from loggia.base_preset import BasePreset
-from loggia.utils.loaderutils import import_all_files, import_fqn
 from loggia._internal.bootstrap_logger import BootstrapLogger as logger
+from loggia.base_preset import BasePreset
+from loggia.utils.loaderutils import import_all_files
 
 if TYPE_CHECKING:
     from collections.abc import Iterable

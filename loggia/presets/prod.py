@@ -23,7 +23,7 @@ def _build_json_formatter() -> dict[str, type[Formatter] | Any]:
     }
 
 
-class Prod(BasePreset):    
+class Prod(BasePreset):
     @classmethod
     def slots(cls) -> list[str]:
         return ["main"]

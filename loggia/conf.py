@@ -9,7 +9,6 @@ from loggia._internal.conf import EnvironmentLoader, is_truthy_string
 from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
 
-
 if TYPE_CHECKING:
     import logging.config
     from json import JSONEncoder

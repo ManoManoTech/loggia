@@ -3,13 +3,12 @@ from __future__ import annotations
 
 import logging
 import logging.config
-from os import getenv
 import sys
 from collections.abc import Mapping
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
-from loggia.conf import LoggerConfiguration
 from loggia._internal.bootstrap_logger import BootstrapLogger
+from loggia.conf import LoggerConfiguration
 
 if TYPE_CHECKING:
     from types import TracebackType
