@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 from os import getenv
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Any, Literal
 
 import loggia._internal.env_parsers as ep
 from loggia._internal.conf import EnvironmentLoader, is_truthy_string
@@ -87,7 +87,7 @@ class LoggerConfiguration:
 
     # LOGGIA_EXTRA_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
-    def add_log_filter(self, logger_name: str, filter_: str | dict) -> None:
+    def add_log_filter(self, logger_name: str, filter_: str | dict[str, Any]) -> None:
         assert "loggers" in self._dictconfig  # noqa: S101
         filter_id = self._register("filters", filter_)
         self._enforce_logger(logger_name)
@@ -104,7 +104,7 @@ class LoggerConfiguration:
 
     # LOGGIA_DEV_FORMATTER=prettyformatter|simpleformatter
     @env.register("LOGGIA_FORMATTER")
-    def set_default_formatter(self, formatter: str | dict) -> None:
+    def set_default_formatter(self, formatter: str | dict[str, Any]) -> None:
         """Sets the default formatter."""
         assert "handlers" in self._dictconfig  # noqa: S101
         formatter_id = self._register("formatters", formatter)
@@ -162,7 +162,7 @@ class LoggerConfiguration:
             self._dictconfig["loggers"][logger_name] = {}
             self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
 
-    def _register(self, kind: Literal["filters"] | Literal["formatters"], thing: str | dict) -> str:
+    def _register(self, kind: Literal["filters"] | Literal["formatters"], thing: str | dict[str, Any]) -> str:
         fqn = thing if isinstance(thing, str) else thing.__class__.__module__ + "." + thing.__class__.__name__
 
         # XXX: changing the way we derive IDs will prevent conflicts to ever happen

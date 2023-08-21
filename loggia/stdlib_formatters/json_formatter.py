@@ -89,7 +89,7 @@ class CustomJsonFormatter(JsonFormatter):
         # Cleanup and expansion of gunicorn specific log attributes
         if "gunicorn" in log_record["logger.name"]:
             if hasattr(record.args, "items"):
-                for k, v in record.args.items():  # type: ignore
+                for k, v in record.args.items():  # type: ignore[union-attr]
                     if "{" not in k or k.startswith("{http_"):
                         continue
                     m = GUNICORN_KEY_RE.search(k)

@@ -1,5 +1,5 @@
+import os
 from collections.abc import Callable
-from os import environ
 from typing import Any, NamedTuple, TypeVar
 
 import loggia._internal.env_parsers as ep
@@ -7,14 +7,13 @@ from loggia.constants import FALSY_STRINGS
 
 EnvParser = Callable[[str], list[list[str]]]
 
+_ALL_ENV_KEYS: set[str] = set()
+_F = TypeVar("_F", bound=Callable[..., Any])
+
 
 class EnvConfigurable(NamedTuple):
     parser: EnvParser
-    method: Callable
-
-
-_ALL_ENV_KEYS: set[str] = set()
-T = TypeVar("T")
+    method: Callable[[Any], Any]
 
 
 def is_truthy_string(s: str) -> bool:
@@ -29,14 +28,14 @@ class EnvironmentLoader:
     def __init__(self) -> None:
         self._parsers = {}
 
-    def register(self, env_var_name: str | None = None, *, parser: EnvParser = ep.default):
+    def register(self, env_var_name: str | None = None, *, parser: EnvParser = ep.default) -> Callable[[_F], _F]:
         """Enable a configuration classmethod to be invoked by setting an environment variable.
 
         This annotation mostly registers the intent, the actual parsing of environment
         variable and configuration loading is done in apply_env(...)
         """
 
-        def decorator(fn: Callable) -> Callable:
+        def decorator(fn: _F) -> _F:
             nonlocal env_var_name
 
             if env_var_name is None:
@@ -57,12 +56,10 @@ class EnvironmentLoader:
         Browse an environment dict for supported environment variables, parse the values
         of the variables, and use the parsed output as the function args on the configuration.
         """
-        if env is None:
-            env = environ
-
+        environ = os.environ if env is None else env
         for env_key, (parser, method) in self._parsers.items():
-            if env_key in env:
-                value = env[env_key]
+            if env_key in environ:
+                value = environ[env_key]
                 parsed_values = parser(value)
                 for pv in parsed_values:
                     method(configurable, *pv)

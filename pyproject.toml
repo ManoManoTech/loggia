@@ -198,6 +198,8 @@ ignore = [
   "EM101",  # Exception must not use a string literal, assign to variable first
   "TRY",    # Avoid specifying long messages outside the exception class
   "FIX003", # Line contains XXX
+  "N817",   # CamelCase `XxXx` imported as acronym `XX`
+  "N813"    # CamelCase `XxXx` imported as lowercase `xxxx`
 ]
 select = ["ALL"]
 [tool.ruff.pydocstyle]

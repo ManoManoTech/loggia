@@ -14,7 +14,7 @@ def popattr(record: logging.LogRecord, attr: str, default: T) -> T:
         return default
     result = getattr(record, attr)
     delattr(record, attr)
-    return result
+    return result  # type: ignore[no-any-return]
 
 
 def default_attr(record: logging.LogRecord, attr: str, value: Any) -> None:

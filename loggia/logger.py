@@ -28,14 +28,14 @@ def _patch_to_add_level(level_number: int, level_name: str) -> None:
     logging.addLevelName(level_number, level_name_upper)
 
 
-def initialize(conf: LoggerConfiguration | Mapping | None = None, presets: str | list[str] | None = None) -> None:
+def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets: str | list[str] | None = None) -> None:
     """Initialize the logging system."""
     if conf is None:
         conf = LoggerConfiguration(presets=presets)
     if isinstance(conf, Mapping):
-        conf = LoggerConfiguration(conf, presets=presets)
+        conf = LoggerConfiguration(settings=conf, presets=presets)
     if not isinstance(conf, LoggerConfiguration):
-        raise TypeError("initialize() accepts LoggerConfiguration " "instances or mappings (like a dict).")
+        raise TypeError("initialize() accepts LoggerConfiguration instances or mappings (like a dict).")
 
     if conf.setup_excepthook:
         _set_excepthook(logging.getLogger())

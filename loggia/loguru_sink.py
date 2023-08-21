@@ -69,7 +69,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     # if "module" in record:
     #     attributes
 
-    loguru_extra = cast(dict[str, Any], record.pop("extra", {}))
+    loguru_extra = cast(dict[str, Any], record.pop("extra", {}))  # type: ignore[misc]
     record_dict = loguru_extra | attributes
 
     # exc_info = extra.pop("exc_info", None)
