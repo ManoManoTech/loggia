@@ -5,7 +5,7 @@ from typing import Any, NamedTuple, TypeVar
 import loggia._internal.env_parsers as ep
 from loggia.constants import FALSY_STRINGS
 
-EnvParser = Callable[[str], list[list[str]]]
+EnvParser = Callable[[str], list[list[str]] | list[list[bool]]]
 
 _ALL_ENV_KEYS: set[str] = set()
 _F = TypeVar("_F", bound=Callable[..., Any])

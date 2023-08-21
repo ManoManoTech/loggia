@@ -64,7 +64,7 @@ class DatadogNormalisation(BasePreset):
             traceback_lines = traceback.format_exception(exc_type, exc_value, exc_traceback)
             setattr(record, "error.stack", "".join(traceback_lines))
             setattr(record, "error.message", str(exc_value))
-            setattr(record, "error.kind", exc_type.__module__ + "." + exc_type.__name__)
+            setattr(record, "error.kind", exc_type.__module__ + "." + exc_type.__name__)  # type: ignore[union-attr]
 
         # DDTrace compatibility
         # XXX: Check intersection with DDTrace standard logger support

@@ -162,7 +162,7 @@ class LoggerConfiguration:
             self._dictconfig["loggers"][logger_name] = {}
             self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
 
-    def _register(self, kind: Literal["filters"] | Literal["formatters"], thing: str | dict[str, Any]) -> str:
+    def _register(self, kind: Literal["filters", "formatters"], thing: str | dict[str, Any]) -> str:
         fqn = thing if isinstance(thing, str) else thing.__class__.__module__ + "." + thing.__class__.__name__
 
         # XXX: changing the way we derive IDs will prevent conflicts to ever happen

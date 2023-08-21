@@ -35,7 +35,7 @@ class PrettyFormatter(logging.Formatter):
         super().__init__(*args, **kwargs)
 
     # pylint: disable=protected-access
-    def _set_format(self, fmt: str, style: Literal["%"] | Literal["$"] | Literal["{"] = "%") -> None:
+    def _set_format(self, fmt: str, style: Literal["%", "$", "{"] = "%") -> None:
         self._style = logging._STYLES[style][0](fmt)  # type: ignore[operator]  # type: ignore[reportGeneralTypeIssues] # Mysticism 🤔
         self._fmt = self._style._fmt
 

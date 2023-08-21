@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import Any, Literal
+from typing import Any
 
 from gunicorn.config import Config as GunicornConfig
 from gunicorn.http.message import Request
@@ -21,7 +21,7 @@ class GunicornLogger:
         self._access_logger = logging.getLogger("gunicorn.access")
         self.cfg: GunicornConfig = cfg
 
-    def __getattr__(self, name: str | Literal["critical", "error", "warning", "info", "debug", "exception", "log"]) -> Any:
+    def __getattr__(self, name: str) -> Any:
         if name in ["critical", "error", "warning", "info", "debug", "exception", "log"]:
             return getattr(self._error_logger, name)
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
