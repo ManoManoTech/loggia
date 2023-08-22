@@ -67,5 +67,5 @@ it accepts a `list[str|BasePreset]` as a value.
 
 ### Overriding built-in presets
 
-You may also opt to inherit from one of the base presets, like perhaps the [`Dev`][loggia.presets.dev.Dev] one.
+You may also opt to inherit from one of the base presets, like perhaps the [`Dev`][loggia.presets.dev] one.
 This new slotted preset will be picked up automatically after setting `LOGGIA_PRESETS`.
