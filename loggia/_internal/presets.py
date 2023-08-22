@@ -24,12 +24,8 @@ class Presets:
     available: list[type[BasePreset]]
 
     def __init__(self, preset_preferences: Iterable[str] | None = None):
-        if not preset_preferences:
-            # We default to production presets.
-            preset_preferences = {"prod"}
-        else:
-            preset_preferences = {e.lower() for e in preset_preferences}
-
+        # We default to production presets.
+        preset_preferences = {e.lower() for e in preset_preferences} if preset_preferences else {"prod"}
         all_builtins = self._load_builtins()
 
         # Index all presets by their slots if possible

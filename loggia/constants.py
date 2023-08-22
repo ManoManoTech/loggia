@@ -35,7 +35,7 @@ HYPERCORN_ATTRIBUTES_MAP: Final[dict[str, str]] = {
     "U": "http.url_details.path",
     "D": "duration",
 }
-"""Map of hypercorn log format characters to structlog attributes."""
+"""Map of hypercorn log format characters to standard logging attributes."""
 
 
 GUNICORN_HYPERCORN_KEY_RE: Final[re.Pattern[str]] = re.compile("{([^}]+)}")

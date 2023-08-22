@@ -12,7 +12,7 @@ from loggia.utils.logrecordutils import extra_fields, popattr
 std_log = logging.Logger._log
 
 
-def patched_log(*args: list[Any], **kwargs: dict[str, Any]) -> Any:
+def patched_log(*args: tuple[Any, ...], **kwargs: Any) -> Any:
     if "stacklevel" in kwargs:
         kwargs["stacklevel"] += 1
         if "extra" not in kwargs:
@@ -20,10 +20,10 @@ def patched_log(*args: list[Any], **kwargs: dict[str, Any]) -> Any:
         kwargs["extra"]["_fmt_with_filename"] = True
     else:
         kwargs["stacklevel"] = 2
-    return std_log(*args, **kwargs)
+    return std_log(*args, **kwargs)  # type: ignore[arg-type]
 
 
-logging.Logger._log = patched_log
+logging.Logger._log = patched_log  # type: ignore[method-assign]
 
 
 class PrettyFormatter(logging.Formatter):
@@ -35,7 +35,7 @@ class PrettyFormatter(logging.Formatter):
         super().__init__(*args, **kwargs)
 
     # pylint: disable=protected-access
-    def _set_format(self, fmt: str, style: Literal["%"] | Literal["$"] | Literal["{"] = "%") -> None:
+    def _set_format(self, fmt: str, style: Literal["%", "$", "{"] = "%") -> None:
         self._style = logging._STYLES[style][0](fmt)  # type: ignore[operator]  # type: ignore[reportGeneralTypeIssues] # Mysticism 🤔
         self._fmt = self._style._fmt
 
