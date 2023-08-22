@@ -15,7 +15,7 @@ ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
 try:
     import ddtrace
 except ImportError:
-    ddtrace = None
+    ddtrace = None  # type: ignore[assignment]
 
 
 def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:

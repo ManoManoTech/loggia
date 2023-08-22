@@ -19,9 +19,8 @@ if DD_TRACE_ENABLED:
     try:
         from ddtrace import tracer
     except ImportError:
-        tracer = object()
-        tracer.current_span = lambda: 0
-GUNICORN_KEY_RE = re.compile("{([^}]+)}")
+        tracer = object()  # type: ignore[assignment]
+        tracer.current_span = lambda: None  # type: ignore[method-assign]
 
 
 class CustomJsonEncoder(JsonEncoder):
@@ -74,7 +73,7 @@ class CustomJsonFormatter(JsonFormatter):
 
         # Normalisation: Datadog duration (in nanoseconds)
         if record.args and "duration" in record.args and hasattr(record.args, "__getitem__"):
-            log_record["duration"] = record.args["duration"]  # XXX document
+            log_record["duration"] = record.args["duration"]  # type: ignore[call-overload] # XXX document
 
         # Normalization: Datadog stack trace
         if "exc_info" in log_record:

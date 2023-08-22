@@ -2,7 +2,6 @@
 
 They are used in the default configuration, but you can also use them in your own configuration.
 """
-import inspect
 import logging
 import logging.config
 import os
@@ -13,16 +12,14 @@ from logging import Logger, LogRecord
 from types import FrameType, TracebackType
 from typing import Any
 
-from structlog.processors import CallsiteParameterAdder
-from structlog.types import EventDict
-
 from loggia.presets.datadog_normalisation import _figure_out_exc_info
 
 try:
     import ddtrace
 except ImportError:
-    ddtrace = None
+    ddtrace = None  # type: ignore[assignment]
 
+EventDict = dict[str, Any]
 ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
 CONSOLE = bool(os.getenv("ENV") == "DEV")
 
@@ -207,31 +204,31 @@ def _find_first_app_frame_and_name(
     return f, name
 
 
-class CallsiteParameterAdderWithStacklevel(CallsiteParameterAdder):
-    """ZOR."""
+# class CallsiteParameterAdderWithStacklevel(CallsiteParameterAdder):
+#     """ZOR."""
 
-    def __call__(
-        self,
-        logger: logging.Logger,
-        name: str,
-        event_dict: EventDict,
-    ) -> EventDict:
-        record: logging.LogRecord | None = event_dict.get("_record")
-        from_structlog: bool | None = event_dict.get("_from_structlog")
-        # If the event dictionary has a record, but it comes from structlog,
-        # then the callsite parameters of the record will not be correct.
-        if record is not None and not from_structlog:
-            for mapping in self._record_mappings:
-                event_dict[mapping.event_dict_key] = record.__dict__[mapping.record_attribute]
-        else:
-            depth = 1
-            if "stacklevel" in event_dict:
-                depth = int(event_dict["stacklevel"])
+#     def __call__(
+#         self,
+#         logger: logging.Logger,
+#         name: str,
+#         event_dict: EventDict,
+#     ) -> EventDict:
+#         record: logging.LogRecord | None = event_dict.get("_record")
+#         from_structlog: bool | None = event_dict.get("_from_structlog")
+#         # If the event dictionary has a record, but it comes from structlog,
+#         # then the callsite parameters of the record will not be correct.
+#         if record is not None and not from_structlog:
+#             for mapping in self._record_mappings:
+#                 event_dict[mapping.event_dict_key] = record.__dict__[mapping.record_attribute]
+#         else:
+#             depth = 1
+#             if "stacklevel" in event_dict:
+#                 depth = int(event_dict["stacklevel"])
 
-            frame, module = _find_first_app_frame_and_name(
-                additional_ignores=self._additional_ignores,
-            )
-            frame_info = inspect.getframeinfo(frame, depth)
-            for parameter, handler in self._active_handlers:
-                event_dict[parameter.value] = handler(module, frame_info)
-        return event_dict
+#             frame, module = _find_first_app_frame_and_name(
+#                 additional_ignores=self._additional_ignores,
+#             )
+#             frame_info = inspect.getframeinfo(frame, depth)
+#             for parameter, handler in self._active_handlers:
+#                 event_dict[parameter.value] = handler(module, frame_info)
+#         return event_dict
