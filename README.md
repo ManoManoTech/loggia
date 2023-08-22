@@ -2,6 +2,11 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/) ![Python 3.11](https://img.shields.io/badge/python-3.11-blue?style=flat) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 
+
+> **The documentation is available on Gitlab Pages**
+>
+***REMOVED***
+
 ## Objective
 
 The objective of this package is to provide a simple and standard way to configure logging in Python projects, using the standard `logging` module, and compatible with [loguru](https://loguru.readthedocs.io/en/stable/index.html).
@@ -21,9 +26,9 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Usage
 
-***REMOVED***
 2. `from loggia.logger import initialize; initialize()` is a strong starting point
-3. Read the [Usage](docs/usage.md) docs should you need to tune things.
+***REMOVED***
+***REMOVED***
 
 ## Features
 
