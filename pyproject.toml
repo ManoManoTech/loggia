@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 [project]
 name = "loggia"
 dynamic = ["urls"]
-version = "0.1.0"
+version = "0.1.1"
 description = "A convenient logging configuration manager for Python's standard logging library and Loguru."
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
