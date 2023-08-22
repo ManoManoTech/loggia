@@ -23,6 +23,7 @@ license = { text = "Proprietary" }
 [project.optional-dependencies]
 loguru = ["loguru>=0.7.0"]
 rich = ["rich>=13.3.4"]
+ddtrace = ["ddtrace>=1.18.0"]
 
 
 [tool.hatch]
