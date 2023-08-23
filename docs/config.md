@@ -4,11 +4,11 @@ Almost all configurations can and should be passed through environment variables
 
 ## Common Environment variables
 
-| Variable name(s)   | From python                                                              | Default value | Description                                              |
+| Variable name(s)   | From Python                                                              | Default value | Description                                              |
 |--------------------|--------------------------------------------------------------------------|---------------|----------------------------------------------------------|
 | `LOGGIA_LEVEL`     | [`set_general_level`][loggia.conf.LoggerConfiguration.set_general_level] | `INFO`        | The log level number or name.                            |
 | `LOGGIA_SUB_LEVEL` | [`set_logger_level`][loggia.conf.LoggerConfiguration.set_logger_level]   | `INFO`        | The log level number or name for any given named logger. |
-| `LOGGIA_PRESETS`   | [`set_logger_level`][loggia.conf.LoggerConfiguration.set_logger_level]   | `prod`        | Preferences for Loggia [Presets](presets.md)             |
+| `LOGGIA_PRESETS`   | _only during LoggerConfiguration construction_                           | `prod`        | Preferences for Loggia [Presets](presets.md)             |
 
 ## Advanced Environment variables
 
@@ -16,12 +16,16 @@ These variables are not commonly modified, and changing them requires a good
 understanding of Loggia's internals --- at least while the documentation remains
 sparse.
 
-| Variable name(s)          | From python                                                                      | Default value | Description                                                                                        |
-|---------------------------|----------------------------------------------------------------------------------|---------------|----------------------------------------------------------------------------------------------------|
-| `LOGGIA_FORMATTER`        | [`set_default_formatter`][loggia.conf.LoggerConfiguration.set_default_formatter] | (unset)       | The fully qualified name of a `logging.Formatter` - see `loggia.formatters` for available options. |
-| `LOGGIA_SET_EXCEPTHOOK`   | [`set_excepthook`][loggia.conf.LoggerConfiguration.set_excepthook]               | `True`        | Whether the logger should set the `sys.excepthook`.                                                |
-| `LOGGIA_CAPTURE_WARNINGS` | [`capture_warnings`][loggia.conf.LoggerConfiguration.set_capture_warnings]       | `True`        | Whether the logger should capture warnings from the `warnings` module.                             |
-| `LOGGIA_CAPTURE_LOGURU`   | [`capture_loguru`][loggia.conf.LoggerConfiguration.set_loguru_capture]           | `True`        | Whether the logger should capture logs emitted through loguru.                                     |
+| Variable name(s)                  | From Python                                                                                            | Default value | Description                                                                                        |
+|-----------------------------------|--------------------------------------------------------------------------------------------------------|---------------|----------------------------------------------------------------------------------------------------|
+| `LOGGIA_FORMATTER`                | [`set_default_formatter`][loggia.conf.LoggerConfiguration.set_default_formatter]                       | (unset)       | The fully qualified name of a `logging.Formatter` - see `loggia.formatters` for available options. |
+| `LOGGIA_SET_EXCEPTHOOK`           | [`set_excepthook`][loggia.conf.LoggerConfiguration.set_excepthook]                                     | (unset)       | Whether the logger should set the `sys.excepthook`.                                                |
+| `LOGGIA_CAPTURE_WARNINGS`         | [`set_capture_warnings`][loggia.conf.LoggerConfiguration.set_capture_warnings]                         | (unset)       | Whether the logger should capture warnings from the `warnings` module.                             |
+| `LOGGIA_CAPTURE_LOGURU`           | [`set_loguru_capture`][loggia.conf.LoggerConfiguration.set_loguru_capture]                             | (unset)       | Whether the logger should capture logs emitted through loguru.                                     |
+| `LOGGIA_EXTRA_FILTERS`            | [`add_log_filter`][loggia.conf.LoggerConfiguration.add_log_filter]                                     | (unset)       |
+| `LOGGIA_DISALLOW_LOGURU_RECONFIG` | [`set_loguru_reconfiguration_block`][loggia.conf.LoggerConfiguration.set_loguru_reconfiguration_block] | (unset)       | Explicitely allow loguru to be reconfigured.                                                       |
+| `LOGGIA_SUB_PROPAGATION`          | [`set_logger_propagation`][loggia.conf.LoggerConfiguration.set_logger_propagation]                     | (unset)       |
+
 
 ## Environment variable parsers
 

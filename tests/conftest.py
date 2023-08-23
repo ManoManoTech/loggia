@@ -1,8 +1,8 @@
 import json
 import os
+import re
 from collections.abc import Callable
 from importlib import reload
-import re
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -56,7 +56,7 @@ def _env_setup_teardown():
 class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._lines: list[str] | None  = None
+        self._lines: list[str] | None = None
 
     @property
     def lines(self):
@@ -72,6 +72,7 @@ class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
     def strip_ansi_codes(self):
         def strip(text: str):
             return re.sub(r"\x1B\[[0-?]*[ -/]*[@-~]", "", text)
+
         self._lines = [strip(line) for line in self._lines]
 
     @property
@@ -101,7 +102,7 @@ def caperrlines(request: SubRequest):
 class JsonStderrCaptureFixture(ErrlinesCaptureFixture):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._records: list[Any] | None  = None
+        self._records: list[Any] | None = None
 
     @property
     def records(self):

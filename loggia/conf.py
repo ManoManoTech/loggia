@@ -68,7 +68,6 @@ class LoggerConfiguration:
     def log_level(self) -> int | str:
         return self._dictconfig["loggers"][""]["level"]
 
-    # LOGGIA_SUB_LEVEL=numba:INFO,numpy:TRACE,...
     @env.register("LOGGIA_SUB_LEVEL", parser=ep.comma_colon)
     def set_logger_level(self, logger_name: str, level: int | str) -> None:
         """Set a specific log level for a specific logger.
@@ -81,13 +80,14 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_SUB_PROPAGATION", parser=ep.comma_colon)
     def set_logger_propagation(self, logger_name: str, does_propagate: str) -> None:
+        """Set a specific logger's propagation."""
         assert "loggers" in self._dictconfig  # noqa: S101
         self._enforce_logger(logger_name)
         self._dictconfig["loggers"][logger_name]["propagate"] = is_truthy_string(does_propagate)
 
-    # LOGGIA_EXTRA_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
     def add_log_filter(self, logger_name: str, filter_: str | dict[str, Any]) -> None:
+        """Add a filter to a specific logger."""
         assert "loggers" in self._dictconfig  # noqa: S101
         filter_id = self._register("filters", filter_)
         self._enforce_logger(logger_name)
@@ -102,7 +102,6 @@ class LoggerConfiguration:
     def remove_log_filter(self, logger_name: str, filter_fqn: str) -> None:
         raise NotImplementedError
 
-    # LOGGIA_DEV_FORMATTER=prettyformatter|simpleformatter
     @env.register("LOGGIA_FORMATTER")
     def set_default_formatter(self, formatter: str | dict[str, Any]) -> None:
         """Sets the default formatter."""
