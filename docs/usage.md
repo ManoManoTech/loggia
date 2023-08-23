@@ -117,7 +117,8 @@ Be careful, the handler is called default
 Following the standard ManoMano log levels, and compatible with loguru,
 we extended the standard logger to expose a trace level at priority 5.
 
-You it like so:
+You need to have the loguru capture enabled to use custom levels.
+
 
 ```python
 ...

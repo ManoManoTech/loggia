@@ -53,9 +53,10 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
         try:
             from loggia.loguru_sink import configure_loguru
 
+            _patch_to_add_level(5, "TRACE")
+            _patch_to_add_level(25, "SUCCESS")
             configure_loguru(conf)
-            _patch_to_add_level(5, "trace")
-            _patch_to_add_level(25, "success")
+
         except ImportError as e:
             BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
 

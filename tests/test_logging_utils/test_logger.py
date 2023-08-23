@@ -51,3 +51,23 @@ def test_preset_precedence_with_env() -> None:
     os.environ["LOGGIA_PRESETS"] = "prod"
     logging_config = LC(presets="dev")
     assert logging_config.preset_bank.preset_preferences == {"prod"}
+
+
+def test_logger_level_lowercase_debug() -> None:
+    """Test that lowercase level names are correctly handled."""
+    os.environ["LOGGIA_LEVEL"] = "debug"
+    logging_config = LC()
+    initialize(logging_config)
+    logger = logging.getLogger("test")
+    assert logger.isEnabledFor(10)
+
+
+def test_logger_level_lowercase_custom() -> None:
+    """Test that lowercase level names are correctly handled."""
+    os.environ["LOGGIA_LEVEL"] = "5"
+    logging_config = LC()
+    logging_config.set_loguru_capture(enabled=True)
+    initialize(logging_config)
+
+    logger = logging.getLogger("test")
+    assert logger.isEnabledFor(5)

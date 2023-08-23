@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+import logging.config
 from copy import deepcopy
 from os import getenv
 from typing import TYPE_CHECKING, Any, Literal
@@ -10,7 +12,6 @@ from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
 
 if TYPE_CHECKING:
-    import logging.config
     from json import JSONEncoder
 
 
@@ -58,15 +59,31 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_LEVEL")
     def set_general_level(self, level: int | str) -> None:
-        """Set the general, or default, log level."""
-        # XXX(dugab): does not handle lowercase `trace`
-        # XXX(dugab): does not handle log int (eg. 5)
+        """Set the general/root, or default, log level.
+
+        Can be either a level name string or a level numder int.
+        """
         assert "loggers" in self._dictconfig  # noqa: S101
+        if isinstance(level, str):
+            level = level.upper()
+            if level.isdigit():
+                level = int(level)
         self._dictconfig["loggers"][""]["level"] = level
 
     @property
-    def log_level(self) -> int | str:
-        return self._dictconfig["loggers"][""]["level"]
+    def log_level(self) -> int:
+        root_level = self._dictconfig["loggers"][""]["level"]
+        if isinstance(root_level, str):
+            if root_level.isdigit():
+                return int(root_level)
+            root_level = root_level.upper()
+            root_level_nb = logging.getLevelName(root_level)
+            if not isinstance(root_level_nb, int):
+                raise RuntimeError(f"Unexpected root level name {root_level}")
+            return root_level_nb
+        if isinstance(root_level, int):
+            return root_level
+        raise RuntimeError(f"Unexpected root level type str or int, got: {type(root_level)}")
 
     @env.register("LOGGIA_SUB_LEVEL", parser=ep.comma_colon)
     def set_logger_level(self, logger_name: str, level: int | str) -> None:

@@ -12,7 +12,7 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     # Setup
     from loggia.logger import initialize
 
-    initialize()
+    initialize(conf={"LOGGIA_CAPTURE_LOGURU": "True"})
 
     # Use standard logger
     from logging import getLogger
@@ -20,7 +20,7 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     logger = getLogger()
 
     # Use the added trace level
-    logger.log(level=5, msg="Hello trace from the std_lib!")
+    logger.log(level=10, msg="Hello trace from the std_lib!")
     # <!-- DOC:END -->
 
     captured = capsys.readouterr()
