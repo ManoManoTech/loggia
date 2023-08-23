@@ -1,5 +1,6 @@
 import logging
 import logging.config
+import os
 import sys
 from unittest import mock
 
@@ -45,44 +46,8 @@ def test_patch_to_add_level():
     logger.log(level_number, "Testing")
 
 
-# def test_check_duplicate_processors_no_duplicates():
-#     logging.shutdown()
-#     reload(logging)
-#     logger_config = _get_logger_config(None)
-#     logger_factory = structlog.PrintLoggerFactory()
-#     processor = structlog.processors.JSONRenderer()
-
-#     # Create a structlog logger with unique processors
-#     structlog.configure(
-#         processors=[structlog.stdlib.filter_by_level, structlog.stdlib.add_logger_name, processor],
-#         logger_factory=logger_factory,
-#         wrapper_class=structlog.stdlib.BoundLogger,
-#         context_class=dict,
-#         cache_logger_on_first_use=True,
-#     )
-#     assert check_duplicate_processors(logging.getLogger()) == False
-#     # Verify that the check_duplicate_processors function doesn't raise an exception
-
-#     try:
-#         check_duplicate_processors(logging.getLogger()) == False
-#     except Exception as e:
-#         pytest.fail(f"Unexpected Exception {e}")
-
-
-# def test_check_duplicate_processors_with_duplicates():
-#     logging.shutdown()
-#     reload(logging)
-#     logger_config = _get_logger_config(None)
-#     logger_factory = structlog.PrintLoggerFactory()
-#     processor = structlog.processors.JSONRenderer()
-
-#     # Create a structlog logger with duplicate processors
-#     structlog.configure(
-#         processors=[structlog.stdlib.filter_by_level, structlog.stdlib.add_logger_name, processor, processor],
-#         logger_factory=logger_factory,
-#         wrapper_class=structlog.stdlib.BoundLogger,
-#         context_class=dict,
-#         cache_logger_on_first_use=True,
-#     )
-
-#     assert check_duplicate_processors(logging.getLogger()) == True
+def test_preset_precedence_with_env() -> None:
+    """Tests that the preset choosen in constructor is overridden by the env var."""
+    os.environ["LOGGIA_PRESETS"] = "prod"
+    logging_config = LC(presets="dev")
+    assert logging_config.preset_bank.preset_preferences == {"prod"}

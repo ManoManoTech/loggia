@@ -25,7 +25,7 @@ class Presets:
 
     def __init__(self, preset_preferences: Iterable[str] | None = None):
         # We default to production presets.
-        preset_preferences = {e.lower() for e in preset_preferences} if preset_preferences else {"prod"}
+        self.preset_preferences = {e.lower() for e in preset_preferences} if preset_preferences else {"prod"}
         all_builtins = self._load_builtins()
 
         # Index all presets by their slots if possible
@@ -48,7 +48,7 @@ class Presets:
 
             indexed_presets = {preset.__name__.lower(): preset for preset in presets}
             indexed_preset_keys = set(indexed_presets.keys())
-            solutions = indexed_preset_keys.intersection(preset_preferences)
+            solutions = indexed_preset_keys.intersection(self.preset_preferences)
 
             if len(solutions) == 0:
                 solution = sorted(indexed_preset_keys)[0]

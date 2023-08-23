@@ -33,13 +33,13 @@ class LoggerConfiguration:
         self._dictconfig = deepcopy(BASE_DICTCONFIG)
 
         # Load presets according to preferences
-        presets = presets or getenv("LOGGIA_PRESETS")
+        presets = getenv("LOGGIA_PRESETS") or presets
         if isinstance(presets, str):
             presets = presets.split(",")
-        preset_bank = Presets(presets)
+        self.preset_bank = Presets(presets)
 
         # Instanciate presets (overrides defaults only and may provide new defaults
-        for preset_type in preset_bank.available:
+        for preset_type in self.preset_bank.available:
             preset = preset_type()
             env_loader = preset_type.env_loader()
             if env_loader:
