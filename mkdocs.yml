@@ -1,15 +1,24 @@
 ---
 site_name: Loggia
+site_description: A Python logging helper
+***REMOVED***
+copyright: Copyright &copy; Colibri SAS
+
+
 ***REMOVED***
 repo_name: component-python/pkgs/loggia
 ***REMOVED***
+
 theme:
   name: "material"
   # logo: assets/logo.png
   # favicon: assets/logo.png
   features:
+    - content.action.edit
+    - content.code.copy
     - navigation.instant
     - navigation.expand
+    - navigation.footer
     # - navigation.indexes
     - navigation.top
     # - navigation.tabs
@@ -28,7 +37,7 @@ theme:
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
-      primary: blue
+      primary: black
       accent: blue
       toggle:
         icon: material/weather-sunny
@@ -38,7 +47,6 @@ extra:
     - icon: fontawesome/brands/slack
 ***REMOVED***
   generator: false
-copyright: Copyright &copy; Colibri SAS
 
 watch:
   - loggia
@@ -64,6 +72,8 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets:
       check_paths: true
@@ -104,3 +114,11 @@ plugins:
 
 extra_css:
   - style.css
+
+validation:
+  omitted_files: warn
+  absolute_links: warn
+  unrecognized_links: warn
+  nav:
+    omitted_files: warn
+    absolute_links: warn

@@ -2,7 +2,6 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/) ![Python 3.11](https://img.shields.io/badge/python-3.11-blue?style=flat) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 
-
 > **The documentation is available on Gitlab Pages**
 >
 ***REMOVED***
@@ -26,8 +25,10 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Usage
 
-2. `from loggia.logger import initialize; initialize()` is a strong starting point
+1. Add the `loggia` dependency to your project, e.g. with PDM:
 ***REMOVED***
+***REMOVED***
+2. `#!python from loggia.logger import initialize; initialize()` is a strong starting point
 ***REMOVED***
 
 ## Features
@@ -37,7 +38,6 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 - configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
 - using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
 - configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
-
 
 ## Code standards
 

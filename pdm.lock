@@ -6,7 +6,7 @@ groups = ["default", "debug", "dev", "doc", "loguru", "rich", "tests", "ddtrace"
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:3387f630bb411ba8f62c73d2d133e91d55d88a24ef5b1ff177549e988f15ac69"
+content_hash = "sha256:da018f06881d9886bf285cf9a571999bce0ce95de0f60f4d480f07c79fa7ae67"
 
 [[package]]
 name = "appnope"
@@ -903,7 +903,7 @@ files = [
 
 [[package]]
 name = "mkdocs-material"
-version = "9.2.1"
+version = "9.2.3"
 requires_python = ">=3.7"
 summary = "Documentation that simply works"
 dependencies = [
@@ -922,8 +922,8 @@ dependencies = [
     "requests>=2.26",
 ]
 files = [
-    {file = "mkdocs_material-9.2.1-py3-none-any.whl", hash = "sha256:941a3b70f45baab9f243f54d8ec0fe63b1139617d9aa6c0a972b991c82d61c6f"},
-    {file = "mkdocs_material-9.2.1.tar.gz", hash = "sha256:42c1993b03e4618e53eae24156c8e34f56f88f9cfa3dfdd0c422d1fd1b4829f9"},
+    {file = "mkdocs_material-9.2.3-py3-none-any.whl", hash = "sha256:1cbac871826bbe0b5a42d7a86cfe729e03cef60cbd4d7425c640115bf1936360"},
+    {file = "mkdocs_material-9.2.3.tar.gz", hash = "sha256:7a8c5638e28cb1c0a0c7596dd85835c461a73637ce8640ea9302dbc674c2aa29"},
 ]
 
 [[package]]
