@@ -64,7 +64,7 @@ class JsonStderrCaptureFixture(pytest.CaptureFixture[str]):
         captured = self.readouterr()
         err_lines = captured.err.split("\n")
         err_lines.remove("")  # ignore blank lines
-        self._records = [json.loads(l) for l in err_lines]
+        self._records = [json.loads(line) for line in err_lines]
         return self._records
 
     @property

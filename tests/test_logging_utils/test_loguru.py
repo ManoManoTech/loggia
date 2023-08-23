@@ -6,7 +6,6 @@ This is just a manual test helper for now.
 """
 from __future__ import annotations
 
-import json
 import logging
 from typing import TYPE_CHECKING
 
