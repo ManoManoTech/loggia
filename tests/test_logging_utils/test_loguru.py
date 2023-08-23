@@ -1,9 +1,3 @@
-"""TODO(dugab): automated testing
-
-This is just a manual test helper for now.
-
-
-"""
 from __future__ import annotations
 
 import logging

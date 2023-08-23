@@ -4,6 +4,7 @@ import os
 import re
 from socket import socket
 from typing import TYPE_CHECKING, Any, Final
+from uuid import UUID
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
@@ -24,9 +25,20 @@ if DD_TRACE_ENABLED:
 
 
 class CustomJsonEncoder(JsonEncoder):
-    """Custom JSON encoder for xSGI server logs."""
+    """Custom JSON encoder, handling some extra types like UUID or socket."""
 
-    def encode(self, o: Any) -> str:
+    def encode(self, o: Any) -> str:  # noqa: PLR0911
+        if hasattr(o, "__json__"):
+            return o.__json__()
+        if isinstance(o, UUID):
+            return super().encode(str(o))
+        if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
+            return super().encode(str(o))
+        if type(o).__name__ == "function":
+            # We don't match on callable cause it could catch more than we intend
+            return super().encode(o.__qualname__)
+        if hasattr(o, "__dataclass_fields__"):
+            return super().encode(o.__dict__)
         if isinstance(o, socket):
             return super().encode({"socket": {"peer": o.getpeername()}})
         return super().encode(o)

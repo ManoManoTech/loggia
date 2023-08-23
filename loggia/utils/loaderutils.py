@@ -13,11 +13,11 @@ if TYPE_CHECKING:
 
 
 def import_fqn(fully_qualified_name: str, ensure_instance_of: type | None = None, *, ensure_callable: bool = False) -> Any:
-    """_summary_.
+    """Import Python from a fully qualified name.
 
     Args:
         fully_qualified_name (str): FQN of the class/thing to import
-        ensure_instance_of (_type_, optional): TODO Documentation. Unused. Defaults to None.
+        ensure_instance_of (type | None, optional): Check whether the object is an instance of this type, raise if not. Defaults to None.
         ensure_callable (bool, optional): Check whether the object is callable, raise if not. Defaults to False.
 
     Raises:
