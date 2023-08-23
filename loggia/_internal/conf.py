@@ -16,7 +16,9 @@ class EnvConfigurable(NamedTuple):
     method: Callable[[Any], Any]
 
 
-def is_truthy_string(s: str) -> bool:
+def is_truthy_string(s: str | bool) -> bool:
+    if isinstance(s, bool):
+        return s
     if s and s.upper() not in FALSY_STRINGS:
         return True
     return False

@@ -120,7 +120,7 @@ class LoggerConfiguration:
         raise NotImplementedError
 
     @env.register("LOGGIA_CAPTURE_LOGURU")
-    def set_loguru_capture(self, enabled: str) -> None:
+    def set_loguru_capture(self, enabled: bool | str) -> None:
         """Explicitely disable Loggia-Loguru interop.
 
         When set to true, Loggia will attempt to configure Loguru if it is
@@ -130,7 +130,7 @@ class LoggerConfiguration:
         self.capture_loguru = is_truthy_string(enabled)
 
     @env.register("LOGGIA_DISALLOW_LOGURU_RECONFIG")
-    def set_loguru_reconfiguration_block(self, enabled: str) -> None:
+    def set_loguru_reconfiguration_block(self, enabled: bool | str) -> None:
         """Explicitely allow loguru to be reconfigured.
 
         Loggia hacks Loguru to prevent other systems to overwrite its interop.
@@ -140,7 +140,7 @@ class LoggerConfiguration:
         self.disallow_loguru_reconfig = is_truthy_string(enabled)
 
     @env.register("LOGGIA_SET_EXCEPTHOOK")
-    def set_excepthook(self, enabled: str) -> None:
+    def set_excepthook(self, enabled: bool | str) -> None:
         """Explicitely disable the excepthook.
 
         When set to true, Loggia will attempt to log unhandled exceptions.
@@ -148,7 +148,7 @@ class LoggerConfiguration:
         self.setup_excepthook = is_truthy_string(enabled)
 
     @env.register("LOGGIA_CAPTURE_WARNINGS")
-    def set_capture_warnings(self, enabled: str) -> None:
+    def set_capture_warnings(self, enabled: bool | str) -> None:
         """Explicitely enable the capture of warnings.
 
         When set to true, Loggia will attempt to log warnings.
