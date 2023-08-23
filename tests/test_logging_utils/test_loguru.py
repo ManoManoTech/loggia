@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import logging
+from typing import TYPE_CHECKING
 
 import pytest
 from loguru import logger as loguru_logger
@@ -15,20 +16,41 @@ from loguru import logger as loguru_logger
 from loggia.conf import LoggerConfiguration
 from loggia.logger import initialize
 
+if TYPE_CHECKING:
+    from tests.conftest import JsonStderrCaptureFixture
+
 # ruff: noqa: T201
 
 
-def test_basic_info(capsys: pytest.CaptureFixture[str]) -> None:
+def test_basic_info(capjson: JsonStderrCaptureFixture) -> None:
     lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
     initialize(lc)
     loguru_logger.info("test info")
-    captured = capsys.readouterr()
-    errlines = captured.err.split("\n")
-    errlines.remove("")
-    assert len(errlines) == 1
-    print(errlines[0])
-    record = json.loads(errlines[0])
-    assert record["message"] == "test info"
+    assert len(capjson.records) == 1
+    assert capjson.record["message"] == "test info"
+
+
+def test_extra_kv(capjson: JsonStderrCaptureFixture) -> None:
+    lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
+    initialize(lc)
+    loguru_logger.info("test info", coco=1, toto=False, xoxo="oui")
+    assert len(capjson.records) == 1
+    assert capjson.record["message"] == "test info"
+    assert capjson.record["coco"] == 1
+    assert capjson.record["toto"] is False
+    assert capjson.record["xoxo"] == "oui"
+
+
+def test_bind(capjson: JsonStderrCaptureFixture) -> None:
+    lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
+    initialize(lc)
+    bound_loguru_logger = loguru_logger.bind(coco=1, toto=False, xoxo="oui")
+    bound_loguru_logger.info("test info")
+    assert len(capjson.records) == 1
+    assert capjson.record["message"] == "test info"
+    assert capjson.record["coco"] == 1
+    assert capjson.record["toto"] is False
+    assert capjson.record["xoxo"] == "oui"
 
 
 def launch() -> None:

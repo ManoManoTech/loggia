@@ -1,9 +1,16 @@
+import json
 import os
 from importlib import reload
+from typing import TYPE_CHECKING, Any
 
 import pytest
+from _pytest.capture import SysCapture
+from _pytest.fixtures import SubRequest
 
 from loggia import logger
+
+if TYPE_CHECKING:
+    from _pytest.capture import CaptureManager
 
 os.environ["ENV"] = "test"
 
@@ -42,3 +49,35 @@ def _env_setup_teardown():
     yield
     os.environ.clear()
     os.environ.update(original_environ)
+
+
+class JsonStderrCaptureFixture(pytest.CaptureFixture[str]):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._records: list[Any] | None  = None
+
+    @property
+    def records(self):
+        if self._records:
+            return self._records
+
+        captured = self.readouterr()
+        err_lines = captured.err.split("\n")
+        err_lines.remove("")  # ignore blank lines
+        self._records = [json.loads(l) for l in err_lines]
+        return self._records
+
+    @property
+    def record(self):
+        return self.records[0]
+
+
+@pytest.fixture()
+def capjson(request: SubRequest):
+    capman: CaptureManager = request.config.pluginmanager.getplugin("capturemanager")
+    capture_fixture = JsonStderrCaptureFixture(SysCapture, request, _ispytest=True)
+    capman.set_fixture(capture_fixture)
+    capture_fixture._start()
+    yield capture_fixture
+    capture_fixture.close()
+    capman.unset_fixture()
