@@ -48,7 +48,6 @@ class PrettyFormatter(logging.Formatter):
 
         if pretty_extra:
             pretty_extra = f"\n  {pretty_extra}"
-        pretty_extra = ""
 
         if with_filename:
             fmt = (

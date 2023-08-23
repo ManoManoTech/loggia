@@ -42,13 +42,21 @@
 
 ### Make Loggia more configurable
 
-- Provide different palettes for the pretty formatter (ACCESSIBILITY)
 - Support more conditional extensions and knobs for the pretty formatter
+  - Specific datetime format
+  - Optionally add thread id
+  - Optionally add process id
+  - Provide different palettes for the pretty formatter (ACCESSIBILITY)
+  - Hide some KVs from messages
+  - Optionally quoted strings to distinguish between e.g. 1 and "1"
 - Support more and more custom things in our bundled JSONEncoder
 - Support for user injected filters either on the general handler or on some specific logger
 - Support faster JSON encoders like `msgspec`, `orjson` and `ujson` when detected
 - Allow custom formatters to be loaded via fully qualified names
 - Allow custom presets to be loaded via fully qualified names
+- Stronger KV support globally or per-logger
+  - Through a general filter
+  - Strip some KVs from messages
 
 ### Make Loggia handle more concerns
 
