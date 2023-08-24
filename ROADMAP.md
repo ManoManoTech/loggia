@@ -1,6 +1,6 @@
 # ROADMAP
 
-## 0.1.0
+## 0.1.0 - 2023-08-21
 
 - [x] Properly configured standard logger either in `pretty` or `structured` mode
 - [x] Basic interop with `loguru`, with `loguru` piping into standard logger
@@ -13,10 +13,23 @@
 - [x] Rename internals to have legible documentation
 - [x] Clean up mkdocs settings for the reference part
 - [x] Write preset tests
+- [X] (MM-Internal) Artifactory release
+
+## 0.1.1 - 2023-08-22
+
+- Fix linting, typo and doc issues
+
+## 0.1.2 - 2023-08-24
+
+- Fixed environment variable `LOGGIA_PRESETS` that was ignored if `presets` was passed to the LoggerConfiguration constructor
+- Improved docs, with all options documented and other minor improvements
+- Fixed `extra` values KVs not being shown for `pretty` mode
+- Allow booleans to configure bool options, instead of only truthy strings
+- Fixed general log level not properly parsed if passed as a non-uppercase string or a number
+- Trace and success level are now only supported if loguru capture is enabled, even for standard logging
 
 ## 0.2.0
 
-- [ ] (MM-Internal) Artifactory release
 - [ ] Load preset through FQN in `LOGGIA_PRESETS`
 - [ ] Write built-in preset override tests
 - [ ] Make environment variable parsing type aware and document it
@@ -38,6 +51,8 @@
 - Preset auto-activation based on feature/package detection
 - Provide type stubs that help language servers recognize extensions to the logger
 - Document and test `__json__` on our bundled `CustomJSONEncoder`
+- Right types for Python LoggerConfiguration constructor and methods (bool and int support, not just str...)
+- Good story for users to test their configuration (pytest config?)
 - Capture ANSI output in usage tests, render it with `ansi2html` and include it in the documentation
 
 ### Make Loggia more configurable
