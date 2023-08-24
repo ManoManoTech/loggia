@@ -27,9 +27,9 @@ if DD_TRACE_ENABLED:
 class CustomJsonEncoder(JsonEncoder):
     """Custom JSON encoder, handling some extra types like UUID or socket."""
 
-    def encode(self, o: Any) -> str:  # noqa: PLR0911
+    def encode(self, o: Any) -> str:  # noqa: PLR0911 # pylint: disable=too-many-return-statements
         if hasattr(o, "__json__"):
-            return o.__json__()
+            return o.__json__()  # type: ignore[no-any-return] # XXX document
         if isinstance(o, UUID):
             return super().encode(str(o))
         if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
