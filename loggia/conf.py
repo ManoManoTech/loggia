@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import logging
 import logging.config
+import os
 from copy import deepcopy
-from os import getenv
 from typing import TYPE_CHECKING, Any, Literal
 
 import loggia._internal.env_parsers as ep
@@ -34,7 +34,7 @@ class LoggerConfiguration:
         self._dictconfig = deepcopy(BASE_DICTCONFIG)
 
         # Load presets according to preferences
-        presets = getenv("LOGGIA_PRESETS") or presets
+        presets = os.getenv("LOGGIA_PRESETS", presets)
         if isinstance(presets, str):
             presets = presets.split(",")
         self.preset_bank = Presets(presets)
