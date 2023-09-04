@@ -21,6 +21,23 @@ license = { text = "Proprietary" }
 ***REMOVED***
 ***REMOVED***
 # }
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: Other/Proprietary License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Typing :: Typed",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: System :: Logging",
+  "Topic :: Utilities",
+  "Operating System :: OS Independent",
+  "Environment :: Console",
+  "Environment :: Web Environment",
+]
+
 
 [project.optional-dependencies]
 loguru = ["loguru>=0.7.0"]
@@ -38,6 +55,14 @@ exclude = []
 # variable = "VERSION"
 [tool.hatch.metadata]
 allow-direct-references = true
+# source = "vcs"
+
+#[tool.hatch.build.hooks.vcs]
+#version-file = "loggia/_version.py"
+#[tool.hatch.metadata.hooks.vcs.urls]
+***REMOVED***
+***REMOVED***
+
 [tool.hatch.envs.default]
 dependencies = ["pytest", "pytest-cov"]
 [tool.hatch.envs.default.scripts]
@@ -88,7 +113,7 @@ verify_ssl = true
 [tool.pdm.dev-dependencies]
 dev = [
   "black>=22.12.0",
-  "mypy>=1.2",
+  "mypy>=1.4",
   "pylint>=2.15.8",
   "pytest-cov>=4.0.0",
   "yamllint>=1.28.0",
@@ -98,7 +123,6 @@ dev = [
   "gunicorn>=20.1.0",
   "hypercorn>=0.14.3",
   "ruff>=0.0.262",
-  "python-json-logger>=2.0.7",
   "tox>=4.11.1",
   "tox-pdm>=0.6.1",
 ]
@@ -141,17 +165,17 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.black]
 line-length = 140
-target-version = ['py311']
+target-version = ['py310']
 
 [tool.isort]
 profile = "black"
-py_version = 311
+py_version = 310
 line_length = 140
 wrap_length = 140
 
 [tool.pylint]
 [tool.pylint.MASTER]
-py-version = "3.11"
+py-version = "3.10"
 ignore = ['__pypackages__', '.git', 'packages', '.venv']
 
 
@@ -228,7 +252,8 @@ builtins-ignorelist = ["filter", "format"]
 "loggia/presets/*.py" = ["D101"]
 
 [tool.mypy]
-python_version = "3.11"
+files = ["loggia"]
+python_version = "3.10"
 strict = true
 strict_optional = true
 mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
