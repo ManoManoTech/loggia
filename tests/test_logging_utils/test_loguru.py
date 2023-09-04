@@ -16,6 +16,7 @@ if TYPE_CHECKING:
 loguru_module = pytest.importorskip("loguru")
 loguru_logger = loguru_module.logger
 
+
 def test_basic_info(capjson: JsonStderrCaptureFixture) -> None:
     lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
     initialize(lc)
@@ -106,7 +107,7 @@ def test_disallow_loguru_reconfig():
     with pytest.raises(RuntimeError):
         loguru_logger.add(lambda x: print(x))
 
-    from loggia.loguru_sink import _unblock_loguru_reconfiguration
+    from loggia._internal.loguru_stuff import _unblock_loguru_reconfiguration
 
     _unblock_loguru_reconfiguration()
     test = loguru_logger.add(lambda x: print(x))

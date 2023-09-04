@@ -61,7 +61,7 @@ def builtin_types() -> dict[str, type]:
     for typish_thing in typish_things:
         try:
             signature(typish_thing)
-        except ValueError:
+        except ValueError:  # noqa: PERF203
             result.append(typish_thing)
     return {result.__name__: result for result in result}
 

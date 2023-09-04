@@ -3,10 +3,10 @@ import pytest
 
 # ruff: noqa: F811
 def test_usage_with_loguru(capsys: pytest.CaptureFixture[str]):
-    from loggia.loguru_sink import _unblock_loguru_reconfiguration
-
     # NB: We keep the 'import loguru' below
     loguru = pytest.importorskip("loguru")
+
+    from loggia._internal.loguru_stuff import _unblock_loguru_reconfiguration
 
     # If another test did not properly teardown, we need to unblock loguru
     _unblock_loguru_reconfiguration()

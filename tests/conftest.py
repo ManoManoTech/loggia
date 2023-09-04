@@ -3,7 +3,6 @@ import os
 import re
 from collections.abc import Callable
 from importlib import reload
-from sys import modules
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -25,6 +24,8 @@ def _reload_modules():
 
     try:
         import loguru
+
+        import loggia._internal.loguru_stuff
     except ImportError:
         loguru = None
 
@@ -40,9 +41,9 @@ def _reload_modules():
     logging = reload(logging)
     # Reinitialize logging
     logging.basicConfig()
-    loggia.loguru_sink._unblock_loguru_reconfiguration()
 
     if loguru:
+        loggia._internal.loguru_stuff._unblock_loguru_reconfiguration()
         loguru.logger.remove()
 
     loggia = reload(loggia)
