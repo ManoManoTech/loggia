@@ -3,11 +3,12 @@ from __future__ import annotations
 import os
 import re
 from socket import socket
-from typing import TYPE_CHECKING, Any, Final
+from typing import TYPE_CHECKING, Any, Final, Protocol, runtime_checkable
 from uuid import UUID
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
+from loggia._internal.bootstrap_logger import BootstrapLogger
 from loggia.constants import SAFE_HEADER_ATTRIBUTES
 from loggia.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
@@ -20,16 +21,25 @@ if DD_TRACE_ENABLED:
     try:
         from ddtrace import tracer
     except ImportError:
+        BootstrapLogger.error("DD_TRACE_ENABLED environment variable is set but ddtrace package cannot be loaded")
         tracer = object()  # type: ignore[assignment]
         tracer.current_span = lambda: None  # type: ignore[method-assign]
 
+
+@runtime_checkable
+class JsonSerializable(Protocol):
+    """Protocol for any object willing to cooperate with our CustomJsonEncoder."""
+    def __json__(self) -> str:
+        ...
 
 class CustomJsonEncoder(JsonEncoder):
     """Custom JSON encoder, handling some extra types like UUID or socket."""
 
     def encode(self, o: Any) -> str:  # noqa: PLR0911 # pylint: disable=too-many-return-statements
         if hasattr(o, "__json__"):
-            return o.__json__()  # type: ignore[no-any-return] # XXX document
+            if not isinstance(o, JsonSerializable):
+                raise RuntimeError(f"Method __json__ on {o} does not conform to expectations")
+            return o.__json__()
         if isinstance(o, UUID):
             return super().encode(str(o))
         if hasattr(o, "__module__") and o.__module__ == "loguru._recattrs":
@@ -62,6 +72,7 @@ class CustomJsonFormatter(JsonFormatter):
         # Cleanup: just don't log cookies
         if "cookie" in log_record:
             log_record["cookie"] = "STRIPPED_AT_EMISSION"
+
         if DD_TRACE_ENABLED:
             span = tracer.current_span()
             trace_id, span_id = (span.trace_id, span.span_id) if span else (None, None)

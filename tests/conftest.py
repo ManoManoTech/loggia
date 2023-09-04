@@ -3,6 +3,7 @@ import os
 import re
 from collections.abc import Callable
 from importlib import reload
+from sys import modules
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -22,12 +23,17 @@ def _reload_modules():
     """Automatic fixture to reload modules between tests."""
     import logging
 
-    import loguru
+    try:
+        import loguru
+    except ImportError:
+        loguru = None
 
     import loggia.logger
     import loggia.loguru_sink
 
     yield
+
+    # Unload our optional dependencies
 
     # Repeat the above steps after test if required.
     logging.shutdown()
@@ -36,11 +42,14 @@ def _reload_modules():
     logging.basicConfig()
     loggia.loguru_sink._unblock_loguru_reconfiguration()
 
-    loguru.logger.remove()
+    if loguru:
+        loguru.logger.remove()
 
     loggia = reload(loggia)
     loggia.logger = reload(logger)
-    loggia.loguru_sink = reload(loggia.loguru_sink)
+
+    if loguru:
+        loggia.loguru_sink = reload(loggia.loguru_sink)
 
 
 @pytest.fixture(autouse=True)

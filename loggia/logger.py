@@ -56,8 +56,7 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
             _patch_to_add_level(5, "TRACE")
             _patch_to_add_level(25, "SUCCESS")
             configure_loguru(conf)
-
-        except ImportError as e:
+        except ModuleNotFoundError as e:
             BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
 
     logging.config.dictConfig(conf._dictconfig)
