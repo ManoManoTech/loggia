@@ -2,10 +2,9 @@
   "recommendations": [
     "mikestead.dotenv",
     "davidanson.vscode-markdownlint",
-    "ms-python.python",
     "ms-python.vscode-pylance",
     "ms-python.black-formatter",
-    "ms-python.isort",
-    "bungcip.better-toml",
+    "tamasfe.even-better-toml",
+    "charliermarsh.ruff"
   ]
 }
