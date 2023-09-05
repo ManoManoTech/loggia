@@ -172,3 +172,4 @@ poetry.toml
 _version.py
 .scannerwork
 sonar-project.properties
+.pdm-build
