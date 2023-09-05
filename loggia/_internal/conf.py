@@ -1,11 +1,22 @@
+from __future__ import annotations
+
 import os
 from collections.abc import Callable
-from typing import Any, NamedTuple, TypeVar
+from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
 
 import loggia._internal.env_parsers as ep
 from loggia.constants import FALSY_STRINGS
 
-EnvParser = Callable[[str], list[list[str]] | list[list[bool]]]
+if TYPE_CHECKING:
+    import sys
+
+    if sys.version_info >= (3, 10):
+        from typing import TypeAlias
+    else:
+        from typing_extensions import TypeAlias
+
+
+EnvParser: TypeAlias = "Callable[[str], list[list[str]] | list[list[bool]]]"
 
 _ALL_ENV_KEYS: set[str] = set()
 _F = TypeVar("_F", bound=Callable[..., Any])

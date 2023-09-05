@@ -4,7 +4,7 @@ We expect importing code to import-guard against loguru.
 """
 from __future__ import annotations
 
-from logging import getLogger, makeLogRecord
+import logging
 from typing import TYPE_CHECKING, Any, NoReturn, cast
 
 from loguru import logger as loguru_logger
@@ -20,7 +20,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     record: LoguruRecord = message.record
 
     # XXX(dugab): should we cache the getLogger? use a wrapped logger?
-    logger = getLogger(record["name"])
+    logger = logging.getLogger(record["name"])
 
     # XXX test with loguru.log
 
@@ -65,7 +65,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
     # exc_info = extra.pop("exc_info", None)
     # XXX there are more forbidden keys to extra, see logging/__init__.py:1606
 
-    log_record = makeLogRecord(record_dict)
+    log_record = logging.makeLogRecord(record_dict)
     logger.handle(log_record)
 
 

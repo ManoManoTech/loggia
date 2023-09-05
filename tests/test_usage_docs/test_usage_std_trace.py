@@ -5,9 +5,9 @@ import pytest
 def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Assuming we want a very verbose logger
-    from os import environ
+    import os
 
-    environ["LOGGIA_LEVEL"] = "TRACE"
+    os.environ["LOGGIA_LEVEL"] = "TRACE"
 
     # Setup
     from loggia.logger import initialize
@@ -15,9 +15,9 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     initialize(conf={"LOGGIA_CAPTURE_LOGURU": "True"})
 
     # Use standard logger
-    from logging import getLogger
+    import logging
 
-    logger = getLogger()
+    logger = logging.getLogger()
 
     # Use the added trace level
     logger.log(level=10, msg="Hello trace from the std_lib!")

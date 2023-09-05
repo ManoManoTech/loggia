@@ -1,18 +1,21 @@
+from __future__ import annotations
+
 import json
 import os
 import re
-from collections.abc import Callable
 from importlib import reload
 from typing import TYPE_CHECKING, Any
 
 import pytest
 from _pytest.capture import SysCapture
-from _pytest.fixtures import SubRequest
 
 from loggia import logger
 
 if TYPE_CHECKING:
+    from collections.abc import Callable
+
     from _pytest.capture import CaptureManager
+    from _pytest.fixtures import SubRequest
 
 os.environ["ENV"] = "test"
 

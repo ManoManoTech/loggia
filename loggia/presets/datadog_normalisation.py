@@ -1,12 +1,17 @@
 """Remap anything to Datadog standard and common attributes."""
 
+import logging
 import sys
 import traceback
-from logging import LogRecord
-from typing import TYPE_CHECKING, Any, TypeAlias, Union
+from typing import TYPE_CHECKING, Any, Union
 
 from loggia.base_preset import BasePreset
 from loggia.conf import LoggerConfiguration
+
+if sys.version_info >= (3, 10):
+    from typing import TypeAlias
+else:
+    from typing_extensions import TypeAlias
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -43,7 +48,7 @@ class DatadogNormalisation(BasePreset):
         # XXX: self.__something__ ?
         conf.add_log_filter("", "loggia.presets.DatadogNormalisation")
 
-    def filter(self, record: LogRecord) -> bool:
+    def filter(self, record: logging.LogRecord) -> bool:
         setattr(record, "logger.name", record.name)
         setattr(record, "logger.thread_name", record.threadName)
         setattr(record, "logger.method_name", record.funcName)

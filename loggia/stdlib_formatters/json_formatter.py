@@ -13,7 +13,7 @@ from loggia.constants import SAFE_HEADER_ATTRIBUTES
 from loggia.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
 if TYPE_CHECKING:
-    from logging import LogRecord
+    import logging
 
 GUNICORN_KEY_RE = re.compile("{([^}]+)}")
 DD_TRACE_ENABLED: Final[str | None] = os.environ.get("DD_TRACE_ENABLED")
@@ -64,7 +64,7 @@ class CustomJsonFormatter(JsonFormatter):
     def add_fields(
         self,
         log_record: dict[str, Any],
-        record: LogRecord,
+        record: logging.LogRecord,
         message_dict: dict[str, Any],
     ) -> None:
         # pylint: disable=too-many-statements
@@ -136,7 +136,7 @@ class CustomJsonFormatter(JsonFormatter):
             ],
         )
 
-    def _process_gunicorn_extra(self, log_record: dict[str, Any], record: LogRecord) -> None:
+    def _process_gunicorn_extra(self, log_record: dict[str, Any], record: logging.LogRecord) -> None:
         if "gunicorn" in log_record["logger.name"]:
             if hasattr(record.args, "items"):
                 for k, v in record.args.items():  # type: ignore[union-attr]

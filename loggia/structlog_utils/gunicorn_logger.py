@@ -1,11 +1,15 @@
-import datetime
+from __future__ import annotations
+
 import logging
 import os
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from gunicorn.config import Config as GunicornConfig
-from gunicorn.http.message import Request
-from gunicorn.http.wsgi import Response
+if TYPE_CHECKING:
+    import datetime
+
+    from gunicorn.config import Config as GunicornConfig
+    from gunicorn.http.message import Request
+    from gunicorn.http.wsgi import Response
 
 
 class GunicornLogger:

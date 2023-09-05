@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 import logging
-from logging import getLogger
 from typing import TYPE_CHECKING
 
-from hypercorn.config import Config
 from hypercorn.logging import Logger
 
 from loggia.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
@@ -10,6 +10,7 @@ from loggia.constants import HYPERCORN_ATTRIBUTES_MAP, SAFE_HEADER_ATTRIBUTES
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+    from hypercorn.config import Config
     from hypercorn.typing import ResponseSummary, WWWScope
 
 
@@ -25,12 +26,12 @@ class HypercornLogger(Logger):
     access_logger: logging.Logger
 
     def __init__(self, cfg: Config):  # pylint: disable=super-init-not-called
-        self.error_logger = getLogger("hypercorn.error")
-        self.access_logger = getLogger("hypercorn.access")
+        self.error_logger = logging.getLogger("hypercorn.error")
+        self.access_logger = logging.getLogger("hypercorn.access")
         self.cfg = cfg
         self.access_log_format = cfg.access_log_format.replace("%(t)s ", "").lstrip("- ")
 
-    async def access(self, request: "WWWScope", response: "ResponseSummary", request_time: float) -> None:
+    async def access(self, request: WWWScope, response: ResponseSummary, request_time: float) -> None:
         # XXX(dugab): Url vs URI?
         # XXX Check duration is in ns
         atoms: Mapping[str, float | int | str] = self.atoms(request, response, request_time)

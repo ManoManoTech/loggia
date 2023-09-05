@@ -7,12 +7,12 @@ from loggia.base_preset import BasePreset
 from loggia.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
 
 if TYPE_CHECKING:
-    from logging import Formatter
+    import logging
 
     from loggia.conf import LoggerConfiguration
 
 
-def _build_json_formatter() -> dict[str, type[Formatter] | Any]:
+def _build_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
     attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
     attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
     return {

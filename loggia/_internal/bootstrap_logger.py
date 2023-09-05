@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class BootstrapLogger:
     """BootstrapLogger for use before standard logging is setup.
 
