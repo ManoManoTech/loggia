@@ -59,6 +59,7 @@ nav:
       - Config: config.md
       - Usage: usage.md
       - Reference: reference.md
+  - Contributing: developpers/contributing.md
   - Roadmap: roadmap.md
 
 markdown_extensions:

@@ -41,7 +41,12 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Code standards
 
-This is currently a very typed Python 3.11 codebase, with a various assortments
-of linters.
+This is currently a very typed Python 3.11 codebase, with a various assortments of linters.
 
-We plan on retrofitting support for 3.10 and possibly 3.9 i.e. we will endeavor to support either the last 3 or 4 stable Python releases.
+## Supported versions
+
+We currently support Python 3.9, 3.10 and 3.11.
+
+We may drop the support for a Python version before its end of life, to keep the codebase up to date with the latest Python features: i.e. we will endeavor to support either the last 3 or 4 stable Python releases.
+
+We don't plan to support ealier versions or different runtimes.
