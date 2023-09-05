@@ -14,7 +14,7 @@ dependencies = [
     "python-json-logger>=2.0.7",
     "typing-extensions>=4.7.1 ; python_version < '3.10'",
 ]
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.13"
 readme = "README.md"
 license = { text = "Proprietary" }
 dynamic = ["version"]
@@ -106,7 +106,7 @@ doc = [
     "mkdocs>=1.4.2",
     "mkdocs-material>=8.5.11",
     "mkdocs-git-revision-date-plugin>=0.3.2",
-    "mkdocs-include-markdown-plugin>=3.9.1",
+    "mkdocs-include-markdown-plugin>=6.0.0",
     "mkdocstrings[python]>=0.19.1",
     "mkdocs-section-index>=0.3.4",
     "mdx-truly-sane-lists>=1.3",

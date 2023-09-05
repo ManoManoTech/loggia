@@ -6,7 +6,7 @@ groups = ["default", "debug", "dev", "doc", "loguru", "rich", "tests", "ddtrace"
 cross_platform = true
 static_urls = false
 lock_version = "4.3"
-content_hash = "sha256:5ceb75ef2a2b8aa68ab9cd5675479e1d56f05675a0883ec5f23d43e5bc84c216"
+content_hash = "sha256:047a003fcd76161aa40a686b5778338a3d02333b5146c80061389bc215411f57"
 
 [[package]]
 name = "appnope"
@@ -106,6 +106,16 @@ files = [
     {file = "black-23.7.0-cp39-cp39-win_amd64.whl", hash = "sha256:ad0014efc7acf0bd745792bd0d8857413652979200ab924fbf239062adc12491"},
     {file = "black-23.7.0-py3-none-any.whl", hash = "sha256:9fd59d418c60c0348505f2ddf9609c1e1de8e7493eab96198fc89d9f865e7a96"},
     {file = "black-23.7.0.tar.gz", hash = "sha256:022a582720b0d9480ed82576c920a8c1dde97cc38ff11d8d8859b3bd6ca9eedb"},
+]
+
+[[package]]
+name = "bracex"
+version = "2.4"
+requires_python = ">=3.8"
+summary = "Bash style brace expander."
+files = [
+    {file = "bracex-2.4-py3-none-any.whl", hash = "sha256:efdc71eff95eaff5e0f8cfebe7d01adf2c8637c8c92edaf63ef348c241a82418"},
+    {file = "bracex-2.4.tar.gz", hash = "sha256:a27eaf1df42cf561fed58b7a8f3fdf129d1ea16a81e1fadd1d17989bc6384beb"},
 ]
 
 [[package]]
@@ -1016,12 +1026,15 @@ files = [
 
 [[package]]
 name = "mkdocs-include-markdown-plugin"
-version = "3.9.1"
-requires_python = ">=3.6"
+version = "6.0.1"
+requires_python = "<3.13,>=3.8"
 summary = "Mkdocs Markdown includer plugin."
+dependencies = [
+    "wcmatch<9,>=8",
+]
 files = [
-    {file = "mkdocs_include_markdown_plugin-3.9.1-py3-none-any.whl", hash = "sha256:f33687e29ac66d045ba181ea50f054646b0090b42b0a4318f08e7f1d1235e6f6"},
-    {file = "mkdocs_include_markdown_plugin-3.9.1.tar.gz", hash = "sha256:5e5698e78d7fea111be9873a456089daa333497988405acaac8eba2924a19152"},
+    {file = "mkdocs_include_markdown_plugin-6.0.1-py3-none-any.whl", hash = "sha256:cbb71f06bf6bd03312f0ff79e1aed198ad13c0ff4fcaf5bb7fe5da385fba4849"},
+    {file = "mkdocs_include_markdown_plugin-6.0.1.tar.gz", hash = "sha256:eb8832b36a72c1c416baec666eeed057c2e613e8b07b353e86fa518157858b0a"},
 ]
 
 [[package]]
@@ -1832,6 +1845,19 @@ files = [
     {file = "watchdog-3.0.0-py3-none-win_amd64.whl", hash = "sha256:4c9956d27be0bb08fc5f30d9d0179a855436e655f046d288e2bcc11adfae893c"},
     {file = "watchdog-3.0.0-py3-none-win_ia64.whl", hash = "sha256:5d9f3a10e02d7371cd929b5d8f11e87d4bad890212ed3901f9b4d68767bee759"},
     {file = "watchdog-3.0.0.tar.gz", hash = "sha256:4d98a320595da7a7c5a18fc48cb633c2e73cda78f93cac2ef42d42bf609a33f9"},
+]
+
+[[package]]
+name = "wcmatch"
+version = "8.5"
+requires_python = ">=3.8"
+summary = "Wildcard/glob file name matcher."
+dependencies = [
+    "bracex>=2.1.1",
+]
+files = [
+    {file = "wcmatch-8.5-py3-none-any.whl", hash = "sha256:14554e409b142edeefab901dc68ad570b30a72a8ab9a79106c5d5e9a6d241bd5"},
+    {file = "wcmatch-8.5.tar.gz", hash = "sha256:86c17572d0f75cbf3bcb1a18f3bf2f9e72b39a9c08c9b4a74e991e1882a8efb3"},
 ]
 
 [[package]]
