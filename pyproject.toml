@@ -1,26 +1,20 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [project]
 name = "loggia"
-version = "0.1.4"
 description = "A convenient logging configuration manager for Python's standard logging library and Loguru."
 authors = [
   { name = "Gabriel Dugny", email = "gabriel.dugny@manomano.com" },
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
-dependencies = [
-    "python-json-logger>=2.0.7",
-]
-requires-python = ">=3.11"
+dependencies = ["python-json-logger>=2.0.7"]
+requires-python = ">=3.10"
 readme = "README.md"
 license = { text = "Proprietary" }
-# urls = {
-***REMOVED***
-***REMOVED***
-# }
+dynamic = ["version"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
@@ -37,45 +31,23 @@ classifiers = [
   "Environment :: Console",
   "Environment :: Web Environment",
 ]
-
+[project.urls]
+***REMOVED***
 
 [project.optional-dependencies]
 loguru = ["loguru>=0.7.0"]
 rich = ["rich>=13.3.4"]
 ddtrace = ["ddtrace>=1.18.0"]
 
-
-[tool.hatch]
-
-[tool.hatch.build]
-include = ["loggia"]
-exclude = []
-# [tool.hatch.version]
-# source = "env"
-# variable = "VERSION"
-[tool.hatch.metadata]
-allow-direct-references = true
-# source = "vcs"
-
-#[tool.hatch.build.hooks.vcs]
-#version-file = "loggia/_version.py"
-#[tool.hatch.metadata.hooks.vcs.urls]
-***REMOVED***
-***REMOVED***
-
-[tool.hatch.envs.default]
-dependencies = ["pytest", "pytest-cov"]
-[tool.hatch.envs.default.scripts]
-cov = "pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=mm_utils --cov=tests {args}"
-no-cov = "cov --no-cov {args}"
-
-[[tool.hatch.envs.test.matrix]]
-python = ["311"]
-
-[tool.hatch.envs.default.env-vars]
-***REMOVED***
-
 [tool.pdm]
+[tool.build.build]
+include = ["loggia"]
+exclude = ["**/.*", ".*", ".mypy_cache"]
+
+[tool.pdm.version]
+source = "scm"
+write_to = "loggia/_version.py"
+write_template = "__version__ = '{}'"
 
 # Common settings for all scripts
 [tool.pdm.scripts._]
@@ -105,10 +77,6 @@ test-cov = { cmd = "pytest tests --junitxml=pytest-report.xml --cov --cov-report
 docs-serve = { cmd = "mkdocs serve", help = "Serve the docs locally" }
 docs-build = { cmd = "mkdocs build --strict", help = "Build the docs" }
 
-[[tool.pdm.source]]
-name = "pypi"
-url = "https://pypi.org/simple"
-verify_ssl = true
 
 [tool.pdm.dev-dependencies]
 dev = [
@@ -194,7 +162,7 @@ disable = [
 
 [tool.ruff]
 line-length = 140
-target-version = "py311"
+target-version = "py310"
 ignore = [
   "E501",   # Line too long
   "ANN101", # Missing type annotation for self in method
@@ -220,7 +188,7 @@ ignore = [
   "TRY",    # Avoid specifying long messages outside the exception class
   "FIX003", # Line contains XXX
   "N817",   # CamelCase `XxXx` imported as acronym `XX`
-  "N813"    # CamelCase `XxXx` imported as lowercase `xxxx`
+  "N813",   # CamelCase `XxXx` imported as lowercase `xxxx`
 ]
 select = ["ALL"]
 [tool.ruff.pydocstyle]
