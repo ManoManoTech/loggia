@@ -10,8 +10,11 @@ authors = [
   { name = "Elie Bleton", email = "elie.bleton@manomano.com" },
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
-dependencies = ["python-json-logger>=2.0.7"]
-requires-python = ">=3.10"
+dependencies = [
+    "python-json-logger>=2.0.7",
+    "typing-extensions>=4.7.1 ; python_version < '3.10'",
+]
+requires-python = ">=3.9"
 readme = "README.md"
 license = { text = "Proprietary" }
 dynamic = ["version"]
@@ -56,7 +59,7 @@ env_file = ".env"
 [tool.pdm.scripts]
 # Lint
 lint-pylint = { cmd = "pylint loggia", help = "Run pylint" }
-lint-mypy = { shell = "mypy loggia --enable-incomplete-feature=Unpack", help = "Run mypy type checker" }
+lint-mypy = { shell = "mypy", help = "Run mypy type checker" }
 lint-ruff = { cmd = "ruff .", help = "Run ruff linter" }
 lint = { composite = [
   "lint-ruff",
@@ -71,8 +74,8 @@ fmt = { composite = [
   "fmt-ruff",
 ], help = "Run all formatters (black, isort-like ruff)" }
 # Tests
-test = { cmd = "pytest tests", help = "Run the tests" }
-test-cov = { cmd = "pytest tests --junitxml=pytest-report.xml --cov --cov-report xml:pytest-coverage.xml --cov-fail-under=0 --cov-report html", help = "Run the tests with coverage, and generate reports" }
+test = { cmd = "pytest", help = "Run the tests" }
+test-cov = { cmd = "pytest --junitxml=pytest-report.xml --cov --cov-report xml:pytest-coverage.xml --cov-fail-under=0 --cov-report html", help = "Run the tests with coverage, and generate reports" }
 # Docs
 docs-serve = { cmd = "mkdocs serve", help = "Serve the docs locally" }
 docs-build = { cmd = "mkdocs build --strict", help = "Build the docs" }
@@ -133,7 +136,7 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 
 [tool.black]
 line-length = 140
-target-version = ['py310']
+target-version = ['py39']
 
 [tool.isort]
 profile = "black"
@@ -143,7 +146,7 @@ wrap_length = 140
 
 [tool.pylint]
 [tool.pylint.MASTER]
-py-version = "3.10"
+py-version = "3.9"
 ignore = ['__pypackages__', '.git', 'packages', '.venv']
 
 
@@ -162,7 +165,7 @@ disable = [
 
 [tool.ruff]
 line-length = 140
-target-version = "py310"
+target-version = "py39"
 ignore = [
   "E501",   # Line too long
   "ANN101", # Missing type annotation for self in method
@@ -197,10 +200,23 @@ convention = "google"
 allow-star-arg-any = true
 mypy-init-return = true
 suppress-dummy-args = true
+suppress-none-returning = true
 [tool.ruff.flake8-unused-arguments]
 ignore-variadic-names = true
 [tool.ruff.flake8-tidy-imports]
 ban-relative-imports = "all"
+[tool.ruff.flake8-errmsg]
+max-string-length = 20
+[tool.ruff.flake8-import-conventions]
+# Declare the banned `from` imports.
+banned-from = [
+  "datetime",
+  "os",
+  "sys",
+  "logging",
+  "time",
+  "re",
+]
 [tool.ruff.flake8-builtins]
 builtins-ignorelist = ["filter", "format"]
 [tool.ruff.per-file-ignores]
@@ -221,7 +237,7 @@ builtins-ignorelist = ["filter", "format"]
 
 [tool.mypy]
 files = ["loggia"]
-python_version = "3.10"
+python_version = "3.9"
 strict = true
 strict_optional = true
 mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
