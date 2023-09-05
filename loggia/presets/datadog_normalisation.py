@@ -3,13 +3,15 @@
 import sys
 import traceback
 from logging import LogRecord
-from types import TracebackType
-from typing import Any, Union
+from typing import TYPE_CHECKING, Any, TypeAlias, Union
 
 from loggia.base_preset import BasePreset
 from loggia.conf import LoggerConfiguration
 
-ExcInfo = tuple[type[BaseException], BaseException, None | TracebackType]
+if TYPE_CHECKING:
+    from types import TracebackType
+
+ExcInfo: TypeAlias = "tuple[type[BaseException], BaseException, None | TracebackType]"
 
 
 try:

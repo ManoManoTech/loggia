@@ -29,8 +29,10 @@ if DD_TRACE_ENABLED:
 @runtime_checkable
 class JsonSerializable(Protocol):
     """Protocol for any object willing to cooperate with our CustomJsonEncoder."""
+
     def __json__(self) -> str:
         ...
+
 
 class CustomJsonEncoder(JsonEncoder):
     """Custom JSON encoder, handling some extra types like UUID or socket."""
