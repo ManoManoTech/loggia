@@ -22,8 +22,7 @@ if DD_TRACE_ENABLED:
         from ddtrace import tracer
     except ImportError:
         BootstrapLogger.error("DD_TRACE_ENABLED environment variable is set but ddtrace package cannot be loaded")
-        tracer = object()  # type: ignore[assignment]
-        tracer.current_span = lambda: None  # type: ignore[method-assign]
+        tracer = None  # type: ignore[assignment]
 
 
 @runtime_checkable
@@ -61,6 +60,13 @@ class CustomJsonFormatter(JsonFormatter):
 
     RESERVED_ATTRS = RESERVED_ATTRS
 
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)  # type: ignore[no-untyped-call]
+        if DD_TRACE_ENABLED and tracer is not None:
+            self.process_ddtrace = _process_ddtrace
+        else:
+            self.process_ddtrace = lambda log_record: None
+
     def add_fields(
         self,
         log_record: dict[str, Any],
@@ -75,12 +81,7 @@ class CustomJsonFormatter(JsonFormatter):
         if "cookie" in log_record:
             log_record["cookie"] = "STRIPPED_AT_EMISSION"
 
-        if DD_TRACE_ENABLED:
-            span = tracer.current_span()
-            trace_id, span_id = (span.trace_id, span.span_id) if span else (None, None)
-
-            log_record["dd.trace_id"] = str(trace_id or 0)
-            log_record["dd.span_id"] = str(span_id or 0)
+        self.process_ddtrace(log_record)
 
         # Normalisation: Datadog source code attributes
         log_record["logger.name"] = record.name or "__undefined__"
@@ -157,3 +158,13 @@ class CustomJsonFormatter(JsonFormatter):
             if log_record["error.message"]:
                 log_record["error.kind"] = log_record["error.message"].split(":")[0]
             del log_record["exc_info"]
+
+
+def _process_ddtrace(log_record: dict[str, Any]) -> None:
+    if tracer is None:
+        return  # type: ignore[unreachable]
+    span = tracer.current_span()
+    trace_id, span_id = (span.trace_id, span.span_id) if span else (None, None)
+
+    log_record["dd.trace_id"] = str(trace_id or 0)
+    log_record["dd.span_id"] = str(span_id or 0)
