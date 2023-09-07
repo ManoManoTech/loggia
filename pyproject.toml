@@ -14,7 +14,7 @@ dependencies = [
     "python-json-logger>=2.0.7",
     "typing-extensions>=4.7.1 ; python_version < '3.10'",
 ]
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9"
 readme = "README.md"
 license = { text = "Proprietary" }
 dynamic = ["version"]
@@ -113,6 +113,9 @@ doc = [
     "mike>=1.1.2",
 ]
 debug = ["check-wheel-contents>=0.4.0"]
+
+[tool.pdm.resolution.overrides]
+mkdocs-include-markdown-plugin= "6.0.1"
 
 [tool.pytest]
 [tool.pytest.ini_options]
