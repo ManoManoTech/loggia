@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from enum import Enum
 import logging
 import logging.config
 import os
@@ -7,16 +8,32 @@ from copy import deepcopy
 from typing import TYPE_CHECKING, Any, Literal
 
 import loggia._internal.env_parsers as ep
-from loggia._internal.conf import EnvironmentLoader, is_truthy_string
+from loggia._internal.conf import EnvironmentLoader, is_truthy_string, is_falsy_string
 from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
 
 if TYPE_CHECKING:
     from json import JSONEncoder
 
+class FlexibleFlag(Enum):
+    ENABLED = 1
+    DISABLED = 2
+    AUTO = 3
+
+    @classmethod
+    def from_any(cls, anything: str | bool | FlexibleFlag) -> FlexibleFlag:
+        if isinstance(anything, FlexibleFlag):
+            return anything
+        if is_falsy_string(anything):
+            return FlexibleFlag.DISABLED
+        if is_truthy_string(anything):
+            return FlexibleFlag.ENABLED
+        if isinstance(anything, str) and anything.upper() == "AUTO":
+            return FlexibleFlag.AUTO
+        raise ValueError(f"Can't cast '{anything}' to either ENABLED, DISABLED or AUTO")
+
 
 env = EnvironmentLoader()
-
 
 class LoggerConfiguration:
     """Environment-aware configuration container for loggia."""
@@ -24,7 +41,7 @@ class LoggerConfiguration:
     _dictconfig: logging.config._DictConfigArgs
     setup_excepthook: bool = False
     capture_warnings: bool = False
-    capture_loguru: bool = True
+    capture_loguru: FlexibleFlag = FlexibleFlag.AUTO
     disallow_loguru_reconfig: bool = True
 
     def __init__(self, *, settings: dict[str, str] | None = None, presets: str | list[str] | None = None):
@@ -137,14 +154,19 @@ class LoggerConfiguration:
         raise NotImplementedError
 
     @env.register("LOGGIA_CAPTURE_LOGURU")
-    def set_loguru_capture(self, enabled: bool | str) -> None:
+    def set_loguru_capture(self, enabled: FlexibleFlag | bool | str) -> None:
         """Explicitely disable Loggia-Loguru interop.
 
-        When set to true, Loggia will attempt to configure Loguru if it is
-        installed. You do not need to explicitely disable the Loguru interop
-        if Loguru is not installed.
+        When set to AUTO, Loggia will attempt to configure Loguru if possible,
+        and be silent if it's not possible.
+
+        When set to ENABLED, Loggia will attempt to configure Loguru, and will
+        produce an error if it is not importable.
+
+        When set to DISABLED, Loggia will not attempt to configure Loguru even
+        if it is present.
         """
-        self.capture_loguru = is_truthy_string(enabled)
+        self.capture_loguru = FlexibleFlag.from_any(enabled)
 
     @env.register("LOGGIA_DISALLOW_LOGURU_RECONFIG")
     def set_loguru_reconfiguration_block(self, enabled: bool | str) -> None:

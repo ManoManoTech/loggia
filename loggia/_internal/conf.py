@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
 
 import loggia._internal.env_parsers as ep
-from loggia.constants import FALSY_STRINGS
+from loggia.constants import TRUTHY_STRINGS, FALSY_STRINGS
 
 if TYPE_CHECKING:
     import sys
@@ -30,9 +30,13 @@ class EnvConfigurable(NamedTuple):
 def is_truthy_string(s: str | bool) -> bool:
     if isinstance(s, bool):
         return s
-    if s and s.upper() not in FALSY_STRINGS:
-        return True
-    return False
+    return s.upper() in TRUTHY_STRINGS
+
+
+def is_falsy_string(s: str | bool) -> bool:
+    if isinstance(s, bool):
+        return s
+    return s.upper() in FALSY_STRINGS
 
 
 class EnvironmentLoader:

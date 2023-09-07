@@ -8,7 +8,7 @@ from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
 from loggia._internal.bootstrap_logger import BootstrapLogger
-from loggia.conf import LoggerConfiguration
+from loggia.conf import LoggerConfiguration, FlexibleFlag
 
 if TYPE_CHECKING:
     from types import TracebackType
@@ -21,7 +21,6 @@ def _patch_to_add_level(level_number: int, level_name: str) -> None:
     XXX(dugab): Some of these statements may be redundant.
     """
     # pylint: disable=protected-access
-    # pyright: reportGeneralTypeIssues=false
     # ruff: noqa: SLF001
     level_name_upper = level_name.upper()
     level_name.lower()
@@ -49,7 +48,7 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
         # XXX test
         logging.captureWarnings(capture=True)
 
-    if conf.capture_loguru:
+    if conf.capture_loguru in (FlexibleFlag.AUTO, FlexibleFlag.ENABLED):
         try:
             from loggia.loguru_sink import configure_loguru
 
@@ -57,7 +56,8 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
             _patch_to_add_level(25, "SUCCESS")
             configure_loguru(conf)
         except ModuleNotFoundError as e:
-            BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
+            if conf.capture_loguru == FlexibleFlag.ENABLED:
+                BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
 
     logging.config.dictConfig(conf._dictconfig)
 

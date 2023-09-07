@@ -103,4 +103,7 @@ has the lowest precedence over any kind of configuration in Loggia.
 """
 
 
-FALSY_STRINGS = {"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "BY CHTULU, NO!"}
+TRUTHY_STRINGS = {"Y", "YES", "JA", "OUI", "1", "TRUE", "ENABLED", "ACTIVATED", "ARMED"}
+
+
+FALSY_STRINGS = {"N", "NO", "NEIN", "NON", "0", "FALSE", "DISABLED", "DEACTIVATED", "DISARMED", "BY CHTULU, NO!"}

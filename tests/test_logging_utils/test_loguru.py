@@ -26,6 +26,18 @@ def test_basic_info(capjson: JsonStderrCaptureFixture) -> None:
     assert capjson.record["message"] == "test info"
 
 
+def test_basic_info_2(capjson: JsonStderrCaptureFixture) -> None:
+    lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "AUTO"})
+    initialize(lc)
+    loguru_logger.info("test info")
+    assert len(capjson.records) == 1
+    assert capjson.record
+    assert capjson.record["message"] == "test info"
+
+
+# XXX test that CAPTURE_LOGURU=FALSE does work
+
+
 def test_extra_kv(capjson: JsonStderrCaptureFixture) -> None:
     lc = LoggerConfiguration(settings={"LOGGIA_CAPTURE_LOGURU": "OUI"})
     initialize(lc)
