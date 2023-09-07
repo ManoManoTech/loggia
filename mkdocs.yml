@@ -60,7 +60,8 @@ nav:
       - Usage: usage.md
       - Reference: reference.md
   - Contributing: developpers/contributing.md
-  - Roadmap: roadmap.md
+  - Changelog: CHANGELOG.md
+  - Roadmap: ROADMAP.md
 
 markdown_extensions:
   - abbr
