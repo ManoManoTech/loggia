@@ -65,7 +65,7 @@
   - Hide some KVs from messages
   - Optionally quoted strings to distinguish between e.g. 1 and "1"
 - Support more and more custom things in our bundled JSONEncoder
-- Support for user injected filters either on the general handler or on some specific logger
+- Support for user-injected filters either on the general handler or on some specific logger
 - Support faster JSON encoders like `msgspec`, `orjson` and `ujson` when detected
 - Allow custom formatters to be loaded via fully qualified names
 - Allow custom presets to be loaded via fully qualified names
@@ -99,7 +99,7 @@
 
 ### Improve Loggia's internal quality
 
-- Auto generate configuration docs using our decorators and an mkdocs plugin
+- Auto-generate configuration docs using our decorators and a mkdocs plugin
 - Move monkey patches else where into a custom LogRecordFactory and LoggerFactory
 - All code shown in documentation is derived from the test suite
 - Remove dependency on `pythonjsonlogger`

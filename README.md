@@ -8,7 +8,7 @@
 
 ## Objective
 
-The objective of this package is to provide a simple and standard way to configure logging in Python projects, using the standard `logging` module, and compatible with [loguru](https://loguru.readthedocs.io/en/stable/index.html).
+The objective of this package is to provide a simple and standard way to configure logging in Python applications, using the standard `logging` module, and compatible with [loguru](https://loguru.readthedocs.io/en/stable/index.html).
 
 We aim for a batteries-included, no configuration required, delightful out-of-the box experience.
 
@@ -25,19 +25,21 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Usage
 
-1. Add the `loggia` dependency to your project, e.g. with PDM:
+1. Add the `loggia` dependency to your project, e.g.: with PDM:
 ***REMOVED***
 ***REMOVED***
 2. `#!python from loggia.logger import initialize; initialize()` is a strong starting point
+   - You should call this as early as possible in your application, ideally before any other code is run, for instance by adding it in your main `__init__.py` file.
 ***REMOVED***
 
 ## Features
 
 - Delightful standard logging configuration in `pretty` or `structured` mode
 - Compatibility with `loguru` (WIP) - you can keep using Loguru's API as much as you like or need it, while Loggia takes care of all the other standard-logging based loggers.
-- configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
-- using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
-- configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
+- Configuring [`sys.excepthook`](https://docs.python.org/3/library/sys.html#sys.excepthook) to properly log uncaught exceptions
+- Using [`logging.captureWarnings`](https://docs.python.org/3/library/logging.html#logging.captureWarnings_warnings) to log warnings
+- Configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
+- Only one non-optional dependency
 
 ## Code standards
 
@@ -47,6 +49,6 @@ This is currently a very typed Python 3.11 codebase, with a various assortments 
 
 We currently support Python 3.9, 3.10 and 3.11.
 
-We may drop the support for a Python version before its end of life, to keep the codebase up to date with the latest Python features: i.e. we will endeavor to support either the last 3 or 4 stable Python releases.
+We may drop the support for a Python version before its end of life, to keep the codebase up to date with the latest Python features: i.e.: we will endeavor to support either the last 3 or 4 stable Python releases.
 
 We don't plan to support earlier versions or different runtimes.

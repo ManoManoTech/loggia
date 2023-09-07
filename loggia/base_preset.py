@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 class BasePreset(ABC):
     """Base class for Loggia Presets.
 
-    Loggia presets are a very thin abstraction that allow bundling of settings
+    Loggia presets are a very thin abstraction that allows bundling of settings
     that address a similar concern.
     """
 

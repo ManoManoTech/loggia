@@ -16,7 +16,7 @@ def test_usage_custom_config(capsys: pytest.CaptureFixture[str]) -> None:
     )
     initialize(log_config)
 
-    ## Use just like the standard logger
+    # Use just like the standard logger
     import logging
 
     logger = logging.getLogger("test")

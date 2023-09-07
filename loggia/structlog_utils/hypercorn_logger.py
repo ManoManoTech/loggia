@@ -19,7 +19,7 @@ class HypercornLogger(Logger):
 
     From https://gist.github.com/airhorns/c2d34b2c823541fc0b32e5c853aab7e7
     A stripped down version of https://github.com/benoitc/gunicorn/blob/master/gunicorn/glogging.py to provide structlog logging in gunicorn
-    Modified from http://stevetarver.github.io/2017/05/10/python-falcon-logging.html.
+    Modified from https://stevetarver.github.io/2017/05/10/python-falcon-logging.html.
     """
 
     error_logger: logging.Logger

@@ -33,7 +33,7 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
     if conf is None:
         conf = LoggerConfiguration(presets=presets)
     if isinstance(conf, Mapping):
-        conf = LoggerConfiguration(settings=conf, presets=presets)
+        conf = LoggerConfiguration(settings=dict(conf), presets=presets)
     if not isinstance(conf, LoggerConfiguration):
         raise TypeError("initialize() accepts LoggerConfiguration instances or mappings (like a dict).")
 

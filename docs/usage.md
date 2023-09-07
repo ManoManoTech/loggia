@@ -78,7 +78,7 @@ See the [Presets documentation](presets.md) for more information.
 %}
 ```
 
-You probably want to configure the standard Python logger as well, eg, to change the log level for some libraries.
+You probably want to configure the standard Python logger as well, e.g., to change the log level for some libraries.
 
 ```python
 {%
@@ -97,7 +97,7 @@ XXX Documentation
 <!--
 Pass the Logger classes in your Hypercorn or Gunicorn configuration.
 
-The logger are already configured for DataDog, and they support JSON structured logging for access logs.
+The logger classes are already configured for DataDog, and they support JSON structured logging for access logs.
 
 
 ### Hypercorn
