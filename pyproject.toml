@@ -50,7 +50,7 @@ exclude = ["**/.*", ".*", ".mypy_cache"]
 [tool.pdm.version]
 source = "scm"
 write_to = "loggia/_version.py"
-write_template = "__version__ = '{}'"
+write_template = "__version__: str = \"{}\"\n"
 
 # Common settings for all scripts
 [tool.pdm.scripts._]
