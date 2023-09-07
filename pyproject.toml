@@ -251,3 +251,8 @@ warn_unused_configs = true
 warn_unreachable = true
 warn_no_return = false
 check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+disallow_incomplete_defs = false

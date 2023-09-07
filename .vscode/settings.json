@@ -30,7 +30,10 @@
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true
+        "source.organizeImports": true,
+        "source.organizeImports.ruff": true,
+        "source.organizeImports.isort": false,
+        "source.organizeImports.isort.check": false
     },
   },
   "isort.args": [
