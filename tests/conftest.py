@@ -39,6 +39,8 @@ def _reload_modules():
     import loggia._internal.bootstrap_logger
     import loggia._internal.presets
 
+    loggia._internal.bootstrap_logger.bootstrap_logger.raise_on_log = True
+
     yield
 
     # Unload our optional dependencies
@@ -176,4 +178,5 @@ class BootstrapLoggerFixture:
 def capbootstrap(_reload_modules: None):
     from loggia._internal.bootstrap_logger import bootstrap_logger
     bootstrap_logger.deferred = True
+    bootstrap_logger.raise_on_log = False
     return BootstrapLoggerFixture(bootstrap_logger)

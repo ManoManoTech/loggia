@@ -9,6 +9,9 @@ if TYPE_CHECKING:
     from types import TracebackType
 
 
+class BootstrapLoggerError(RuntimeError):
+    pass
+
 class BootstrapLogger:
     """BootstrapLogger for use before standard logging is setup.
 
@@ -16,6 +19,7 @@ class BootstrapLogger:
     after logging is setup. (vaporware, presently clobbering stdout like a maniac)
     """
     deferred = False
+    raise_on_log = False
     buf: list[_BootstrapLoggerEntry]
 
     def __init__(self):
@@ -30,6 +34,10 @@ class BootstrapLogger:
     def log(self, level: str, msg: str, exc: Exception | None = None) -> None:
         levelno = logging._nameToLevel.get(level.upper(), logging.INFO)
         e = _BootstrapLoggerEntry(datetime.now(tz=UTC), levelno, msg, exc)
+
+        if self.raise_on_log:
+            raise BootstrapLoggerError(str(e))
+
         if not self.deferred:
             print(e)
         else:
