@@ -120,7 +120,7 @@ mkdocs-include-markdown-plugin= "6.0.1"
 [tool.pytest]
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q"
+addopts = "-ra -q --pdbcls=IPython.terminal.debugger:Pdb"
 testpaths = ["tests"]
 pythonpath = [
   "."
@@ -195,6 +195,7 @@ ignore = [
   "FIX003", # Line contains XXX
   "N817",   # CamelCase `XxXx` imported as acronym `XX`
   "N813",   # CamelCase `XxXx` imported as lowercase `xxxx`
+  "ICN003", # Members of `datetime` should not be imported explicitely
 ]
 select = ["ALL"]
 [tool.ruff.pydocstyle]

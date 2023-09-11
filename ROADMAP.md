@@ -4,8 +4,8 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 
 ## 0.2.0
 
-- [ ] Load preset through FQN in `LOGGIA_PRESETS`
-- [ ] Write built-in preset override tests
+- [x] Load preset through FQN in `LOGGIA_PRESETS`
+- [x] Write built-in preset override tests
 - [ ] Make environment variable parsing type aware and document it
 - (And more! Let us know what you'd like next.)
 
@@ -79,3 +79,4 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Remove dependency on `pythonjsonlogger`
 - Ensure all dependencies are strictly optional - Loggia should bring no dependencies at all to respect our minimalist friends' sensibilities.
 - Introduce a decent exception hierarchy - no more `RuntimeError`
+- Add tests for `loaderutils`

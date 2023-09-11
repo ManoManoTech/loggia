@@ -6,23 +6,69 @@ from functools import cache
 from importlib import import_module
 from inspect import signature
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Never, TypeVar, overload
 
 if TYPE_CHECKING:
     from types import ModuleType
 
 
-def import_fqn(fully_qualified_name: str, ensure_instance_of: type | None = None, *, ensure_callable: bool = False) -> Any:
+T = TypeVar("T")
+
+
+@overload
+def import_fqn(fully_qualified_name: str,
+               *,
+               ensure_instance_of: type[T],
+               ensure_subclass_of: None = None) -> T:
+    ...
+
+
+@overload
+def import_fqn(fully_qualified_name: str,
+               *,
+               ensure_subclass_of: type,
+               ensure_instance_of: type) -> Never:
+    ...
+
+
+@overload
+def import_fqn(fully_qualified_name: str,
+               *,
+               ensure_subclass_of: type[T],
+               ensure_instance_of: None = None) -> type[T]:
+    ...
+
+
+@overload
+def import_fqn(fully_qualified_name: str,
+               *,
+               ensure_instance_of: None = None,
+               ensure_subclass_of: None = None) -> Any:
+    ...
+
+
+# XXX overload for ensure_callable
+def import_fqn(fully_qualified_name: str,
+               *,
+               ensure_instance_of: type | None = None,
+               ensure_subclass_of: type | None = None) -> Any:
     """Import Python from a fully qualified name.
 
     Args:
         fully_qualified_name (str): FQN of the class/thing to import
-        ensure_instance_of (type | None, optional): Check whether the object is an instance of this type, raise if not. Defaults to None.
-        ensure_callable (bool, optional): Check whether the object is callable, raise if not. Defaults to False.
+        ensure_instance_of (type | None, optional): Check whether the object
+            is an instance of this type, raise if not. Defaults to None.
+        ensure_subclass_of (type | None, optional): Check whether the object
+            is a type, and that this types subclasses the given type.
 
     Raises:
         ImportError: If the FQN could not be imported, or conditions are not met.
+        ValueError:
+
     """
+    if ensure_instance_of and ensure_subclass_of:
+        raise ValueError("Specify only one of ensure_instance_of and ensure_subclass_of")
+
     fqn_atoms = fully_qualified_name.split(".")
     module_name = ".".join(fqn_atoms[0:-1])
     name = fqn_atoms[-1]
@@ -39,8 +85,8 @@ def import_fqn(fully_qualified_name: str, ensure_instance_of: type | None = None
     if ensure_instance_of is not None and not isinstance(result, ensure_instance_of):
         raise ImportError(f"Object '{fully_qualified_name}' isn't instance of {ensure_instance_of}")
 
-    if ensure_callable and not callable(result):
-        raise ImportError(f"Object '{fully_qualified_name}' is not callable.")
+    if ensure_subclass_of is not None and not issubclass(result, ensure_subclass_of):
+        raise ImportError(f"Object '{fully_qualified_name}' is not a subclass of {ensure_subclass_of}.")
 
     return result
 

@@ -7,7 +7,7 @@ import sys
 from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
-from loggia._internal.bootstrap_logger import BootstrapLogger
+from loggia._internal.bootstrap_logger import bootstrap_logger
 from loggia.conf import LoggerConfiguration, FlexibleFlag
 
 if TYPE_CHECKING:
@@ -57,7 +57,7 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
             configure_loguru(conf)
         except ModuleNotFoundError as e:
             if conf.capture_loguru == FlexibleFlag.ENABLED:
-                BootstrapLogger.error("Failed to configure loguru! Is is installed?", e)
+                bootstrap_logger.error("Failed to configure loguru! Is is installed?", e)
 
     logging.config.dictConfig(conf._dictconfig)
 

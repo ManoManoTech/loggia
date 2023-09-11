@@ -4,18 +4,19 @@ import json
 import os
 import re
 from importlib import reload
+import sys
 from typing import TYPE_CHECKING, Any
 
 import pytest
 from _pytest.capture import SysCapture
-
-from loggia import logger
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
     from _pytest.capture import CaptureManager
     from _pytest.fixtures import SubRequest
+
+    from loggia._internal.bootstrap_logger import BootstrapLogger
 
 os.environ["ENV"] = "test"
 
@@ -34,6 +35,9 @@ def _reload_modules():
 
     import loggia.logger
     import loggia.loguru_sink
+    import loggia._internal
+    import loggia._internal.bootstrap_logger
+    import loggia._internal.presets
 
     yield
 
@@ -50,7 +54,13 @@ def _reload_modules():
         loguru.logger.remove()
 
     loggia = reload(loggia)
-    loggia.logger = reload(logger)
+    loggia.logger = reload(loggia.logger)
+    loggia._internal = reload(loggia._internal)
+    loggia._internal.bootstrap_logger = reload(loggia._internal.bootstrap_logger)
+    loggia._internal.presets = reload(loggia._internal.presets)
+
+    if "loggia.auto" in sys.modules:
+        del sys.modules["loggia.auto"]
 
     if loguru:
         loggia.loguru_sink = reload(loggia.loguru_sink)
@@ -141,3 +151,29 @@ def capjson(request: SubRequest):
     yield capture_fixture
     capture_fixture.close()
     capman.unset_fixture()
+
+
+class BootstrapLoggerFixture:
+    def __init__(self, logger: BootstrapLogger):
+        self.logger = logger
+
+    def __len__(self):
+        return len(self.logger.buf)
+
+    def assert_one_message(self):
+        assert len(self) == 1, self.messages
+
+    @property
+    def first_entry(self):
+        return self.logger.buf[0]
+
+    @property
+    def messages(self) -> str:
+        return "\n".join(e.msg for e in self.logger.buf)
+
+
+@pytest.fixture()
+def capbootstrap(_reload_modules: None):
+    from loggia._internal.bootstrap_logger import bootstrap_logger
+    bootstrap_logger.deferred = True
+    return BootstrapLoggerFixture(bootstrap_logger)

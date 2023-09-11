@@ -8,7 +8,7 @@ from uuid import UUID
 
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
-from loggia._internal.bootstrap_logger import BootstrapLogger
+from loggia._internal.bootstrap_logger import bootstrap_logger
 from loggia.constants import SAFE_HEADER_ATTRIBUTES
 from loggia.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
@@ -21,7 +21,7 @@ if DD_TRACE_ENABLED:
     try:
         from ddtrace import tracer
     except ImportError:
-        BootstrapLogger.error("DD_TRACE_ENABLED environment variable is set but ddtrace package cannot be loaded")
+        bootstrap_logger.error("DD_TRACE_ENABLED environment variable is set but ddtrace package cannot be loaded")
         tracer = None  # type: ignore[assignment]
 
 

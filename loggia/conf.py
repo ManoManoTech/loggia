@@ -53,11 +53,11 @@ class LoggerConfiguration:
         # Load presets according to preferences
         presets = os.getenv("LOGGIA_PRESETS", presets)
         if isinstance(presets, str):
-            presets = presets.split(",")
+            presets = [preset.strip() for preset in presets.split(",")]
         self.preset_bank = Presets(presets)
 
         # Instanciate presets (overrides defaults only and may provide new defaults
-        for preset_type in self.preset_bank.available:
+        for preset_type in self.preset_bank.available_presets:
             preset = preset_type()
             env_loader = preset_type.env_loader()
             if env_loader:

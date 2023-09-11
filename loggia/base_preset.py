@@ -3,6 +3,8 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
+from loggia.utils.strutils import to_snake_case
+
 if TYPE_CHECKING:
     from loggia._internal.conf import EnvironmentLoader
     from loggia.conf import LoggerConfiguration
@@ -32,3 +34,7 @@ class BasePreset(ABC):
     @classmethod
     def env_loader(cls) -> EnvironmentLoader | None:
         return None
+
+    @classmethod
+    def preference_key(cls) -> str:
+        return to_snake_case(cls.__name__)
