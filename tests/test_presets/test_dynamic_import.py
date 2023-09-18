@@ -22,7 +22,7 @@ def test_fqn_unslotted_preset():
     with_env("LOGGIA_PRESETS", "dev,tests.test_presets.test_dynamic_import.TestUnslottedPreset")
 
     with pytest.raises(RuntimeError, match="TestUnslotted"):
-        import loggia.auto  # noqa=F701
+        import loggia.auto  # noqa: F401
 
 
 class TestSlottedPreset(BasePreset):
@@ -38,7 +38,7 @@ def test_fqn_slotted_preset():
     with_env("LOGGIA_PRESETS", "dev,tests.test_presets.test_dynamic_import.TestSlottedPreset")
 
     with pytest.raises(RuntimeError, match="TestSlotted"):
-        import loggia.auto  # noqa=F701
+        import loggia.auto  # noqa: F401
 
 
 class DevOverridePreset(Dev):
@@ -50,7 +50,7 @@ def test_fqn_overriding_preset():
     with_env("LOGGIA_PRESETS", "tests.test_presets.test_dynamic_import.DevOverridePreset")
 
     with pytest.raises(RuntimeError, match="TestDevOverride"):
-        import loggia.auto  # noqa=F701
+        import loggia.auto  # noqa: F401
 
 
 def test_fqn_overriding_preset_conflicting_preference(capbootstrap: BootstrapLoggerFixture):
@@ -59,7 +59,7 @@ def test_fqn_overriding_preset_conflicting_preference(capbootstrap: BootstrapLog
     # This pytest.raises assumes that dev_override_preset is the first preset
     # in the alphanumerically sorted list of presets for that slot
     with pytest.raises(RuntimeError, match="TestDevOverride"):
-        import loggia.auto  # noqa=F701
+        import loggia.auto  # noqa: F401
 
     capbootstrap.assert_one_message()
     assert "ambiguous" in capbootstrap.first_entry.msg

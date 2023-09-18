@@ -3,8 +3,8 @@ from __future__ import annotations
 import json
 import os
 import re
-from importlib import reload
 import sys
+from importlib import reload
 from typing import TYPE_CHECKING, Any
 
 import pytest
@@ -33,11 +33,11 @@ def _reload_modules():
     except ImportError:
         loguru = None
 
-    import loggia.logger
-    import loggia.loguru_sink
     import loggia._internal
     import loggia._internal.bootstrap_logger
     import loggia._internal.presets
+    import loggia.logger
+    import loggia.loguru_sink
 
     loggia._internal.bootstrap_logger.bootstrap_logger.raise_on_log = True
 
@@ -177,6 +177,7 @@ class BootstrapLoggerFixture:
 @pytest.fixture()
 def capbootstrap(_reload_modules: None):
     from loggia._internal.bootstrap_logger import bootstrap_logger
+
     bootstrap_logger.deferred = True
     bootstrap_logger.raise_on_log = False
     return BootstrapLoggerFixture(bootstrap_logger)
