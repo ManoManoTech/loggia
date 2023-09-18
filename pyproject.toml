@@ -115,7 +115,7 @@ doc = [
 debug = ["check-wheel-contents>=0.4.0"]
 
 [tool.pdm.resolution.overrides]
-mkdocs-include-markdown-plugin= "6.0.1"
+mkdocs-include-markdown-plugin = "6.0.1"
 
 [tool.pytest]
 [tool.pytest.ini_options]
@@ -260,3 +260,12 @@ check_untyped_defs = true
 module = "tests.*"
 disallow_untyped_defs = false
 disallow_incomplete_defs = false
+
+
+[tool.pyright]
+include = ["src"]
+exclude = ["**/__pycache__",]
+reportMissingImports = true
+reportMissingTypeStubs = false
+
+pythonVersion = "3.9"
