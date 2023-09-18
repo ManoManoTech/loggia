@@ -9,9 +9,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 if TYPE_CHECKING:
+    import sys
     from types import ModuleType
-    from typing import Never
 
+    if sys.version_info < (3, 11):
+        from typing_extensions import Never
+    else:
+        from typing import Never
 
 T = TypeVar("T")
 

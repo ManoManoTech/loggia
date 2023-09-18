@@ -26,7 +26,7 @@ class BootstrapLogger:
     raise_on_log = False
     buf: list[_BootstrapLoggerEntry]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.buf = []
 
     def warn(self, msg: str, exc: Exception | None = None) -> None:
@@ -47,7 +47,7 @@ class BootstrapLogger:
         else:
             self.buf.append(e)
 
-    def buf_to_logger(self, logger: logging.Logger):
+    def buf_to_logger(self, logger: logging.Logger) -> None:
         for e in self.buf:
             # XXX mess with logrecords to properly deal with the timestamp
             logger.log(e.level, e.msg, exc_info=e.exc_info)
