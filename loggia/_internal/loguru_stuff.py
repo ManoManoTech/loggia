@@ -12,6 +12,7 @@ from loguru import logger as loguru_logger
 if TYPE_CHECKING:
     from loguru import Message as LoguruMessage
     from loguru import Record as LoguruRecord
+    from loguru import RecordException
 
 
 # Custom sink function for Loguru to pass log messages to Structlog
@@ -50,7 +51,11 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
 
     # We want to pass stack,exc_info and exception
     if record["exception"]:
-        attributes["exc_info"] = record["exception"].value
+        record_exception: RecordException = record["exception"]
+        if exc_value := record_exception.value:
+            exc_type = type(exc_value) if not record_exception.type else record_exception.type
+            exc_info: logging._ExcInfoType = (exc_type, exc_value, record_exception.traceback)
+            attributes["exc_info"] = exc_info
 
     if "stack" in record:
         # XXX(dugab): check key actualy exists somewhere?
