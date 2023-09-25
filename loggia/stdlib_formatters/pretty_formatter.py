@@ -3,7 +3,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Literal
 
-from loggia.constants import PALETTES
+from loggia.constants import FORMAT_FIELDS, PALETTES
 from loggia.utils.colorsutils import ansi_end, ansi_fg
 from loggia.utils.logrecordutils import extra_fields, popattr
 
@@ -44,7 +44,9 @@ class PrettyFormatter(logging.Formatter):
         with_filename = popattr(record, "_fmt_with_filename", default=False)
         palette = PALETTES.get(record.levelno, PALETTES[logging.DEBUG])
 
-        pretty_extra = "\n  ".join(f"{ansi_fg(palette[2])}{k}{ansi_end()}={ansi_fg(palette[3])}{v}" for k, v in extra_fields(record))
+        pretty_extra = "\n  ".join(
+            f"{ansi_fg(palette[2])}{k}{ansi_end()}={ansi_fg(palette[3])}{v}" for k, v in extra_fields(record, FORMAT_FIELDS)
+        )
 
         if pretty_extra:
             pretty_extra = f"\n  {pretty_extra}"

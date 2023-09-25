@@ -1,5 +1,9 @@
 import pytest
 
+# Skip if loguru is not present:
+# # We try to import loguru
+loguru_module = pytest.importorskip("loguru")
+
 
 # ruff: noqa: F811
 def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
@@ -20,7 +24,7 @@ def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     logger = logging.getLogger()
 
     # Use the added trace level
-    logger.log(level=10, msg="Hello trace from the std_lib!")
+    logger.log(level=5, msg="Hello trace from the std_lib!")
     # <!-- DOC:END -->
 
     captured = capsys.readouterr()

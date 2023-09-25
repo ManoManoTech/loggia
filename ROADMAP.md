@@ -4,8 +4,8 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 
 ## 0.2.0
 
-- [x] Load preset through FQN in `LOGGIA_PRESETS`
-- [x] Write built-in preset override tests
+- [X] Load preset through FQN in `LOGGIA_PRESETS`
+- [X] Write built-in preset override tests
 - [ ] Make environment variable parsing type aware and document it
 - (And more! Let us know what you'd like next.)
 

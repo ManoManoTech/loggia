@@ -5,7 +5,7 @@ from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, NamedTuple, TypeVar
 
 import loggia._internal.env_parsers as ep
-from loggia.constants import TRUTHY_STRINGS, FALSY_STRINGS
+from loggia.constants import FALSY_STRINGS, TRUTHY_STRINGS
 
 if TYPE_CHECKING:
     import sys
