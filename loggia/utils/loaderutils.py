@@ -6,52 +6,42 @@ from functools import cache
 from importlib import import_module
 from inspect import signature
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Never, TypeVar, overload
+from typing import TYPE_CHECKING, Any, TypeVar, overload
 
 if TYPE_CHECKING:
+    import sys
     from types import ModuleType
 
+    if sys.version_info < (3, 11):
+        from typing_extensions import Never
+    else:
+        from typing import Never
 
 T = TypeVar("T")
 
 
 @overload
-def import_fqn(fully_qualified_name: str,
-               *,
-               ensure_instance_of: type[T],
-               ensure_subclass_of: None = None) -> T:
+def import_fqn(fully_qualified_name: str, *, ensure_instance_of: type[T], ensure_subclass_of: None = None) -> T:
     ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str,
-               *,
-               ensure_subclass_of: type,
-               ensure_instance_of: type) -> Never:
+def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type, ensure_instance_of: type) -> Never:
     ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str,
-               *,
-               ensure_subclass_of: type[T],
-               ensure_instance_of: None = None) -> type[T]:
+def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type[T], ensure_instance_of: None = None) -> type[T]:
     ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str,
-               *,
-               ensure_instance_of: None = None,
-               ensure_subclass_of: None = None) -> Any:
+def import_fqn(fully_qualified_name: str, *, ensure_instance_of: None = None, ensure_subclass_of: None = None) -> Any:
     ...
 
 
 # XXX overload for ensure_callable
-def import_fqn(fully_qualified_name: str,
-               *,
-               ensure_instance_of: type | None = None,
-               ensure_subclass_of: type | None = None) -> Any:
+def import_fqn(fully_qualified_name: str, *, ensure_instance_of: type | None = None, ensure_subclass_of: type | None = None) -> Any:
     """Import Python from a fully qualified name.
 
     Args:

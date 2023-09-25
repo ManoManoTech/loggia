@@ -1,19 +1,20 @@
 from __future__ import annotations
 
-from enum import Enum
 import logging
 import logging.config
 import os
 from copy import deepcopy
+from enum import Enum
 from typing import TYPE_CHECKING, Any, Literal
 
 import loggia._internal.env_parsers as ep
-from loggia._internal.conf import EnvironmentLoader, is_truthy_string, is_falsy_string
+from loggia._internal.conf import EnvironmentLoader, is_falsy_string, is_truthy_string
 from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
 
 if TYPE_CHECKING:
     from json import JSONEncoder
+
 
 class FlexibleFlag(Enum):
     ENABLED = 1
@@ -34,6 +35,7 @@ class FlexibleFlag(Enum):
 
 
 env = EnvironmentLoader()
+
 
 class LoggerConfiguration:
     """Environment-aware configuration container for loggia."""

@@ -3,6 +3,9 @@ import logging.config
 import re
 from typing import Final
 
+FORMAT_FIELDS = ["asctime", "levelname", "name", "lineno", "message", "filename"]
+"""Fields use in the formatter"""
+
 SAFE_HEADER_ATTRIBUTES: Final[list[str]] = [
     "accept",
     "accept-encoding",

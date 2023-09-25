@@ -2,15 +2,18 @@ from __future__ import annotations
 
 import logging
 import traceback
-from datetime import UTC, datetime
-from typing import TYPE_CHECKING, ClassVar, NamedTuple
+from datetime import datetime, timezone
+from typing import TYPE_CHECKING, NamedTuple
 
 if TYPE_CHECKING:
     from types import TracebackType
 
+UTC = timezone.utc
+
 
 class BootstrapLoggerError(RuntimeError):
     pass
+
 
 class BootstrapLogger:
     """BootstrapLogger for use before standard logging is setup.
@@ -18,11 +21,12 @@ class BootstrapLogger:
     It basically captures all log calls properly - logs are properly written
     after logging is setup. (vaporware, presently clobbering stdout like a maniac)
     """
+
     deferred = False
     raise_on_log = False
     buf: list[_BootstrapLoggerEntry]
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.buf = []
 
     def warn(self, msg: str, exc: Exception | None = None) -> None:
@@ -39,11 +43,11 @@ class BootstrapLogger:
             raise BootstrapLoggerError(str(e))
 
         if not self.deferred:
-            print(e)
+            print(e)  # noqa: T201
         else:
             self.buf.append(e)
 
-    def buf_to_logger(self, logger: logging.Logger):
+    def buf_to_logger(self, logger: logging.Logger) -> None:
         for e in self.buf:
             # XXX mess with logrecords to properly deal with the timestamp
             logger.log(e.level, e.msg, exc_info=e.exc_info)

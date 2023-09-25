@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import defaultdict
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
 from loggia._internal.bootstrap_logger import bootstrap_logger as logger
 from loggia.base_preset import BasePreset
@@ -10,6 +10,9 @@ from loggia.utils.loaderutils import import_all_files, import_fqn
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
+
+# Subclasses of BasePreset
+_PresetT_co = TypeVar("_PresetT_co", bound=BasePreset, covariant=True)
 
 
 class Presets:
@@ -38,7 +41,7 @@ class Presets:
             self._register_preset(preset)
 
         # Dynamically load non-builtin presets
-        for prepre in (preset_preferences or []):
+        for prepre in preset_preferences or []:
             if prepre not in builtin_preset_names:
                 if "." not in prepre:
                     logger.error(f"Preset preference {prepre} matches no builtin and is not a fully qualified name")
@@ -86,7 +89,7 @@ class Presets:
         # Record this
         self.available_presets = self.unslotted_presets + list(selected_slotted_presets.values())
 
-    def _register_preset(self, preset: type[BasePreset]):
+    def _register_preset(self, preset: type[BasePreset]) -> None:
         slots = preset.slots()
         if len(slots) == 0:
             self.unslotted_presets.append(preset)
@@ -105,5 +108,6 @@ class Presets:
                     results.append(thing)
         return results
 
-    def _load_preset_fqn(self, fqn: str) -> type[BasePreset]:
-        return import_fqn(fqn, ensure_subclass_of=BasePreset)
+    def _load_preset_fqn(self, fqn: str) -> type[_PresetT_co]:  # pyright: ignore[reportInvalidTypeVarUse]
+        # XXX(dugab): We may be able to type that in 3.12 with Generic Functions
+        return import_fqn(fqn, ensure_subclass_of=BasePreset)  # type: ignore[arg-type] # pyright: ignore[reportGeneralTypeIssues]
