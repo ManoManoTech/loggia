@@ -80,3 +80,4 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Ensure all dependencies are strictly optional - Loggia should bring no dependencies at all to respect our minimalist friends' sensibilities.
 - Introduce a decent exception hierarchy - no more `RuntimeError`
 - Add tests for `loaderutils`
+- Add tests for the pretty formatter
