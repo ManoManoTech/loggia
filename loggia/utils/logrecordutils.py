@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 import logging
-from collections.abc import Generator
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
+
+if TYPE_CHECKING:
+    from collections.abc import Generator
 
 STANDARD_FIELDS = set(logging.makeLogRecord({}).__dict__.keys())
 
@@ -23,7 +27,9 @@ def default_attr(record: logging.LogRecord, attr: str, value: Any) -> None:
         setattr(record, attr, value)
 
 
-def extra_fields(record: logging.LogRecord) -> Generator[tuple[str, Any], None, None]:
+def extra_fields(record: logging.LogRecord, to_ignore: list[str] | None = None) -> Generator[tuple[str, Any], None, None]:
+    if to_ignore is None:
+        to_ignore = []
     for k, v in record.__dict__.items():
-        if k not in STANDARD_FIELDS:
+        if k not in STANDARD_FIELDS and k not in to_ignore:
             yield k, v
