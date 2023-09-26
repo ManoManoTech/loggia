@@ -2,7 +2,7 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
-## NEXT
+## 0.2.0 - 2023-09-26
 
 - [X] `LOGGIA_CAPTURE_LOGURU` now defaults to `AUTO` and will not display an
       error if loguru is not available. Setting it to `ENABLED` will display an
@@ -13,6 +13,10 @@ For a list of planned features, see [the roadmap](ROADMAP.md).
 - [X] BREAKING CHANGE: Preset preferences are now written in `snake_case` instead
       of `fulllowercase`. This will only affect adventurous custom preset authors.
 - [X] The above two changes bring the library in line with its documentation.
+- [X] Pretty Formatter: hide extra args that are formatted (@jonathan.gallon)
+- [X] Fix loguru exception handling
+- [X] Load preset through FQN in `LOGGIA_PRESETS`
+- [X] Write built-in preset override tests
 
 ## 0.1.3 - 2023-09-07
 

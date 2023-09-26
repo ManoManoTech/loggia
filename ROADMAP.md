@@ -2,10 +2,8 @@
 
 For a list of past changes, see [the changelog](CHANGELOG.md).
 
-## 0.2.0
+## 0.3.0
 
-- [X] Load preset through FQN in `LOGGIA_PRESETS`
-- [X] Write built-in preset override tests
 - [ ] Make environment variable parsing type aware and document it
 - (And more! Let us know what you'd like next.)
 
@@ -14,8 +12,6 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 ### More ways of using Loggia
 
 - PyPI release
-- Support 3.9+ and test with tox
-- `import loggia.auto` for strictly minimal boilerplate
 - `python -m loggia.auto -m mypackage` for non-intrusive logger reconfiguration
 
 ### Make Loggia more delightful
@@ -81,3 +77,4 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Introduce a decent exception hierarchy - no more `RuntimeError`
 - Add tests for `loaderutils`
 - Add tests for the pretty formatter
+- Tox in CI
