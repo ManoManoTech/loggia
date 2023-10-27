@@ -24,6 +24,8 @@ classifiers = [
   "License :: Other/Proprietary License",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Typing :: Typed",
@@ -43,6 +45,9 @@ rich = ["rich>=13.3.4"]
 ddtrace = ["ddtrace>=1.18.0"]
 
 [tool.pdm]
+plugins = [
+    "sync-pre-commit-lock"
+]
 [tool.build.build]
 include = ["loggia"]
 exclude = ["**/.*", ".*", ".mypy_cache"]
@@ -114,8 +119,11 @@ doc = [
 ]
 debug = ["check-wheel-contents>=0.4.0"]
 
-[tool.pdm.resolution.overrides]
-mkdocs-include-markdown-plugin = "6.0.1"
+[[tool.pdm.source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+include_packages = ["*"]
 
 [tool.pytest]
 [tool.pytest.ini_options]
