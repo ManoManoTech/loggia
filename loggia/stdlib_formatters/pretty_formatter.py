@@ -49,7 +49,9 @@ class PrettyFormatter(logging.Formatter):
         )
 
         if pretty_extra:
-            pretty_extra = f"\n  {pretty_extra}"
+            # Sanitize extra so that they are not formatted by percent formatter
+            #  XXX Add tests (against different formatters)
+            pretty_extra = f"\n  {pretty_extra}".replace("%", "%%")
 
         if with_filename:
             fmt = (

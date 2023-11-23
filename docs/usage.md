@@ -130,3 +130,19 @@ we extended the standard logger to expose a trace level at priority 5.
     dedent=true
 %}
 ```
+
+## With SQLAlchemy
+
+SQLAlchemy will reconfigure the loggers if you use the `echo` option, when creating the engine.
+
+For a better experience and integration with Loggia, we recommended you don't use echo, and manage the log levels with Loggia.
+
+
+## With Uvicorn
+
+Load the `uvicorn` preset
+
+## Change the global log level
+
+To change the global logging level, use the `LOGGIA_LEVEL` environment variable or the `loggia_level` setting.
+<!-- XXX Link in doc -->
