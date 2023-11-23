@@ -31,7 +31,7 @@ def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
         return (v.__class__, v, v.__traceback__)
 
     if isinstance(v, tuple):
-        return v  # type: ignore[return-value]
+        return v
 
     if v:
         return sys.exc_info()

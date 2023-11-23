@@ -208,7 +208,7 @@ class LoggerConfiguration:
         # XXX: changing the way we derive IDs will prevent conflicts to ever happen
         key = fqn.split(".")[-1]
 
-        self._dictconfig[kind] = self._dictconfig.get(kind, {})  # type: ignore[typeddict-item]
+        self._dictconfig[kind] = self._dictconfig.get(kind, {})
         assert kind in self._dictconfig  # noqa: S101
         if key not in self._dictconfig[kind]:
             if isinstance(thing, str):

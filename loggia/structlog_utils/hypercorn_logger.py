@@ -53,5 +53,5 @@ class HypercornLogger(Logger):
                 headers["http.response_headers." + key] = value.decode("latin1")
         self.access_logger.info(  # pylint: disable=logging-not-lazy
             self.access_log_format % atoms,  # noqa: G002
-            extra={HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP} | headers,
+            extra={HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP} | headers,  # type: ignore[operator]
         )
