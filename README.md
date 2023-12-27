@@ -41,9 +41,11 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 - Configuring the standard logger and [loguru](https://loguru.readthedocs.io/en/stable/index.html) to use the same handlers
 - Only one non-optional dependency
 
-## Code standards
+## Code standards & Principles
 
-This is currently a very typed Python 3.11 codebase, with a various assortments of linters.
+- Err on the side of way too typed rather than untyped
+- Do not depend on third-party packages (WIP)
+- Do not crash unless explicitely asked to - fallback to sensible things, emit a warning, and move on.
 
 ## Supported versions
 

@@ -2,8 +2,10 @@
 
 For a list of past changes, see [the changelog](CHANGELOG.md).
 
-## 0.3.0
+## 0.3.0 (NEXT)
 
+- [x] Load preset through FQN in `LOGGIA_PRESETS`
+- [x] Write built-in preset override tests
 - [ ] Make environment variable parsing type aware and document it
 - (And more! Let us know what you'd like next.)
 
@@ -47,6 +49,9 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 
 - Integration with better_exceptions and rich exception display
 - Interop with structlog?
+- Hook SIGUSR1 or SIGUSR2 and dump logger status. Useful to discover live loggers
+  that are possibly hidden behind the log level. Default False, turned on in Dev
+  profile.
 
 ### More of Python's internals exposed
 
@@ -78,3 +83,5 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Add tests for `loaderutils`
 - Add tests for the pretty formatter
 - Tox in CI
+- Make environment variable parsing type aware and document it
+

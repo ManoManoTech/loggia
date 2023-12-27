@@ -16,7 +16,7 @@ def comma_colon(value: str) -> list[list[str]]:
 
 
 def comma(value: str) -> list[list[str]]:
-    return [[e] for e in value.split(",")]
+    return [[e.strip()] for e in value.split(",")]
 
 
 def single_boolean_string(value: str) -> list[list[bool]]:

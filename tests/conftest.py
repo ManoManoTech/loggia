@@ -181,3 +181,11 @@ def capbootstrap(_reload_modules: None):
     bootstrap_logger.deferred = True
     bootstrap_logger.raise_on_log = False
     return BootstrapLoggerFixture(bootstrap_logger)
+
+
+@pytest.fixture(autouse=True)
+def nologgingerror():
+    import logging
+    def fixturedHandler(*args, **kwargs):
+        raise RuntimeError("Logging error detected!")
+    logging.Handler.handleError = fixturedHandler

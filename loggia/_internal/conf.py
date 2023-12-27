@@ -21,7 +21,6 @@ EnvParser: TypeAlias = "Callable[[str], list[list[str]] | list[list[bool]]]"
 _ALL_ENV_KEYS: set[str] = set()
 _F = TypeVar("_F", bound=Callable[..., Any])
 
-
 class EnvConfigurable(NamedTuple):
     parser: EnvParser
     method: Callable[[Any], Any]
