@@ -24,7 +24,10 @@ os.environ["ENV"] = "test"
 @pytest.fixture(autouse=True)
 def _reload_modules():
     """Automatic fixture to reload modules between tests."""
+    import sys
     import logging
+
+    original_excepthook = sys.excepthook
 
     try:
         import loguru
@@ -66,6 +69,8 @@ def _reload_modules():
 
     if loguru:
         loggia.loguru_sink = reload(loggia.loguru_sink)
+
+    sys.excepthook = original_excepthook
 
 
 @pytest.fixture(autouse=True)
@@ -188,4 +193,7 @@ def nologgingerror():
     import logging
     def fixturedHandler(*args, **kwargs):
         raise RuntimeError("Logging error detected!")
+    previous_error_handler = logging.Handler.handleError
     logging.Handler.handleError = fixturedHandler
+    yield
+    logging.Handler.handleError = previous_error_handler

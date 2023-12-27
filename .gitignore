@@ -173,3 +173,4 @@ _version.py
 .scannerwork
 sonar-project.properties
 .pdm-build
+.idea

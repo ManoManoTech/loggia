@@ -109,10 +109,10 @@ def launch() -> None:
 
 
 def test_disallow_loguru_reconfig():
-    config = LoggerConfiguration()
-    initialize()
+    config = LoggerConfiguration(presets=["dev"])
     assert config.disallow_loguru_reconfig
     assert config.capture_loguru
+    initialize(config)
 
     assert hasattr(loguru_logger, "add_original")
 

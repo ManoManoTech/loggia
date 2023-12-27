@@ -44,7 +44,7 @@ class LoggerConfiguration:
     setup_excepthook: bool = False
     capture_warnings: bool = False
     capture_loguru: FlexibleFlag = FlexibleFlag.AUTO
-    disallow_loguru_reconfig: bool = True
+    disallow_loguru_reconfig: bool = False
 
     def __init__(self, *, settings: dict[str, str] | None = None, presets: str | list[str] | None = None):
         # XXX Well put docstring!
@@ -174,8 +174,9 @@ class LoggerConfiguration:
     def set_loguru_reconfiguration_block(self, enabled: bool | str) -> None:
         """Explicitely allow loguru to be reconfigured.
 
-        Loggia hacks Loguru to prevent other systems to overwrite its interop.
-        This is to early-detect problems arising from conflicting configurations.
+        Loggia may hack Loguru to prevent other systems to overwrite the interop.
+        This allows early detection of problems arising from conflicting configurations.
+        Generally speaking, Loggia does not support or test against any Loguru customizations.
         You may have to use this setting if your software fails to initialize.
         """
         self.disallow_loguru_reconfig = is_truthy_string(enabled)

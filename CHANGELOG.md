@@ -2,6 +2,14 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
+## NEXT - 202?
+
+- [X] Python 3.12 support and updated dependencies
+- [X] Loguru reconfiguration blocker is now configurable, defaults to false (disabled),
+      and is turned on in the `dev` preset.
+- [X] Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly
+      required an opt-in.
+
 ## 0.2.0 - 2023-09-26
 
 - [X] `LOGGIA_CAPTURE_LOGURU` now defaults to `AUTO` and will not display an
