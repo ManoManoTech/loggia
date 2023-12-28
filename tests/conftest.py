@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import sys
 from importlib import reload
 from typing import TYPE_CHECKING, Any
 
@@ -24,8 +23,8 @@ os.environ["ENV"] = "test"
 @pytest.fixture(autouse=True)
 def _reload_modules():
     """Automatic fixture to reload modules between tests."""
-    import sys
     import logging
+    import sys
 
     original_excepthook = sys.excepthook
 
@@ -189,10 +188,10 @@ def capbootstrap(_reload_modules: None):
 
 
 @pytest.fixture(autouse=True)
-def nologgingerror():
+def _nologgingerror():
     import logging
     def fixturedHandler(*args, **kwargs):
-        raise RuntimeError("Logging error detected!")
+        raise RuntimeError("An error log was emitted during testing! That's a fail.")
     previous_error_handler = logging.Handler.handleError
     logging.Handler.handleError = fixturedHandler
     yield

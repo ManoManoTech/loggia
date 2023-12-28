@@ -24,7 +24,7 @@ class Dev(BasePreset):
     def apply(self, conf: LoggerConfiguration) -> None:
         conf.set_general_level("DEBUG")
         conf.set_default_formatter({"()": PrettyFormatter})
-        conf.set_loguru_reconfiguration_block(True)
+        conf.set_loguru_reconfiguration_block(enabled=True)
 
         debug_spammers = (
             "asyncio",

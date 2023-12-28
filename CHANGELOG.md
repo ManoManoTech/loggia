@@ -2,7 +2,7 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
-## NEXT - 202?
+## NEXT
 
 - [X] Python 3.12 support and updated dependencies
 - [X] Loguru reconfiguration blocker is now configurable, defaults to false (disabled),

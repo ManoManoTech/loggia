@@ -32,7 +32,7 @@ class Prod(BasePreset):
     def apply(self, conf: LoggerConfiguration) -> None:
         conf.set_default_formatter(_build_json_formatter())
         conf.set_general_level("INFO")
-        conf.set_excepthook = True
+        conf.set_excepthook(enabled=True)
 
         # No access logs in production, ingress/api gateways provide them.
         conf.set_logger_level("hypercorn.access", "WARNING")

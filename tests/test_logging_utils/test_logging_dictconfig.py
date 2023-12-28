@@ -1,7 +1,5 @@
 import os
 
-import pytest
-
 from loggia.conf import LoggerConfiguration as LC
 from loggia.constants import BASE_DICTCONFIG
 
