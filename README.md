@@ -1,10 +1,10 @@
 # Loggia
 
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) ![Python 3.11](https://img.shields.io/badge/python-3.11-blue?style=flat) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
+![PyPI - Version](https://img.shields.io/pypi/v/loggia) ![PyPI - Python Version](https://img.shields.io/pypi/pyversions/loggia) ![PyPI - License](https://img.shields.io/pypi/l/loggia) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![pdm-managed](https://img.shields.io/badge/pdm-managed-blueviolet)](https://pdm.fming.dev) [![types - Mypy](https://img.shields.io/badge/types-Mypy-blue.svg)](https://github.com/python/mypy) [![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch) [![linting - Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v0.json)](https://github.com/charliermarsh/ruff)
 
-> **The documentation is available on Gitlab Pages**
+> **The documentation is available on Github Pages**
 >
-***REMOVED***
+> [Read it online](https://manomanotech.github.io/loggia/)
 
 ## Objective
 
@@ -26,11 +26,11 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 ## Usage
 
 1. Add the `loggia` dependency to your project, e.g.: with PDM:
-***REMOVED***
-***REMOVED***
+   - Directly from the Pypi: `pdm add loggia`
+   - With Git: `pdm add "loggia @ git+ssh://git@github.com/manomanotech/loggia.git"`
 2. `#!python from loggia.logger import initialize; initialize()` is a strong starting point
    - You should call this as early as possible in your application, ideally before any other code is run, for instance by adding it in your main `__init__.py` file.
-***REMOVED***
+3. Read the [Usage](https://manomanotech.github.io/loggia/usage) docs should you need to tune things.
 
 ## Features
 
@@ -45,7 +45,7 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 - Err on the side of way too typed rather than untyped
 - Do not depend on third-party packages (WIP)
-- Do not crash unless explicitely asked to - fallback to sensible things, emit a warning, and move on.
+- Do not crash unless explicitly asked to - fallback to sensible things, emit a warning, and move on.
 
 ## Supported versions
 

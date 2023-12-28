@@ -1,18 +1,16 @@
 ---
 site_name: Loggia
 site_description: A Python logging helper
-***REMOVED***
+site_url: https://manomanotech.github.io/loggia/
 copyright: Copyright &copy; Colibri SAS
 
 
-***REMOVED***
-repo_name: component-python/pkgs/loggia
-***REMOVED***
+repo_url: https://github.com/ManoManoTech/loggia
+repo_name: ManoManoTech/loggia
+edit_uri: https://github.com/ManoManoTech/loggia/edit/main/docs/
 
 theme:
   name: "material"
-  # logo: assets/logo.png
-  # favicon: assets/logo.png
   features:
     - content.action.edit
     - content.code.copy
@@ -43,9 +41,6 @@ theme:
         icon: material/weather-sunny
         name: Switch to light mode
 extra:
-  social:
-    - icon: fontawesome/brands/slack
-***REMOVED***
   generator: false
   version:
     provider: mike
