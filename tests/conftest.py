@@ -190,8 +190,10 @@ def capbootstrap(_reload_modules: None):
 @pytest.fixture(autouse=True)
 def _nologgingerror():
     import logging
+
     def fixturedHandler(*args, **kwargs):
         raise RuntimeError("An error log was emitted during testing! That's a fail.")
+
     previous_error_handler = logging.Handler.handleError
     logging.Handler.handleError = fixturedHandler
     yield
