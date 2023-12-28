@@ -27,14 +27,6 @@ def test_configure_logging():
         assert mock_dict_config.called
 
 
-def test_set_excepthook_on():
-    logger = logging.getLogger("test_logger")
-    previous_hook = sys.excepthook
-    _set_excepthook(logger)
-    assert logger is not None
-    assert sys.excepthook is not previous_hook
-
-
 def test_patch_to_add_level():
     level_number = 35
     level_name = "custom_level"

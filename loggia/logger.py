@@ -12,6 +12,7 @@ from loggia.conf import FlexibleFlag, LoggerConfiguration
 
 if TYPE_CHECKING:
     from types import TracebackType
+    from typing import Any
 
 
 def _patch_to_add_level(level_number: int, level_name: str) -> None:
@@ -39,6 +40,9 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
     if conf.setup_excepthook:
         _set_excepthook(logging.getLogger())
 
+    if conf.setup_unraisablehook:
+        _set_unraisablehook(logging.getLogger())
+
     # XXX sys.unraisablehook
     # XXX threading.excepthook
     # XXX asyncio bullshit?
@@ -63,13 +67,15 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
 
 
 def _set_excepthook(logger: logging.Logger) -> None:
-    """Set the excepthook to log unhandled exceptions with the given logger.
-
-    Args:
-        logger (logging.Logger | stdlib.BoundLogger): The logger to use to log unhandled exceptions
-    """
-
     def _excepthook(exc_type: type[BaseException], exc_value: BaseException, exc_traceback: TracebackType | None) -> None:
         logger.critical("Unhandled exception", exc_info=(exc_type, exc_value, exc_traceback))
 
     sys.excepthook = _excepthook
+
+
+def _set_unraisablehook(logger: logging.Logger) -> None:
+    def _unraisablehook(unraisable: sys.UnraisableHookArgs) -> None:
+        msg = f"Unraisable exception: {unraisable.err_msg}" if unraisable.err_msg else "Unraisable exception"
+        logger.critical(msg, exc_info=(unraisable.exc_type, unraisable.exc_value, unraisable.exc_traceback))
+
+    sys.unraisablehook = _unraisablehook

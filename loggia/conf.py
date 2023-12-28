@@ -42,6 +42,7 @@ class LoggerConfiguration:
 
     _dictconfig: logging.config._DictConfigArgs
     setup_excepthook: bool = False
+    setup_unraisablehook: bool = False
     capture_warnings: bool = False
     capture_loguru: FlexibleFlag = FlexibleFlag.AUTO
     disallow_loguru_reconfig: bool = False
@@ -183,11 +184,19 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_SET_EXCEPTHOOK")
     def set_excepthook(self, enabled: bool | str) -> None:
-        """Explicitely disable the excepthook.
+        """Explicitely enable or disable setting `sys.excepthook`.
 
         When set to true, Loggia will attempt to log unhandled exceptions.
         """
         self.setup_excepthook = is_truthy_string(enabled)
+
+    @env.register("LOGGIA_SET_UNRAISABLEHOOK")
+    def set_unraisablehook(self, enabled: bool | str) -> None:
+        """Explicitely enable or disable setting `sys.unraisablehook`.
+
+        When set to true, Loggia will attempt to log unraisable exceptions.
+        """
+        self.setup_unraisablehook = is_truthy_string(enabled)
 
     @env.register("LOGGIA_CAPTURE_WARNINGS")
     def set_capture_warnings(self, enabled: bool | str) -> None:
