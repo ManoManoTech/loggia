@@ -1,8 +1,6 @@
 {
   "files.exclude": {
     "**/*.pyc": true,
-    ".static/": true,
-    "node_modules": true,
     "htmlcov": true,
     "build": true,
     "*.log": true,
@@ -10,39 +8,25 @@
     "pytest-*.xml": true,
   },
   "search.exclude": {
-    "**/node_modules": true,
-    "**/bower_components": true,
     "**/*.code-search": true,
     "dist*": true,
   },
   "html.format.templating": true,
-  "python.formatting.provider": "black",
-  "python.linting.flake8Enabled": false,
-  "python.linting.enabled": true,
   "python.testing.unittestEnabled": false,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": [
     "--rootdir=."
   ],
-  "python.linting.pylintEnabled": true,
-  "python.linting.mypyEnabled": true,
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-        "source.organizeImports": true,
-        "source.organizeImports.ruff": true,
-        "source.organizeImports.isort": false,
-        "source.organizeImports.isort.check": false
+      "source.organizeImports": "explicit",
+      "source.organizeImports.ruff": "explicit",
+      "source.organizeImports.isort": "never",
+      "source.organizeImports.isort.check": "never"
     },
   },
-  "isort.args": [
-    "--profile",
-    "black"
-  ],
   "python.analysis.stubPath": "stubs",
   "yaml.customTags": ["!reference sequence"],
-  "python.linting.mypyArgs": [
-    "--enable-incomplete-feature=Unpack"
-  ]
 }

@@ -149,12 +149,6 @@ exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
 line-length = 140
 target-version = ['py39']
 
-[tool.isort]
-profile = "black"
-py_version = 310
-line_length = 140
-wrap_length = 140
-
 [tool.pylint]
 [tool.pylint.MASTER]
 py-version = "3.9"
