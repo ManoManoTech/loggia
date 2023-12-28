@@ -35,7 +35,9 @@ jobs:
           allow-python-prereleases: true  # Allow prerelease versions of Python to be installed. For example if only 3.12-dev is available, 3.12 will fall back to 3.12-dev
 
       - name: Install dependencies
-        run: pdm install -v && pdm info
+        run: |
+          pdm install -v && pdm info
+          source .venv/bin/activate
 
       - name: Set Cache Variables
         id: set_variables
@@ -53,9 +55,9 @@ jobs:
 
       - name: Test with tox (pytest)
         run: |
-          tox --version
+          pdm run tox --version
           pyversion="${{ matrix.python-version }}"
-          tox -f py${pyversion/./}
+          pdm run tox -f py${pyversion/./}
 
       - name: Test with pytest-cov
         run: |
