@@ -14,7 +14,7 @@ def test_usage_preset_env(capsys: pytest.CaptureFixture[str]) -> None:
 
     import logging
 
-    logging.getLogger("test").warning("hello from logging")  # Will show up colored
+    logging.getLogger("test").warning("hello from logging", extra={"with_extra": "100% yes!"})  # Will show up colored
     # <!-- DOC:END -->
 
     captured = capsys.readouterr()
