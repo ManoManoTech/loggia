@@ -31,7 +31,7 @@ class HypercornLogger(Logger):
         self.cfg = cfg
         self.access_log_format = cfg.access_log_format.replace("%(t)s ", "").lstrip("- ")
 
-    async def access(self, request: WWWScope, response: ResponseSummary, request_time: float) -> None:
+    async def access(self, request: WWWScope, response: ResponseSummary | None, request_time: float) -> None:
         # XXX(dugab): Url vs URI?
         # XXX Check duration is in ns
         atoms: Mapping[str, float | int | str] = self.atoms(request, response, request_time)
@@ -46,11 +46,13 @@ class HypercornLogger(Logger):
             key = key_b.decode("latin1").lower()
             if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
                 headers["http.headers." + key] = value.decode("latin1")
+
         # Same for response headers in http.response_headers
-        for key_b, value in response["headers"]:
-            key = key_b.decode("latin1").lower()
-            if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
-                headers["http.response_headers." + key] = value.decode("latin1")
+        if response is not None:
+            for key_b, value in response["headers"]:
+                key = key_b.decode("latin1").lower()
+                if key in SAFE_HEADER_ATTRIBUTES or key.startswith(("x-", "sec-")):
+                    headers["http.response_headers." + key] = value.decode("latin1")
         self.access_logger.info(  # pylint: disable=logging-not-lazy
             self.access_log_format % atoms,  # noqa: G002
             extra={HYPERCORN_ATTRIBUTES_MAP[k]: v for k, v in atoms.items() if k in HYPERCORN_ATTRIBUTES_MAP} | headers,  # type: ignore[operator]
