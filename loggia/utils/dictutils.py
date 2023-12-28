@@ -50,13 +50,13 @@ def del_many_if_possible(obj: MutableMapping[K, Any], keys: list[K]) -> None:
 
 def deep_merge_log_config(
     dict_cfg: logging.config._DictConfigArgs,
-    opt_dict_cfg: logging.config._OptionalDictConfigArgs | dict[str, Any],
+    opt_dict_cfg: logging.config._DictConfigArgs | dict[str, Any],
 ) -> logging.config._DictConfigArgs:
     """Deep merge two logging config dictionaries. If there are conflicts, it takes the value from the second dictionary.
 
     Args:
         dict_cfg (logging.config._DictConfigArgs): Full logging config dictionary.
-        opt_dict_cfg (logging.config._OptionalDictConfigArgs&quot; | dict[str, Any]): Partial logging config dictionary.
+        opt_dict_cfg (logging.config._DictConfigArgs | dict[str, Any]): Partial logging config dictionary.
 
     Returns:
         logging.config._DictConfigArgs: The merged logging config dictionary.
