@@ -1,0 +1,32 @@
+---
+name: Upload Python Package
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  pypi-publish:
+    name: Upload release to PyPI
+    runs-on: ubuntu-latest
+    permissions:
+      # IMPORTANT: this permission is mandatory for trusted publishing
+      id-token: write
+      # This permission is needed to upload an artifact to the release
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ManoManoTech/setup-pdm@main
+      - name: Publish package distributions to PyPI
+        run: pdm publish
+      - uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: ./dist/*
+      # XXX Needs to be allowed in ManoManoTech org
+      # - uses: xresloader/upload-to-github-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     file: ./dist/*
+      #     release_id: ${{ github.event.release.id }}
