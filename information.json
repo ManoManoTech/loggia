@@ -1,9 +1,0 @@
-{
-    "description": "Utils and common configuration for ManoMano Python projects.",
-    "technology": {
-      "type": "library",
-      "language": "python",
-      "drp_wave": 0
-    },
-    "gdpr_personal_data": false
-  }
