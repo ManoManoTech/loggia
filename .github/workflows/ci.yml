@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         # Empty is latest, head is latest from GitHub
         pdm-version: [""]
 
@@ -33,11 +33,16 @@ jobs:
           architecture: x64                # The target architecture (x86, x64) of the Python interpreter. the same as actions/setup-python
           version: ${{ matrix.pdm-version }}                   # The version of PDM to install. Leave it as empty to use the latest version from PyPI, or 'head' to use the latest version from GitHub
           allow-python-prereleases: true  # Allow prerelease versions of Python to be installed. For example if only 3.12-dev is available, 3.12 will fall back to 3.12-dev
+
+      - name: Install dependencies
+        run: pdm install -v && pdm info
+
       - name: Set Cache Variables
         id: set_variables
         run: |
           echo "PIP_CACHE=$(pip cache dir)" >> $GITHUB_OUTPUT
           echo "PDM_CACHE=$(pdm config cache_dir)" >> $GITHUB_OUTPUT
+
       - name: Cache PIP and PDM
         uses: actions/cache@v2
         with:
