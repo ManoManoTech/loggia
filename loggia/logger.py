@@ -73,7 +73,10 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
         except ModuleNotFoundError as e:
             if conf.capture_loguru == FlexibleFlag.ENABLED:
                 bootstrap_logger.error("Failed to configure loguru! Is is installed?", e)
+
     # XXX Check that logger levels exists
+
+    # BIM BAM BADABEEM BADABOOM, LOGGIA MAGICA!
     logging.config.dictConfig(conf._dictconfig)
 
 
@@ -87,7 +90,8 @@ def _set_excepthook(logger: logging.Logger) -> None:
 def _set_unraisablehook(logger: logging.Logger) -> None:
     def _unraisablehook(unraisable: sys.UnraisableHookArgs) -> None:
         msg = f"Unraisable exception: {unraisable.err_msg}" if unraisable.err_msg else "Unraisable exception"
-        logger.critical(msg, exc_info=(unraisable.exc_type, unraisable.exc_value, unraisable.exc_traceback))
+        # XXX we don't know how to test for exc_value=None
+        logger.critical(msg, exc_info=(unraisable.exc_type, unraisable.exc_value, unraisable.exc_traceback))  # type:ignore[arg-type]
 
     sys.unraisablehook = _unraisablehook
 
@@ -95,6 +99,7 @@ def _set_unraisablehook(logger: logging.Logger) -> None:
 def _set_threading_excepthook(logger: logging.Logger) -> None:
     def _excepthook(args: threading.ExceptHookArgs) -> None:
         msg = f"Unhandled exception in thread: {args.exc_type}"
-        logger.critical(msg, exc_info={args.exc_type, args.exc_value, args.exc_traceback})
+        # XXX we don't know how to test for exc_value=None
+        logger.critical(msg, exc_info={args.exc_type, args.exc_value, args.exc_traceback})  # type:ignore[arg-type]
 
     threading.excepthook = _excepthook

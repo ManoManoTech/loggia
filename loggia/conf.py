@@ -5,15 +5,19 @@ import logging.config
 import os
 from copy import deepcopy
 from enum import Enum
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Callable, Literal, cast
 
 import loggia._internal.env_parsers as ep
 from loggia._internal.conf import EnvironmentLoader, is_falsy_string, is_truthy_string
 from loggia._internal.presets import Presets
 from loggia.constants import BASE_DICTCONFIG
+from loggia.types import SupportsFilter, UserDefinedObject
+from loggia.utils.dictutils import get_in
 
 if TYPE_CHECKING:
     from json import JSONEncoder
+
+    from loggia.types import UserDefinedFilter
 
 
 class FlexibleFlag(Enum):
@@ -123,25 +127,61 @@ class LoggerConfiguration:
         self._enforce_logger(logger_name)
         self._dictconfig["loggers"][logger_name]["propagate"] = is_truthy_string(does_propagate)
 
-    @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
-    def add_log_filter(self, logger_name: str, filter_: str | dict[str, Any]) -> None:
-        """Add a filter to a specific logger."""
-        assert "loggers" in self._dictconfig  # noqa: S101
+    def _add_filter_to_config(self, path: list[str], filter_: UserDefinedFilter) -> None:
+        target_object = get_in(self._dictconfig, path, None)
+        if target_object is None:
+            raise KeyError(f"can't locate dictconfig path {path}")
         filter_id = self._register("filters", filter_)
+        if "filters" not in target_object:
+            target_object["filters"] = []
+        if not isinstance(target_object["filters"], list):
+            raise ValueError(f"invalid typing for filters subdict, expected 'list', got {type(target_object['filters'])}")
+        target_object["filters"].append(filter_id)
+
+    def _nice_filter_to_dictconfig_filter(self, filter_: SupportsFilter | Callable[[logging.LogRecord], bool]) -> UserDefinedFilter:
+        if hasattr(filter_, "__name__"):
+            typename = f"CallableWrapper<{filter_.__module__}.{filter_.__name__}:{id(filter_)}>"
+        else:
+            typename = f"CallableWrapper<{filter_.__class__.__module__}.{filter_.__class__.__name__}:{id(filter_)}>"
+
+        def ctor_proto() -> SupportsFilter:
+            return cast(SupportsFilter, filter_)
+
+        def ctor_callable() -> SupportsFilter:
+            t = type(typename, (), {})
+            t.filter = filter_  # type:ignore[attr-defined]
+            return cast(SupportsFilter, t)
+
+        ctor = ctor_callable if callable(filter_) else ctor_proto
+        ctor.__name__ = typename
+        return {"()": ctor}
+
+    # XXX deprecate this, rename to add_logger_filter(...) which is more accurate/appropriate naming
+    @env.register("LOGGIA_EXTRA_FILTERS", parser=ep.comma_colon)
+    def add_log_filter(self, logger_name: str, filter_: SupportsFilter | Callable[[logging.LogRecord], bool]) -> None:
+        """Add a filter to a specific logger.
+
+        Use the empty string as logger name to add a filter to the root logger.
+
+        NB: Filters do not propagate like handlers do, see https://docs.python.org/3/library/logging.html#logging.Logger.propagate
+        for more information.
+
+        If you want the filter to propagate, set it on the handler rather than
+        the logger with add_handler_filter
+        """
         self._enforce_logger(logger_name)
-        logger_config = self._dictconfig["loggers"][logger_name]
-        if "filters" not in logger_config:
-            logger_config["filters"] = []
-        assert isinstance(logger_config["filters"], list)  # noqa: S101 # XXX tuples?
-        logger_config["filters"].append(filter_id)
+        self._add_filter_to_config(["loggers", logger_name], self._nice_filter_to_dictconfig_filter(filter_))
 
     # LOGGIA_SKIP_FILTERS=pkg.spkg.MonFilter,mylogname:toto.pkg.TaFilter
     @env.register("LOGGIA_DISABLED_FILTERS", parser=ep.comma_colon)
     def remove_log_filter(self, logger_name: str, filter_fqn: str) -> None:
         raise NotImplementedError
 
+    def add_default_handler_filter(self, filter_: SupportsFilter | Callable[[logging.LogRecord], bool]) -> None:
+        self._add_filter_to_config(["handlers", "default"], self._nice_filter_to_dictconfig_filter(filter_))
+
     @env.register("LOGGIA_FORMATTER")
-    def set_default_formatter(self, formatter: str | dict[str, Any]) -> None:
+    def set_default_formatter(self, formatter: UserDefinedObject[logging.Formatter]) -> None:
         """Sets the default formatter."""
         assert "handlers" in self._dictconfig  # noqa: S101
         formatter_id = self._register("formatters", formatter)
@@ -221,26 +261,18 @@ class LoggerConfiguration:
         assert "loggers" in self._dictconfig  # noqa: S101
         if logger_name not in self._dictconfig["loggers"]:
             self._dictconfig["loggers"][logger_name] = {}
-            self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
+            # self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
 
-    def _register(self, kind: Literal["filters", "formatters"], thing: str | dict[str, Any]) -> str:
-        fqn = thing if isinstance(thing, str) else thing.__class__.__module__ + "." + thing.__class__.__name__
-
-        # XXX: changing the way we derive IDs will prevent conflicts to ever happen
-        key = fqn.split(".")[-1]
-
+    def _register(self, kind: Literal["filters", "formatters"], thing: UserDefinedObject[logging.Formatter] | UserDefinedFilter) -> str:
+        assert isinstance(thing, dict)  # noqa: S101
+        assert "()" in thing  # noqa: S101
+        assert callable(thing["()"])  # noqa: S101
+        ctor = thing["()"]
+        key = ctor.__name__.replace(".", "_")
         self._dictconfig[kind] = self._dictconfig.get(kind, {})
         assert kind in self._dictconfig  # noqa: S101
         if key not in self._dictconfig[kind]:
-            if isinstance(thing, str):
-                self._dictconfig[kind][key] = {"class": fqn}
-            else:
-                self._dictconfig[kind][key] = thing
-        else:
-            registered_thing = self._dictconfig[kind][key]["class"]  # type: ignore[typeddict-item]
-            if isinstance(fqn, str) and registered_thing != fqn:
-                # XXX dict compare for objects
-                raise RuntimeError(f"{kind} {fqn} conflicts with {registered_thing}")
+            self._dictconfig[kind][key] = thing  # type:ignore[assignment] # our types are subsets of the more general types accepted here
         return key
 
 

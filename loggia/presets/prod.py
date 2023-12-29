@@ -1,7 +1,7 @@
 """An overarching preset for a no-frills JSON production logger to stdout."""
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from loggia.base_preset import BasePreset
 from loggia.stdlib_formatters.json_formatter import CustomJsonEncoder, CustomJsonFormatter
@@ -10,18 +10,17 @@ if TYPE_CHECKING:
     import logging
 
     from loggia.conf import LoggerConfiguration
+    from loggia.types import UserDefinedObject
 
 
-def _build_json_formatter() -> dict[str, type[logging.Formatter] | Any]:
-    attr_whitelist = {"name", "levelname", "pathname", "lineno", "funcName"}
-    attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_whitelist]
-    return {
-        "()": CustomJsonFormatter,
-        "json_indent": None,
-        "json_encoder": CustomJsonEncoder,
-        "reserved_attrs": attrs,
-        "timestamp": True,
-    }
+def _build_json_formatter() -> UserDefinedObject[logging.Formatter]:
+    attr_allowlist = {"name", "levelname", "pathname", "lineno", "funcName"}
+    attrs = [x for x in CustomJsonFormatter.RESERVED_ATTRS if x not in attr_allowlist]
+
+    def custom_json_formatter_ctor() -> CustomJsonFormatter:
+        return CustomJsonFormatter(json_indent=None, json_encoder=CustomJsonEncoder, reserved_attrs=attrs, timestamp=True)
+
+    return {"()": custom_json_formatter_ctor}
 
 
 class Prod(BasePreset):

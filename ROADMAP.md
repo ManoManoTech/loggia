@@ -24,6 +24,7 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Right types for Python LoggerConfiguration constructor and methods (bool and int support, not just str...)
 - Good story for users to test their configuration (pytest config?)
 - Capture ANSI output in usage tests, render it with `ansi2html` and include it in the documentation
+- Reorganize packages so that `from loggia import logger` produces a valid logger a la loguru, with implicit initialize if need be
 
 ### Make Loggia more configurable
 

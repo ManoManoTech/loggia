@@ -2,69 +2,89 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
-## NEXT
+## 0.3.0 - NEXT
 
-- [X] Python 3.12 support and updated dependencies
-- [X] Loguru reconfiguration blocker is now configurable, defaults to false (disabled),
-      and is turned on in the `dev` preset.
-- [X] Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly
+In this release, we mostly focus on adoption blockers and seriously itchy behavior. The
+goal remains to have a delightful out-of-the-box experience with little to no config
+required.
+
+- **BREAKING CHANGE** `conf.add_log_filter()` has a simpler and safer signature that 
+  abstracts away details from the underlying logging dictconfig implementation. You can
+  now either pass an instance of something that implements a filter method, or a callable,
+  both with the same `[[LogRecord], bool]` signature.
+- *ADDED* Python 3.12 support and updated dependencies
+- *CHANGED* Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly
       required an opt-in.
-- [X] Support for instrumenting `sys.unraisablehook` and `threading.excepthook`. Both are
+- *ADDED* Support for instrumenting `sys.unraisablehook` and `threading.excepthook`. Both are
       enabled by default in the `prod` preset, similarly to `sys.excepthook`. This allows
       library users to configure the solution of their choice in development for exception
       pretty printing, and stays out of the way of IPython.
+- *FIXED* Log `extra_args` containing the `%` sign are now correctly rendered in pretty mode. 
+- *CHANGED* Propagation shenanigans and handler demultiplication have been removed. This change
+  should not impact any use-cases we're aware of. It was required by the next item.
+- *ADDED* `conf.add_default_handler_filter()`, the preferred way to add a filter that applies to
+  all loggers with propagation on.
+- *CHANGED* Loguru reconfiguration blocker is now configurable, defaults to false (disabled),
+  and is turned on in the `dev` preset.
 
 ## 0.2.0 - 2023-09-26
 
-- [X] `LOGGIA_CAPTURE_LOGURU` now defaults to `AUTO` and will not display an
+In this release we stabilize and do a few breaking changes to better the quality of the lib.
+We expand on the core capabilities offered by 0.1
+
+- `LOGGIA_CAPTURE_LOGURU` now defaults to `AUTO` and will not display an
       error if loguru is not available. Setting it to `ENABLED` will display an
       error if loguru is not available. Setting it to `DISABLED` will skip
       loading and configuring loguru entirely.
-- [X] `import loggia.auto` is new syntactic sugar for the common
+- `import loggia.auto` is new syntactic sugar for the common
       `import loggia.logger; loggia.logger.initialize()`
-- [X] BREAKING CHANGE: Preset preferences are now written in `snake_case` instead
+- BREAKING CHANGE: Preset preferences are now written in `snake_case` instead
       of `fulllowercase`. This will only affect adventurous custom preset authors.
-- [X] The above two changes bring the library in line with its documentation.
-- [X] Pretty Formatter: hide extra args that are formatted (@jonathan.gallon)
-- [X] Fix loguru exception handling
-- [X] Load preset through FQN in `LOGGIA_PRESETS`
-- [X] Write built-in preset override tests
+- The above two changes bring the library in line with its documentation.
+- Pretty Formatter: hide extra args that are formatted (@jonathan.gallon)
+- Fix loguru exception handling
+- Load preset through FQN in `LOGGIA_PRESETS`
+- Write built-in preset override tests
 
 ## 0.1.3 - 2023-09-07
 
-- [X] Default log level for `Prod` preset is now `INFO` instead of `DEBUG`
-- [X] Expand supported Python version: we now support Python 3.9, 3.10 and 3.11
+- Default log level for `Prod` preset is now `INFO` instead of `DEBUG`
+- Expand supported Python version: we now support Python 3.9, 3.10 and 3.11
   - We still recommend using Python 3.11 for the best experience
-- [X] Fixed errors when `loguru` is not installed
+- Fixed errors when `loguru` is not installed
   - We now test with `loguru` installed and not installed
-- [X] Fixed crash when `ddtrace` is not installed
-- [X] We now use `pdm-backend` instead of `hatchling` for packaging
-- [X] Misc. documentation and quality improvements
+- Fixed crash when `ddtrace` is not installed
+- We now use `pdm-backend` instead of `hatchling` for packaging
+- Misc. documentation and quality improvements
 
 ## 0.1.2 - 2023-08-24
 
-- [X] Fixed environment variable `LOGGIA_PRESETS` that was ignored if `presets` was passed to the LoggerConfiguration constructor
-- [X] Improved docs, with all options documented and other minor improvements
-- [X] Fixed `extra` values KVs not being shown for `pretty` mode
-- [X] Allow booleans to configure bool options, instead of only truthy strings
-- [X] Fixed general log level not properly parsed if passed as a non-uppercase string or a number
-- [X] Trace and success level are now only supported if loguru capture is enabled, even for standard logging
+- Fixed environment variable `LOGGIA_PRESETS` that was ignored if `presets` was passed to the LoggerConfiguration constructor
+- Improved docs, with all options documented and other minor improvements
+- Fixed `extra` values KVs not being shown for `pretty` mode
+- Allow booleans to configure bool options, instead of only truthy strings
+- Fixed general log level not properly parsed if passed as a non-uppercase string or a number
+- Trace and success level are now only supported if loguru capture is enabled, even for standard logging
 
 ## 0.1.1 - 2023-08-22
 
-- [X] Fix linting, typo and doc issues
+- Fix linting, typo and doc issues
 
 ## 0.1.0 - 2023-08-21
 
-- [x] Properly configured standard logger either in `pretty` or `structured` mode
-- [x] Basic interop. with `loguru`, with `loguru` piping into standard logger
-- [x] First class support for Datadog standard log attributes
-- [x] Preliminary concept of presets
-- [x] Most of the code shown in documentation is derived from the test suite
-- [x] Move Datadog-specific reencoding into a dedicated filter
-- [x] Move hypercorn/gunicorn reencoding into a dedicated filter
-- [x] `dev` and `prod` presets in the `main` slot
-- [x] Rename internals to have legible documentation
-- [x] Clean up mkdocs settings for the reference part
-- [x] Write preset tests
-- [X] (MM-Internal) Artifactory release
+This initial release is a repackaging of ~2 years of various internal logger configurations
+in various states of maintenance (disrepair?) and materializes what we believe are best 
+practices for Python standard logging and loguru.
+
+- Properly configured standard logger either in `pretty` or `structured` mode
+- Basic interop. with `loguru`, with `loguru` piping into standard logger
+- First class support for Datadog standard log attributes
+- Preliminary concept of presets
+- Most of the code shown in documentation is derived from the test suite
+- Move Datadog-specific reencoding into a dedicated filter
+- Move hypercorn/gunicorn reencoding into a dedicated filter
+- `dev` and `prod` presets in the `main` slot
+- Rename internals to have legible documentation
+- Clean up mkdocs settings for the reference part
+- Write preset tests
+- (MM-Internal) Artifactory release

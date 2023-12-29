@@ -46,7 +46,8 @@ class DatadogNormalisation(BasePreset):
 
     def apply(self, conf: LoggerConfiguration) -> None:
         # XXX: self.__something__ ?
-        conf.add_log_filter("", "loggia.presets.DatadogNormalisation")
+        # conf.add_default_handler_filter(self)
+        pass
 
     def filter(self, record: logging.LogRecord) -> bool:
         setattr(record, "logger.name", record.name)

@@ -1,3 +1,7 @@
+"""A manifestation of our reluctance to introducing our own type of LogRecord.
+
+This reluctance is gradually going away as this package expands.
+"""
 from __future__ import annotations
 
 import logging

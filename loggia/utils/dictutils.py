@@ -8,7 +8,7 @@ K = TypeVar("K")
 
 if TYPE_CHECKING:
     import logging.config
-    from collections.abc import MutableMapping
+    from collections.abc import Mapping, MutableMapping
 
 
 def mv_attr(obj: MutableMapping[K, Any], src_key: K, dst_key: K) -> None:
@@ -67,3 +67,17 @@ def deep_merge_log_config(
         else:
             dict_cfg[key] = value  # type: ignore[literal-required]
     return dict_cfg
+
+
+def get_in(_dict: Mapping[Any, Any], keys: list[str] | tuple[str], default: Any = None) -> Any | None:
+    """Get value from a dict using a path. Never raises."""
+    if not keys:
+        return _dict
+    if len(keys) == 1:
+        return _dict.get(keys[0], default)
+    idx = 0
+    current = _dict
+    while idx < len(keys) and current != default:
+        current = current.get(keys[idx], default)
+        idx += 1
+    return current

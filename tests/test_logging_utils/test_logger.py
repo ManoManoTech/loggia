@@ -4,10 +4,7 @@ import os
 from unittest import mock
 
 from loggia.conf import LoggerConfiguration as LC
-from loggia.logger import (
-    _patch_to_add_level,
-    initialize,
-)
+from loggia.logger import _patch_to_add_level, initialize
 
 
 def test_configure_logging_custom():
