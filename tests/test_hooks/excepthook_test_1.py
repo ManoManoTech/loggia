@@ -6,16 +6,18 @@ exception hooks.
 
 import sys
 
-from loggia.logger import initialize
 from loggia.conf import LoggerConfiguration
+from loggia.logger import initialize
 
 
 def baseline_hook(*args, **kwargs):
     sys.stderr.write("TEST FAILURE: LOGGIA HOOK NOT CALLED\n")
     sys.exit(2)
 
+
 class VerySpecificError(RuntimeError):
     pass
+
 
 if __name__ == "__main__":
     sys.excepthook = baseline_hook

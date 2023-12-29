@@ -1,13 +1,11 @@
 import logging
 import logging.config
 import os
-import sys
 from unittest import mock
 
 from loggia.conf import LoggerConfiguration as LC
 from loggia.logger import (
     _patch_to_add_level,
-    _set_excepthook,
     initialize,
 )
 

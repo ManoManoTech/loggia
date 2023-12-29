@@ -43,6 +43,7 @@ class LoggerConfiguration:
     _dictconfig: logging.config._DictConfigArgs
     setup_excepthook: bool = False
     setup_unraisablehook: bool = False
+    setup_threading_excepthook: bool = False
     capture_warnings: bool = False
     capture_loguru: FlexibleFlag = FlexibleFlag.AUTO
     disallow_loguru_reconfig: bool = False
@@ -186,7 +187,7 @@ class LoggerConfiguration:
     def set_excepthook(self, enabled: bool | str) -> None:
         """Explicitely enable or disable setting `sys.excepthook`.
 
-        When set to true, Loggia will attempt to log unhandled exceptions.
+        When set to true, Loggia log unhandled exceptions as CRITICAL errors.
         """
         self.setup_excepthook = is_truthy_string(enabled)
 
@@ -194,9 +195,19 @@ class LoggerConfiguration:
     def set_unraisablehook(self, enabled: bool | str) -> None:
         """Explicitely enable or disable setting `sys.unraisablehook`.
 
-        When set to true, Loggia will attempt to log unraisable exceptions.
+        When set to true, Loggia will log unraisable exceptions as CRITICAL errors.
+        Unraisable exceptions are unusual, and may happen i.e. during finalization
+        or garbage collection.
         """
         self.setup_unraisablehook = is_truthy_string(enabled)
+
+    @env.register("LOGGIA_SET_THREADING_EXCEPTHOOK")
+    def set_threading_excepthook(self, enabled: bool | str) -> None:
+        """Explicitely enable or disable setting `threading.excepthook`.
+
+        When set to true, Loggia will log uncaught exception in threads as CRITICAL errors.
+        """
+        self.setup_threading_excepthook = is_truthy_string(enabled)
 
     @env.register("LOGGIA_CAPTURE_WARNINGS")
     def set_capture_warnings(self, enabled: bool | str) -> None:

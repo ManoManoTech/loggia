@@ -9,6 +9,10 @@ For a list of planned features, see [the roadmap](ROADMAP.md).
       and is turned on in the `dev` preset.
 - [X] Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly
       required an opt-in.
+- [X] Support for instrumenting `sys.unraisablehook` and `threading.excepthook`. Both are
+      enabled by default in the `prod` preset, similarly to `sys.excepthook`. This allows
+      library users to configure the solution of their choice in development for exception
+      pretty printing, and stays out of the way of IPython.
 
 ## 0.2.0 - 2023-09-26
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 import logging
 import logging.config
 import sys
+import threading
 from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
@@ -12,7 +13,6 @@ from loggia.conf import FlexibleFlag, LoggerConfiguration
 
 if TYPE_CHECKING:
     from types import TracebackType
-    from typing import Any
 
 
 def _patch_to_add_level(level_number: int, level_name: str) -> None:
@@ -28,20 +28,30 @@ def _patch_to_add_level(level_number: int, level_name: str) -> None:
     logging.addLevelName(level_number, level_name_upper)
 
 
-def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets: str | list[str] | None = None) -> None:
-    """Initialize the logging system."""
+def _bootstrap_config(
+    conf: LoggerConfiguration | dict[str, str] | None = None, presets: str | list[str] | None = None
+) -> LoggerConfiguration:
     if conf is None:
         conf = LoggerConfiguration(presets=presets)
     if isinstance(conf, Mapping):
         conf = LoggerConfiguration(settings=dict(conf), presets=presets)
     if not isinstance(conf, LoggerConfiguration):
         raise TypeError("initialize() accepts LoggerConfiguration instances or mappings (like a dict).")
+    return conf
+
+
+def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets: str | list[str] | None = None) -> None:
+    """Initialize the logging system."""
+    conf = _bootstrap_config(conf, presets)
 
     if conf.setup_excepthook:
         _set_excepthook(logging.getLogger())
 
     if conf.setup_unraisablehook:
         _set_unraisablehook(logging.getLogger())
+
+    if conf.setup_threading_excepthook:
+        _set_threading_excepthook(logging.getLogger())
 
     # XXX sys.unraisablehook
     # XXX threading.excepthook
@@ -79,3 +89,11 @@ def _set_unraisablehook(logger: logging.Logger) -> None:
         logger.critical(msg, exc_info=(unraisable.exc_type, unraisable.exc_value, unraisable.exc_traceback))
 
     sys.unraisablehook = _unraisablehook
+
+
+def _set_threading_excepthook(logger: logging.Logger) -> None:
+    def _excepthook(args: threading.ExceptHookArgs) -> None:
+        msg = f"Unhandled exception in thread: {args.exc_type}"
+        logger.critical(msg, exc_info={args.exc_type, args.exc_value, args.exc_traceback})
+
+    threading.excepthook = _excepthook

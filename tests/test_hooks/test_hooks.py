@@ -1,19 +1,19 @@
 import logging
 import os.path
 import subprocess
+import sys
 
 import pytest
-import sys
 
 from loggia.logger import _set_excepthook
 
-
-__HERE__ = os.path.dirname(__file__)
+__HERE__ = os.path.dirname(__file__)  # noqa: PTH120
 
 
 def run_script(script_name, *args, expected_retcode: int = 1):
-    # env = dict(os.environ) | {'PYTHONPATH': os.getcwd()}
-    completed_process = subprocess.run(["python3", f"tests/test_hooks/{script_name}"] + list(args), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    completed_process = subprocess.run(
+        ["python3", f"tests/test_hooks/{script_name}", *args], capture_output=True, check=False
+    )  # noqa: S603 S607
     assert completed_process.returncode == expected_retcode
     return completed_process
 
@@ -27,7 +27,7 @@ def test_set_excepthook_on(capsys: pytest.CaptureFixture[str]):
     assert sys.excepthook is not previous_hook
 
 
-@pytest.fixture
+@pytest.fixture()
 def _env_setup_teardown():
     # Override the fixture to make it a no-op
     pass
@@ -51,4 +51,15 @@ def test_unraisablehook_1():
 
 def test_unraisablehook_2():
     ret = run_script("unraisablehook_test_2.py", expected_retcode=10)
+    assert "boom" in ret.stderr.decode()
+
+
+def test_threadinghook_1():
+    ret = run_script("threadinghook_test_1.py", expected_retcode=0)
+    assert "error.stack" in ret.stderr.decode()
+    assert "thread unhandled" in ret.stderr.decode()
+
+
+def test_threadinghook_2():
+    ret = run_script("threadinghook_test_2.py", expected_retcode=10)
     assert "boom" in ret.stderr.decode()

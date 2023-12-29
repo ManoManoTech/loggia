@@ -34,6 +34,7 @@ class Prod(BasePreset):
         conf.set_general_level("INFO")
         conf.set_excepthook(enabled=True)
         conf.set_unraisablehook(enabled=True)
+        conf.set_threading_excepthook(enabled=True)
 
         # No access logs in production, ingress/api gateways provide them.
         conf.set_logger_level("hypercorn.access", "WARNING")

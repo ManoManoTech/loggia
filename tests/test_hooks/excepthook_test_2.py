@@ -6,8 +6,8 @@ exception hooks.
 
 import sys
 
-from loggia.logger import initialize
 from loggia.conf import LoggerConfiguration
+from loggia.logger import initialize
 
 
 def baseline_hook(*_args, **_kwargs):
@@ -28,4 +28,3 @@ if __name__ == "__main__":
         raise RuntimeError("test unhandled exception")
     except VerySpecificError:
         pass
-
