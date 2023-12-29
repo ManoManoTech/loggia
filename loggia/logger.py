@@ -29,7 +29,8 @@ def _patch_to_add_level(level_number: int, level_name: str) -> None:
 
 
 def _bootstrap_config(
-    conf: LoggerConfiguration | dict[str, str] | None = None, presets: str | list[str] | None = None
+    conf: LoggerConfiguration | dict[str, str] | None = None,
+    presets: str | list[str] | None = None,
 ) -> LoggerConfiguration:
     if conf is None:
         conf = LoggerConfiguration(presets=presets)

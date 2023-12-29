@@ -12,8 +12,10 @@ __HERE__ = os.path.dirname(__file__)  # noqa: PTH120
 
 def run_script(script_name, *args, expected_retcode: int = 1):
     completed_process = subprocess.run(
-        ["python3", f"tests/test_hooks/{script_name}", *args], capture_output=True, check=False
-    )  # noqa: S603 S607
+        ["python3", f"tests/test_hooks/{script_name}", *args],  # noqa: S603 S607
+        capture_output=True,
+        check=False,
+    )
     assert completed_process.returncode == expected_retcode
     return completed_process
 
