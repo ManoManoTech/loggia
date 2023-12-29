@@ -2,14 +2,12 @@
 
 For a list of past changes, see [the changelog](CHANGELOG.md).
 
-## 0.3.0 (NEXT)
+## Next release
 
-- [x] Load preset through FQN in `LOGGIA_PRESETS`
-- [x] Write built-in preset override tests
-- [ ] Make environment variable parsing type aware and document it
+- See [CHANGELOG.md](CHANGELOG.md)
 - (And more! Let us know what you'd like next.)
 
-## Later
+## Later (or sooner)
 
 ### More ways of using Loggia
 
@@ -41,6 +39,7 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Support faster JSON encoders like `msgspec`, `orjson` and `ujson` when detected
 - Allow custom formatters to be loaded via fully qualified names
 - Allow custom presets to be loaded via fully qualified names
+- Make environment variable parsing type aware and document it
 - Stronger KV support globally or per-logger
   - Through a general filter
   - Strip some KVs from messages
@@ -55,8 +54,7 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 
 ### More of Python's internals exposed
 
-- Make our `sys.excepthook` compatible with other hooks instead of basic override
-- `sys.unraisablehook()` / `threading.excepthook()` support
+- Make our standard hooks `sys.excepthook` compatible with other hooks instead of basic override
 - audit subsystem interop
 
 ### More delightful built-in presets
@@ -82,6 +80,5 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Introduce a decent exception hierarchy - no more `RuntimeError`
 - Add tests for `loaderutils`
 - Add tests for the pretty formatter
-- Tox in CI
 - Make environment variable parsing type aware and document it
 
