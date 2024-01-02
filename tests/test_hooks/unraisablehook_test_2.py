@@ -15,7 +15,14 @@ def baseline_hook(*_args, **_kwargs):
     # sys.exit() doesn't work here
     import ctypes
 
-    libc = ctypes.CDLL("libc.so.6")  # XXX libc.dylib for macos? msvcrt.dll for windows?
+    system = sys.platform
+    if system == "win32":
+        libc = ctypes.CDLL("msvcrt.dll")
+    elif system == "darwin":
+        libc = ctypes.CDLL("libc.dylib")
+    else:
+        libc = ctypes.CDLL("libc.so.6")
+
     libc.exit(10)
 
 
