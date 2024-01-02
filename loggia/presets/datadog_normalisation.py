@@ -5,6 +5,7 @@ import sys
 import traceback
 from typing import TYPE_CHECKING, Any, Union
 
+from loggia._version import __version__
 from loggia.base_preset import BasePreset
 from loggia.conf import LoggerConfiguration
 
@@ -23,6 +24,8 @@ try:
     import ddtrace
 except ImportError:
     ddtrace = None  # type: ignore[assignment]
+
+loggia_version_str = f"loggia/{__version__}"
 
 
 def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
@@ -53,7 +56,7 @@ class DatadogNormalisation(BasePreset):
         setattr(record, "logger.name", record.name)
         setattr(record, "logger.thread_name", record.threadName)
         setattr(record, "logger.method_name", record.funcName)
-        # XXX dd.version?
+        setattr(record, "logger.version", loggia_version_str)
 
         # Level normalisation (including our custom loguru levels)
         levelname = record.levelname
