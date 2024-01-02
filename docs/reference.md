@@ -5,6 +5,10 @@
     options:
       show_object_full_path: True
       show_source: False
+::: loggia.stdlib_formatters
+    options:
+      show_object_full_path: True
+      show_source: False
 ::: loggia.presets
     options:
       show_object_full_path: True

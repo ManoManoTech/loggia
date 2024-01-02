@@ -225,7 +225,7 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_SET_EXCEPTHOOK")
     def set_excepthook(self, enabled: bool | str) -> None:
-        """Explicitely enable or disable setting `sys.excepthook`.
+        """Explicitely enable or disable setting [sys.excepthook][].
 
         When set to true, Loggia log unhandled exceptions as CRITICAL errors.
         """
@@ -233,7 +233,7 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_SET_UNRAISABLEHOOK")
     def set_unraisablehook(self, enabled: bool | str) -> None:
-        """Explicitely enable or disable setting `sys.unraisablehook`.
+        """Explicitely enable or disable setting [sys.unraisablehook][].
 
         When set to true, Loggia will log unraisable exceptions as CRITICAL errors.
         Unraisable exceptions are unusual, and may happen i.e. during finalization
@@ -243,7 +243,7 @@ class LoggerConfiguration:
 
     @env.register("LOGGIA_SET_THREADING_EXCEPTHOOK")
     def set_threading_excepthook(self, enabled: bool | str) -> None:
-        """Explicitely enable or disable setting `threading.excepthook`.
+        """Explicitely enable or disable setting [threading.excepthook][].
 
         When set to true, Loggia will log uncaught exception in threads as CRITICAL errors.
         """
