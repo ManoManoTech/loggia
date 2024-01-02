@@ -88,5 +88,5 @@ class DatadogNormalisation(BasePreset):
             if ddtrace.config.service:
                 setattr(record, "dd.service", ddtrace.config.service)
             if ddtrace.config.version:
-                setattr(record, "dd.service", ddtrace.config.version)
+                setattr(record, "dd.version", ddtrace.config.version)
         return True
