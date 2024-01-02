@@ -8,7 +8,7 @@ In this release, we mostly focus on adoption blockers and seriously itchy behavi
 goal remains to have a delightful out-of-the-box experience with little to no config
 required.
 
-- **BREAKING CHANGE** `conf.add_log_filter()` has a simpler and safer signature that 
+- **BREAKING CHANGE** `conf.add_log_filter()` has a simpler and safer signature that
   abstracts away details from the underlying logging dictconfig implementation. You can
   now either pass an instance of something that implements a filter method, or a callable,
   both with the same `[[LogRecord], bool]` signature.
@@ -19,7 +19,7 @@ required.
       enabled by default in the `prod` preset, similarly to `sys.excepthook`. This allows
       library users to configure the solution of their choice in development for exception
       pretty printing, and stays out of the way of IPython.
-- *FIXED* Log `extra_args` containing the `%` sign are now correctly rendered in pretty mode. 
+- *FIXED* Log `extra_args` containing the `%` sign are now correctly rendered in pretty mode.
 - *CHANGED* Propagation shenanigans and handler demultiplication have been removed. This change
   should not impact any use-cases we're aware of. It was required by the next item.
 - *ADDED* `conf.add_default_handler_filter()`, the preferred way to add a filter that applies to
@@ -73,7 +73,7 @@ We expand on the core capabilities offered by 0.1
 ## 0.1.0 - 2023-08-21
 
 This initial release is a repackaging of ~2 years of various internal logger configurations
-in various states of maintenance (disrepair?) and materializes what we believe are best 
+in various states of maintenance (disrepair?) and materializes what we believe are best
 practices for Python standard logging and loguru.
 
 - Properly configured standard logger either in `pretty` or `structured` mode
