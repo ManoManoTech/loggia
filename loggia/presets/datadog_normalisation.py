@@ -5,7 +5,6 @@ import sys
 import traceback
 from typing import TYPE_CHECKING, Any
 
-from loggia._version import __version__
 from loggia.base_preset import BasePreset
 
 if sys.version_info >= (3, 10):
@@ -28,6 +27,11 @@ try:
     import ddtrace
 except ImportError:
     ddtrace = None  # type: ignore[assignment]
+
+try:
+    from loggia._version import __version__
+except ImportError:
+    __version__ = "unknown"
 
 loggia_version_str = f"loggia/{__version__}"
 
