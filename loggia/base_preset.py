@@ -20,7 +20,7 @@ class BasePreset(ABC):
     @abstractmethod
     def apply(self, conf: LoggerConfiguration) -> None:
         """The defining part of what the preset does by mutating conf as appropriate."""
-        ...
+        raise NotImplementedError
 
     @classmethod
     def slots(cls) -> list[str]:

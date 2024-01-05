@@ -77,60 +77,70 @@ def _clear_test_applies():
 def test_needs_a1_met():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*NeedsA1"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "NeedsA1"} == TestPreset.APPLICATIONS
 
 
 def test_needs_a1_unmet():
     with_env("LOGGIA_PRESETS", _lp("prod", "*NeedsA1"))
     import loggia.auto  # noqa: F401
+
     assert set() == TestPreset.APPLICATIONS
 
 
 def test_needs_a2_met():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*NeedsA2"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "NeedsA2"} == TestPreset.APPLICATIONS
 
 
 def test_needs_a2_unmet():
     with_env("LOGGIA_PRESETS", _lp("prod", "*NeedsA2"))
     import loggia.auto  # noqa: F401
+
     assert set() == TestPreset.APPLICATIONS
 
 
 def test_a_or_b_met1():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*B", "*AoB"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "B", "AoB"} == TestPreset.APPLICATIONS
 
 
 def test_a_or_b_met2():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*AoB"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "AoB"} == TestPreset.APPLICATIONS
 
 
 def test_a_or_b_met3():
     with_env("LOGGIA_PRESETS", _lp("prod", "*B", "*AoB"))
     import loggia.auto  # noqa: F401
+
     assert {"B", "AoB"} == TestPreset.APPLICATIONS
 
 
 def test_a_or_b_unmet():
     with_env("LOGGIA_PRESETS", _lp("prod", "*C", "*AoB"))
     import loggia.auto  # noqa: F401
+
     assert {"C"} == TestPreset.APPLICATIONS
 
 
 def test_a_and_b_unmet_1():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*AnB"))
     import loggia.auto  # noqa: F401
+
     assert {"A"} == TestPreset.APPLICATIONS
 
 
 def test_a_and_b_unmet_2():
     with_env("LOGGIA_PRESETS", _lp("prod", "*B", "*AnB"))
     import loggia.auto  # noqa: F401
+
     assert {"B"} == TestPreset.APPLICATIONS
 
 
@@ -138,28 +148,33 @@ def test_a_and_b_unmet_2():
 def test_anbnc1_met():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*B", "*C", "*AnB", "*AnBnC1"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "B", "C", "AnB", "AnBnC1"} == TestPreset.APPLICATIONS
 
 
 def test_anbnc2_met():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*B", "*C", "*AnBnC2"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "B", "C", "AnBnC2"} == TestPreset.APPLICATIONS
 
 
 def test_anboc1_met1():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*B", "*AnBoC1"))
     import loggia.auto  # noqa: F401
+
     assert {"A", "B", "AnBoC1"} == TestPreset.APPLICATIONS
 
 
 def test_anboc1_met2():
     with_env("LOGGIA_PRESETS", _lp("prod", "*C", "*AnBoC1"))
     import loggia.auto  # noqa: F401
+
     assert {"C", "AnBoC1"} == TestPreset.APPLICATIONS
 
 
 def test_anboc1_unmet():
     with_env("LOGGIA_PRESETS", _lp("prod", "*A", "*AnBoC1"))
     import loggia.auto  # noqa: F401
+
     assert {"A"} == TestPreset.APPLICATIONS
