@@ -43,7 +43,7 @@ It is expected to be a comma separated string of preset names, identifying which
 for each of the slots.
 
 The default `LOGGIA_PRESETS` value is `"prod"`. This means you have to opt in to pretty formatting
-(by doing something like `export LOGGIA_PRESETS=dev`). This make most loggia-enabled projects 
+(by doing something like `export LOGGIA_PRESETS=dev`). This make most loggia-enabled projects
 "production-ready" by default, as far as logging is concerned.
 
 Loggia will figure out which preset belongs to which slot: conflicting or confusing slot

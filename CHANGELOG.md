@@ -13,13 +13,13 @@ required.
   now either pass an instance of something that implements a filter method, or a callable,
   both with the same `[[LogRecord], bool]` signature.
 - *ADDED* Python 3.12 support and updated dependencies
-- *CHANGED* Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly 
+- *CHANGED* Default `sys.excepthook` is now set in the `prod` preset. It previously explicitly
   required an opt-in.
 - *ADDED* Support for instrumenting `sys.unraisablehook` and `threading.excepthook`. Both are
   enabled by default in the `prod` preset, similarly to `sys.excepthook`. This allows
   library users to configure the solution of their choice in development for exception
   pretty printing, and stays out of the way of IPython.
-- *FIXED* Log `extra_args` containing the `%` sign are now correctly rendered in pretty mode. 
+- *FIXED* Log `extra_args` containing the `%` sign are now correctly rendered in pretty mode.
 - *CHANGED* Propagation shenanigans and handler demultiplication have been removed. This change
   should not impact any use-cases we're aware of. It was required by the next item.
 - *ADDED* `conf.add_default_handler_filter()`, the preferred way to add a filter that applies to
