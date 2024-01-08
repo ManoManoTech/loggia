@@ -28,10 +28,10 @@ A way to express a concern where only one preset may apply.
 For instance, the `main` slot currently has a `prod` and a `dev` preset, that configure
 structured and pretty output formats, respectively.
 
-| Slot            | Available implementations                                               |
-|-----------------|-------------------------------------------------------------------------|
-| `main`          | [`dev`][loggia.presets.dev] ; [`prod`][loggia.presets.prod]             |
-| `normalization` | [`datadog`][loggia.presets.datadog_normalisation] ; `otel` (in ROADMAP) |
+| Slot            | Available implementations                                                           |
+|-----------------|-------------------------------------------------------------------------------------|
+| `main`          | [`dev`][loggia.presets.dev] ; [`prod`][loggia.presets.prod]                         |
+| `normalization` | [`datadog`][loggia.presets.datadog_normalisation] ; `otel` ; `concise` (in ROADMAP) |
 
 ### Preset Preferences
 
@@ -43,7 +43,8 @@ It is expected to be a comma separated string of preset names, identifying which
 for each of the slots.
 
 The default `LOGGIA_PRESETS` value is `"prod"`. This means you have to opt in to pretty formatting
-(by doing something like `export LOGGIA_PRESETS=dev`) - and loggia setups can go to production without a single setting in many instances.
+(by doing something like `export LOGGIA_PRESETS=dev`). This make most loggia-enabled projects 
+"production-ready" by default, as far as logging is concerned.
 
 Loggia will figure out which preset belongs to which slot: conflicting or confusing slot
 to preset mappings are unsupported/forbidden. This could be revisited before 1.0.
@@ -57,13 +58,32 @@ Pending a better tutorial, look at the packages in the [`loggia.presets`][loggia
 inspiration. In most instances, you can cut and paste your Loggia configuration code
 in an `apply` method and be done with it.
 
+!!! note
+    The ROADMAP includes several tasks where we plan on expanding / reworking this side.
+    We notably intend to clarify how to ship presets, add more pythonic ways of registering
+    new presets, and provide a mechanism for conditional activation beyond preset-preset
+    dependencies.
+
 ### Registering your new preset
 
 Adding the fully qualified name of your preset (i.e. `"mypackage.mysubpackage.MyPreset"`)
 to `LOGGIA_PRESETS` is enough for Loggia to load it.
 
 Alternatively, if you are using the constructor parameter, you'll be happy to find out
-it accepts a `list[str|BasePreset]` as a value.
+it accepts a `list[str|BasePreset]` for preset preferences, enabling your to directly
+register the type.
+
+### Declaring a preset-preset dependency
+
+If your preset should be enabled depending on whether or not another preset is activating,
+you may override the `BasePreset.required_presets()` class method to indicate which presets
+you depend on.
+
+For instance, an hypothetic `AddProductionFields` would likely depend on the `prod` preset.
+This is meant to allow extending the builtins without requiring overrides.
+
+!!! note
+    New in version 0.3.0
 
 ### Overriding built-in presets
 
