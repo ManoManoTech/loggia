@@ -1,21 +1,24 @@
 """Remap anything to Datadog standard and common attributes."""
+from __future__ import annotations
 
-import logging
 import sys
 import traceback
-from typing import TYPE_CHECKING, Any, Union
+from typing import TYPE_CHECKING, Any
 
-from loggia._version import __version__
 from loggia.base_preset import BasePreset
-from loggia.conf import LoggerConfiguration
 
 if sys.version_info >= (3, 10):
     from typing import TypeAlias
 else:
-    from typing_extensions import TypeAlias
+    pass
 
 if TYPE_CHECKING:
+    import logging
     from types import TracebackType
+
+    from typing_extensions import TypeAlias
+
+    from loggia.conf import LoggerConfiguration
 
 ExcInfo: TypeAlias = "tuple[type[BaseException], BaseException, None | TracebackType]"
 
@@ -25,10 +28,15 @@ try:
 except ImportError:
     ddtrace = None  # type: ignore[assignment]
 
+try:
+    from loggia._version import __version__
+except ImportError:
+    __version__ = "unknown"
+
 loggia_version_str = f"loggia/{__version__}"
 
 
-def _figure_out_exc_info(v: Any) -> Union["sys._OptExcInfo", "ExcInfo"]:
+def _figure_out_exc_info(v: Any) -> sys._OptExcInfo | ExcInfo:
     """Depending on the Python version will try to do the smartest thing possible to transform *v* into an ``exc_info`` tuple."""
     if isinstance(v, BaseException):
         return (v.__class__, v, v.__traceback__)
@@ -46,6 +54,10 @@ class DatadogNormalisation(BasePreset):
     @classmethod
     def slots(cls) -> list[str]:
         return ["normalization"]
+
+    @classmethod
+    def required_presets(cls) -> list[str | list[str]]:
+        return ["prod"]
 
     def apply(self, conf: LoggerConfiguration) -> None:
         # XXX: self.__something__ ?

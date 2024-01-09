@@ -44,6 +44,7 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Stronger KV support globally or per-logger
   - Through a general filter
   - Strip some KVs from messages
+- Support `LOGGIA_NO_PRESETS` to explicitely bar some presets from being enabled.
 
 ### Make Loggia handle more concerns
 

@@ -142,8 +142,16 @@ omit = ["tests/*", "__pypackages__/*", ".venv/*"]
 source = ["loggia"]
 
 [tool.coverage.report]
-exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:"]
-
+exclude_lines = [
+  "no cov",
+  "def __repr__",
+  "if TYPE_CHECKING:",
+  "raise AssertionError",
+  "raise NotImplementedError",
+  "if __name__ == .__main__.:",
+  'class .*\bProtocol\):',
+  '@(abc\.)?abstractmethod]',
+]
 
 [tool.black]
 line-length = 140
