@@ -38,8 +38,6 @@ class HypercornLogger(Logger):
         # Add all headers in the HEADER_ATTRIBUTES list to the log, or any header starting with x- or sec-
         # Keep in minds that headers are case insensitive, so we need to lowercase them
         # request["headers"] is a tuple of bytes
-        # key: name.decode('latin1').lower()
-        # Value: value.decode('latin1')
         headers: dict[str, str] = {}
 
         for key_b, value in request["headers"]:

@@ -62,6 +62,7 @@ jobs:
       - name: Test with pytest-cov
         run: |
           pdm run test-cov
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
@@ -72,9 +73,11 @@ jobs:
       - name: Type check with mypy
         run: |
           pdm run lint-mypy
+
       - name: Lint with ruff
         run: |
           pdm run lint-ruff --output-format=github --exit-non-zero-on-fix
+
       - name: Build with pdm
         run: |
           pdm build

@@ -1,0 +1,33 @@
+---
+# ManoMano Internal
+include:
+  - project: "component-python/ci-templates"
+    file: "python.gitlab-ci.yml"
+    ref: "main"
+
+
+variables:
+  PROJECT_NAME: loggia
+  PROJECT_TYPE: lib
+
+  PYTHON_VERSION: "3.11"
+  PYTHON_BUILD_PACKAGE: "true"
+  PYTHON_PUBLISH_REPOSITORIES: artifactory,gitlab
+  PYTHON_PYTEST_SELF_INSTALL: "true"
+
+  PYTHON_LINT_RUFF: "true"
+  PYTHON_LINT_MYPY: "true"
+  PYTHON_LINT_PYLINT: "true"
+  PYTHON_FMT_BLACK: "true"
+  PYTHON_JOB_PYTEST: "true"
+
+  MYPY_CMD: pdm run lint-mypy
+  PYLINT_CMD: pylint loggia
+  PYTEST_COV_SOURCES: loggia
+  PYTEST_SCRIPTS: tests
+
+sonarqube_check:
+  variables:
+    SONAR_SOURCES: "loggia"
+    SONAR_TESTS: tests
+    SONAR_PYTHON_VERSION: "3.11"

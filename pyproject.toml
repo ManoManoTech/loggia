@@ -37,7 +37,7 @@ classifiers = [
   "Environment :: Web Environment",
 ]
 [project.urls]
-***REMOVED***
+Homepage = "https://git.manomano.tech/component-python/pkgs/loggia/"
 
 [project.optional-dependencies]
 loguru = ["loguru>=0.7.0"]
