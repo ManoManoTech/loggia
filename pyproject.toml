@@ -48,9 +48,6 @@ ddtrace = ["ddtrace>=1.18.0"]
 plugins = [
     "sync-pre-commit-lock"
 ]
-[tool.build.build]
-include = ["loggia"]
-exclude = ["**/.*", ".*", ".mypy_cache"]
 
 [tool.pdm.version]
 source = "scm"
@@ -90,7 +87,7 @@ docs-build = { cmd = "mkdocs build --strict", help = "Build the docs" }
 dev = [
     "black>=22.12.0",
     "mypy>=1.4",
-    "pylint>=2.15.8",
+    "pylint>=3.0.3",
     "pytest-cov>=4.0.0",
     "yamllint>=1.28.0",
     "ipdb>=0.13.13",
@@ -157,14 +154,8 @@ line-length = 140
 target-version = ['py39']
 
 [tool.pylint]
-[tool.pylint.MASTER]
+[tool.pylint.main]
 py-version = "3.9"
-ignore = ['__pypackages__', '.git', 'packages', '.venv']
-
-
-[tool.pylint.FORMAT]
-max-line-length = 180
-[tool.pylint.'MESSAGES CONTROL']
 disable = [
   "C",
   "R0903",
@@ -175,9 +166,11 @@ disable = [
   "too-many-branches",
 ]
 
+[tool.pylint.format]
+max-line-length = 180
+
 [tool.ruff]
 line-length = 140
-target-version = "py39"
 ignore = [
   "E501",   # Line too long
   "ANN101", # Missing type annotation for self in method
@@ -185,7 +178,6 @@ ignore = [
   "ANN401", # Dynamically typed expressions are disallowed
   "ARG002", # Unused argument
   "ARG005", # Unused lambda argument
-  "ERA001", # XXX Enable later, commented code
   "TD",
   "SLF001", # Private member accessed
   "EM102",  # Exception must not use an f-string literal, assign to variable first
@@ -252,7 +244,6 @@ files = ["loggia"]
 python_version = "3.9"
 strict = true
 strict_optional = true
-mypy_path = "$MYPY_CONFIG_FILE_DIR/stubs"
 allow_redefinition = false
 ignore_missing_imports = true
 local_partial_types = true
