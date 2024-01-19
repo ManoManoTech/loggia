@@ -61,7 +61,6 @@ class DatadogNormalisation(BasePreset):
 
     def apply(self, conf: LoggerConfiguration) -> None:
         # XXX: self.__something__ ?
-        # conf.add_default_handler_filter(self)
         pass
 
     def filter(self, record: logging.LogRecord) -> bool:

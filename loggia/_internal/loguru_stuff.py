@@ -61,14 +61,8 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
         # XXX(dugab): check key actualy exists somewhere?
         attributes["stack"] = record["stack"]  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
-    # if "module" in record:
-    #     attributes
-
     loguru_extra = cast(dict[str, Any], record.pop("extra", {}))  # type: ignore[misc]
     record_dict = loguru_extra | attributes
-
-    # exc_info = extra.pop("exc_info", None)
-    # XXX there are more forbidden keys to extra, see logging/__init__.py:1606
 
     log_record = logging.makeLogRecord(record_dict)
     logger.handle(log_record)

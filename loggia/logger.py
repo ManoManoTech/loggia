@@ -54,8 +54,6 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
     if conf.setup_threading_excepthook:
         _set_threading_excepthook(logging.getLogger())
 
-    # XXX sys.unraisablehook
-    # XXX threading.excepthook
     # XXX asyncio bullshit?
     # XXX audit subsystem bridge
 

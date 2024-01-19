@@ -9,12 +9,14 @@ from loggia.conf import LoggerConfiguration
 from loggia.logger import initialize
 
 if TYPE_CHECKING:
+    import loguru
+
     from tests.conftest import ErrlinesCaptureFixture, JsonStderrCaptureFixture
 
 # ruff: noqa: T201
 
 loguru_module = pytest.importorskip("loguru")
-loguru_logger = loguru_module.logger
+loguru_logger: loguru.Logger = loguru_module.logger
 
 
 def test_basic_info(capjson: JsonStderrCaptureFixture) -> None:
@@ -76,32 +78,6 @@ def test_extra_kv_pretty(caperrlines: ErrlinesCaptureFixture) -> None:
 
 def launch() -> None:
     logger = logging.getLogger(__name__)
-
-    # # Test standard logging
-    # # logging.debug("Debug log from standard logging")
-
-    # # # Test logging with Loguru
-    # loguru_logger.debug("Debug log from Loguru", argument1="test", argument2="test2")
-    # logger.debug("Debug log from std lib", extra=dict(argument1="test", argument2="test2"))
-    # # loguru_logger.info("Info log from Loguru")
-    # # loguru_logger.warning("Warning log from Loguru")
-    # # loguru_logger.error("Error log from Loguru")
-    # # loguru_logger.critical("Critical log from Loguru", argument1="test", argument2="test2")
-    # # loguru_logger.trace("Trace log from Loguru")  # XXX Is ignored rn
-    # # loguru_logger.log("CRITICAL", "Critical log from Loguru, using log method")
-    # # loguru_logger.success("Success log from Loguru")
-    # logger.debug("Debug log from standard logging")
-    # loguru_logger.debug("Debug log from Loguru")
-
-    # #  Test when raising
-    # try:
-    #     1 / 0
-    # except Exception as e:
-    #     loguru_logger.opt(exception=e).error("Error log from Loguru")
-    # try:
-    #     1 / 0
-    # except Exception as e:
-    #     logger.exception("Error log from standard logging")
 
     logger.log(logging.WARNING, "Warning log from standard logging, using log method")
     loguru_logger.log("WARNING", "Warning log from Loguru, using log method")

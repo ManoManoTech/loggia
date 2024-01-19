@@ -187,12 +187,12 @@ class LoggerConfiguration:
         formatter_id = self._register("formatters", formatter)
         self._dictconfig["handlers"]["default"]["formatter"] = formatter_id
 
-    # LOGGIA_PALETTE=dark256|classic16
+    # E.g. LOGGIA_PALETTE in dark256 | classic16
     @env.register("LOGGIA_PRETTY_PALETTE")
     def set_pretty_formatter_palette(self, palette: str) -> None:
         raise NotImplementedError
 
-    # LOGGIA_JSON_ENCODER=xxx
+    # E.g. LOGGIA_JSON_ENCODER set to xxx.JSONEncoder
     @env.register("LOGGIA_JSON_ENCODER")
     def set_json_encoder(self, encoder: type[JSONEncoder] | str) -> None:
         raise NotImplementedError
@@ -261,7 +261,6 @@ class LoggerConfiguration:
         assert "loggers" in self._dictconfig  # noqa: S101
         if logger_name not in self._dictconfig["loggers"]:
             self._dictconfig["loggers"][logger_name] = {}
-            # self._dictconfig["loggers"][logger_name]["handlers"] = ["default"]
 
     def _register(self, kind: Literal["filters", "formatters"], thing: UserDefinedObject[logging.Formatter] | UserDefinedFilter) -> str:
         assert isinstance(thing, dict)  # noqa: S101

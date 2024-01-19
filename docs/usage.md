@@ -89,37 +89,17 @@ You probably want to configure the standard Python logger as well, e.g., to chan
 %}
 ```
 
-
-
-## Configure Hypercorn or Gunicorn xSGI servers
-
-XXX Documentation
-<!--
-Pass the Logger classes in your Hypercorn or Gunicorn configuration.
-
-The logger classes are already configured for DataDog, and they support JSON structured logging for access logs.
-
-
-### Hypercorn
-
-Use [HypercornLogger][loggia.structlog_utils.hypercorn_logger.HypercornLogger] as the logger class.
-
-### Gunicorn
-
-Use [GunicornLogger][loggia.structlog_utils.gunicorn_logger.GunicornLogger] as the logger class. -->
-
 ## Configure the standard logger
 
 Be careful, the handler is called default
 
 ## Using the TRACE level from the standard logger
 
-Following the standard ManoMano log levels, and compatible with loguru,
+To be compatible with loguru, and have similar levels to other loggers,
 we extended the standard logger to expose a trace level at priority 5.
 
 !!! warning
     You need to have loguru installed and the loguru capture enabled to use custom levels.
-
 
 ```python
 ...
