@@ -26,7 +26,7 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 ## Usage
 
 1. Add the `loggia` dependency to your project, e.g.: with PDM:
-   - Directly from the Pypi: `pdm add loggia`
+   - Directly from Pypi: `pdm add loggia`
    - With Git: `pdm add "loggia @ git+ssh://git@github.com/manomanotech/loggia.git"`
 2. `#!python from loggia.logger import initialize; initialize()` is a strong starting point
    - You should call this as early as possible in your application, ideally before any other code is run, for instance by adding it in your main `__init__.py` file.
@@ -43,8 +43,8 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Code standards & Principles
 
-- Err on the side of way too typed rather than untyped
-- Do not depend on third-party packages (WIP)
+- Lean towards being way too typed rather than untyped
+- Do not depend on third-party packages (_WIP_)
 - Do not crash unless explicitly asked to - fallback to sensible things, emit a warning, and move on.
 
 ## Supported versions
