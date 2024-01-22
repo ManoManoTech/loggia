@@ -21,7 +21,7 @@ dynamic = ["version"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "License :: OSI Approved :: ISC License",
+  "License :: OSI Approved :: ISC License (ISCL)",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
   "Programming Language :: Python :: 3.9",

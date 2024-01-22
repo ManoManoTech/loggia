@@ -24,7 +24,7 @@ theme:
     - search.share
     - search.suggest
   icon:
-    repo: fontawesome/brands/gitlab
+    repo: fontawesome/brands/github
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default

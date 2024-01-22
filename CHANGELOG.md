@@ -2,7 +2,9 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
-## 0.3.0 - NEXT
+## 0.3.0 - 2024-01-22
+
+_Initial Open Source Release!_
 
 In this release, we mostly focus on adoption blockers and seriously itchy behavior. The
 goal remains to have a delightful out-of-the-box experience with little to no config
