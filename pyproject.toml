@@ -36,8 +36,11 @@ classifiers = [
   "Environment :: Console",
   "Environment :: Web Environment",
 ]
+
 [project.urls]
-Homepage = "https://git.manomano.tech/component-python/pkgs/loggia/"
+Repository = "https://github.com/ManoManoTech/loggia"
+Documentation = "https://manomanotech.github.io/loggia/latest/"
+Changelog = "https://manomanotech.github.io/loggia/latest/CHANGELOG/"
 
 [project.optional-dependencies]
 loguru = ["loguru>=0.7.0"]
@@ -115,12 +118,6 @@ doc = [
 ]
 debug = ["check-wheel-contents>=0.4.0"]
 
-[[tool.pdm.source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
-name = "pypi"
-include_packages = ["*"]
-
 [tool.pytest]
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -134,7 +131,7 @@ pythonpath = [
 [tool.coverage.run]
 branch = true
 parallel = true
-omit = ["tests/*", "__pypackages__/*", ".venv/*"]
+omit = ["tests/*", ".venv/*"]
 source = ["loggia"]
 
 [tool.coverage.report]
@@ -262,5 +259,4 @@ include = ["src"]
 exclude = ["**/__pycache__",]
 reportMissingImports = true
 reportMissingTypeStubs = false
-
 pythonVersion = "3.9"

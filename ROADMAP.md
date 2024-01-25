@@ -11,7 +11,6 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 
 ### More ways of using Loggia
 
-- PyPI release
 - `python -m loggia.auto -m mypackage` for non-intrusive logger reconfiguration
 
 ### Make Loggia more delightful
@@ -83,4 +82,3 @@ For a list of past changes, see [the changelog](CHANGELOG.md).
 - Add tests for `loaderutils`
 - Add tests for the pretty formatter
 - Make environment variable parsing type aware and document it
-

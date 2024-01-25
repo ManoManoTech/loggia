@@ -13,6 +13,7 @@ theme:
   name: "material"
   features:
     - content.action.edit
+    - content.action.view
     - content.code.copy
     - navigation.instant
     - navigation.expand
@@ -26,6 +27,10 @@ theme:
   icon:
     repo: fontawesome/brands/github
   palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: blue
@@ -44,6 +49,11 @@ extra:
   generator: false
   version:
     provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/ManoManoTech/loggia
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/loggia/
 
 watch:
   - loggia
