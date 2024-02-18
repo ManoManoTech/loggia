@@ -56,10 +56,10 @@ across several deployments, we recommend you try writing a preset instead.
 
 Pending a better tutorial, look at the packages in the [`loggia.presets`][loggia.presets] namespace for
 inspiration. In most instances, you can cut and paste your Loggia configuration code
-in an `apply` method and be done with it.
+in an [`apply`][loggia.base_preset.BasePreset.apply]method and be done with it.
 
 !!! note
-    The ROADMAP includes several tasks where we plan on expanding / reworking this side.
+    The [ROADMAP](/ROADMAP.md) includes several tasks where we plan on expanding / reworking this side.
     We notably intend to clarify how to ship presets, add more pythonic ways of registering
     new presets, and provide a mechanism for conditional activation beyond preset-preset
     dependencies.
@@ -76,7 +76,7 @@ register the type.
 ### Declaring a preset-preset dependency
 
 If your preset should be enabled depending on whether or not another preset is activating,
-you may override the `BasePreset.required_presets()` class method to indicate which presets
+you may override the [`BasePreset.required_presets()`][loggia.base_preset.BasePreset.required_presets] class method to indicate which presets
 you depend on.
 
 For instance, an hypothetic `AddProductionFields` would likely depend on the `prod` preset.

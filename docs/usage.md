@@ -80,6 +80,8 @@ See the [Presets documentation](presets.md) for more information.
 
 You probably want to configure the standard Python logger as well, e.g., to change the log level for some libraries.
 
+This is done using environment variables `LOGGIA_SUB_LEVEL`, or by using calling [set_logger_level][loggia.conf.LoggerConfiguration.set_logger_level].
+
 ```python
 {%
     include "../tests/test_usage_docs/test_usage_custom_config.py"
