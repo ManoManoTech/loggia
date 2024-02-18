@@ -164,6 +164,8 @@ max-line-length = 180
 
 [tool.ruff]
 line-length = 140
+
+[tool.ruff.lint]
 ignore = [
   "E501",   # Line too long
   "ANN101", # Missing type annotation for self in method
@@ -194,20 +196,20 @@ ignore = [
   "ISC001", # Conflicts with formatter
 ]
 select = ["ALL"]
-[tool.ruff.pydocstyle]
+[tool.ruff.lint.pydocstyle]
 convention = "google"
-[tool.ruff.flake8-annotations]
+[tool.ruff.lint.flake8-annotations]
 allow-star-arg-any = true
 mypy-init-return = true
 suppress-dummy-args = true
 suppress-none-returning = true
-[tool.ruff.flake8-unused-arguments]
+[tool.ruff.lint.flake8-unused-arguments]
 ignore-variadic-names = true
-[tool.ruff.flake8-tidy-imports]
+[tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
-[tool.ruff.flake8-errmsg]
+[tool.ruff.lint.flake8-errmsg]
 max-string-length = 20
-[tool.ruff.flake8-import-conventions]
+[tool.ruff.lint.flake8-import-conventions]
 # Declare the banned `from` imports.
 banned-from = [
   "datetime",
@@ -217,9 +219,9 @@ banned-from = [
   "time",
   "re",
 ]
-[tool.ruff.flake8-builtins]
+[tool.ruff.lint.flake8-builtins]
 builtins-ignorelist = ["filter", "format"]
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = [
   "S101",
   "D",
