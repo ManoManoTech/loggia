@@ -18,7 +18,6 @@ variables:
   PYTHON_LINT_RUFF: "true"
   PYTHON_LINT_MYPY: "true"
   PYTHON_LINT_PYLINT: "true"
-  PYTHON_FMT_BLACK: "true"
   PYTHON_JOB_PYTEST: "true"
 
   MYPY_CMD: pdm run lint-mypy

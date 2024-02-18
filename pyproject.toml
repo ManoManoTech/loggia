@@ -72,12 +72,12 @@ lint = { composite = [
   "lint-mypy",
 ], help = "Run all linters (ruff, pylint, mypy)." }
 # Format
-fmt-black = { cmd = "black .", help = "Run black formatter" }
+fmt-black = { cmd = "ruff format .", help = "Run ruff black-like formatter" }
 fmt-ruff = { cmd = "ruff . --fix --select I001", help = "Run isort-like import sorting with ruff" }
 fmt = { composite = [
   "fmt-black",
   "fmt-ruff",
-], help = "Run all formatters (black, isort-like ruff)" }
+], help = "Run all formatters (black-like ruff, isort-like ruff)" }
 # Tests
 test = { cmd = "pytest", help = "Run the tests" }
 test-cov = { cmd = "pytest --junitxml=pytest-report.xml --cov --cov-report xml:pytest-coverage.xml --cov-fail-under=0 --cov-report html", help = "Run the tests with coverage, and generate reports" }
@@ -88,7 +88,6 @@ docs-build = { cmd = "mkdocs build --strict", help = "Build the docs" }
 
 [tool.pdm.dev-dependencies]
 dev = [
-    "black>=22.12.0",
     "mypy>=1.4",
     "pylint>=3.0.3",
     "pytest-cov>=4.0.0",
@@ -146,9 +145,6 @@ exclude_lines = [
   '@(abc\.)?abstractmethod]',
 ]
 
-[tool.black]
-line-length = 140
-target-version = ['py39']
 
 [tool.pylint]
 [tool.pylint.main]
@@ -194,6 +190,8 @@ ignore = [
   "N817",   # CamelCase `XxXx` imported as acronym `XX`
   "N813",   # CamelCase `XxXx` imported as lowercase `xxxx`
   "ICN003", # Members of `datetime` should not be imported explicitely
+  "COM812", # Conflicts with formatter
+  "ISC001", # Conflicts with formatter
 ]
 select = ["ALL"]
 [tool.ruff.pydocstyle]

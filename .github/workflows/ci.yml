@@ -78,6 +78,10 @@ jobs:
         run: |
           pdm run lint-ruff --output-format=github --exit-non-zero-on-fix
 
+      - name: Check formatting with ruff
+        run: |
+          pdm run ruff format --check --diff .
+
       - name: Build with pdm
         run: |
           pdm build
