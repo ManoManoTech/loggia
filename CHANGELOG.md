@@ -2,6 +2,10 @@
 
 For a list of planned features, see [the roadmap](ROADMAP.md).
 
+## Unreleased
+
+- *CHANGED* `LOGGIA_SUB_LEVEL` and [set_logger_level](loggia.conf.LoggerConfiguration.set_logger_level) now accept a lowercase strings and ints as well as uppercase strings.
+
 ## 0.3.0 - 2024-01-22
 
 _Initial Open Source Release!_
