@@ -10,7 +10,7 @@ import pytest
 from _pytest.capture import SysCapture
 
 if TYPE_CHECKING:
-    from collections.abc import Callable
+    from collections.abc import Callable, Generator
 
     from _pytest.capture import CaptureManager
     from _pytest.fixtures import SubRequest
@@ -33,7 +33,7 @@ def _reload_modules():
 
         import loggia._internal.loguru_stuff
     except ImportError:
-        loguru = None
+        loguru = None  # type: ignore[assignment]
 
     import loggia._internal
     import loggia._internal.bootstrap_logger
@@ -83,12 +83,12 @@ def _env_setup_teardown():
 
 
 class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self._lines: list[str] | None = None
+        self._lines: list[str] = []
 
     @property
-    def lines(self):
+    def lines(self) -> list[str]:
         if self._lines:
             return self._lines
 
@@ -98,7 +98,7 @@ class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
         self._lines = err_lines
         return self._lines
 
-    def strip_ansi_codes(self):
+    def strip_ansi_codes(self) -> None:
         def strip(text: str):
             return re.sub(r"\x1B\[[0-?]*[ -/]*[@-~]", "", text)
 
@@ -116,7 +116,7 @@ class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
 
 
 @pytest.fixture()
-def caperrlines(request: SubRequest):
+def caperrlines(request: SubRequest) -> Generator[ErrlinesCaptureFixture, None, None]:
     """Convenience helper around capsys that only exposes non empty split stderr lines"""
     # most code lifted from upstreams capsys fixture
     capman: CaptureManager = request.config.pluginmanager.getplugin("capturemanager")
@@ -129,7 +129,7 @@ def caperrlines(request: SubRequest):
 
 
 class JsonStderrCaptureFixture(ErrlinesCaptureFixture):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
         self._records: list[Any] | None = None
 
@@ -166,7 +166,7 @@ class BootstrapLoggerFixture:
     def __len__(self):
         return len(self.logger.buf)
 
-    def assert_one_message(self):
+    def assert_one_message(self) -> None:
         assert len(self) == 1, self.messages
 
     @property
@@ -195,6 +195,6 @@ def _nologgingerror():
         raise RuntimeError("An error log was emitted during testing! That's a fail.")
 
     previous_error_handler = logging.Handler.handleError
-    logging.Handler.handleError = fixturedHandler
+    logging.Handler.handleError = fixturedHandler  # type: ignore[method-assign]
     yield
-    logging.Handler.handleError = previous_error_handler
+    logging.Handler.handleError = previous_error_handler  # type: ignore[method-assign]

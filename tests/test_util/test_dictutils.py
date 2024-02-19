@@ -44,7 +44,11 @@ def test_deep_merge_log_config():
         "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "simple"}},
     }
 
-    opt_dict_cfg: logging.config._OptionalDictConfigArgs = {"handlers": {"console": {"level": "INFO"}}, "root": {"handlers": ["console"]}}
+    opt_dict_cfg: logging.config._DictConfigArgs = {
+        "version": 1,
+        "handlers": {"console": {"level": "INFO"}},
+        "root": {"handlers": ["console"]},
+    }
 
     # Expected result
     expected: logging.config._DictConfigArgs = {
