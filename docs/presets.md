@@ -59,7 +59,7 @@ inspiration. In most instances, you can cut and paste your Loggia configuration 
 in an [`apply`][loggia.base_preset.BasePreset.apply]method and be done with it.
 
 !!! note
-    The [ROADMAP](/ROADMAP.md) includes several tasks where we plan on expanding / reworking this side.
+    The [ROADMAP](ROADMAP.md) includes several tasks where we plan on expanding / reworking this side.
     We notably intend to clarify how to ship presets, add more pythonic ways of registering
     new presets, and provide a mechanism for conditional activation beyond preset-preset
     dependencies.
