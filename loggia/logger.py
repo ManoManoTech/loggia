@@ -72,7 +72,6 @@ def initialize(conf: LoggerConfiguration | dict[str, str] | None = None, presets
                 bootstrap_logger.error("Failed to configure loguru! Is is installed?", e)
 
     # XXX Check that logger levels exists
-
     # BIM BAM BADABEEM BADABOOM, LOGGIA MAGICA!
     logging.config.dictConfig(conf._dictconfig)
 
