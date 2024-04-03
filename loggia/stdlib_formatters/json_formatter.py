@@ -9,6 +9,7 @@ from uuid import UUID
 from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
 
 from loggia._internal.bootstrap_logger import bootstrap_logger
+from loggia._internal.conf import is_truthy_string
 from loggia.constants import SAFE_HEADER_ATTRIBUTES
 from loggia.utils.dictutils import del_if_possible, del_many_if_possible, mv_attr
 
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
     import logging
 
 GUNICORN_KEY_RE = re.compile("{([^}]+)}")
-DD_TRACE_ENABLED: Final[str | None] = os.environ.get("DD_TRACE_ENABLED")
+DD_TRACE_ENABLED: Final[bool | None] = is_truthy_string(os.environ.get("DD_TRACE_ENABLED", False))
 if DD_TRACE_ENABLED:
     try:
         from ddtrace import tracer

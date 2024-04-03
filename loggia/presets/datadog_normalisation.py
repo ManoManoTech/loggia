@@ -1,10 +1,13 @@
 """Remap anything to Datadog standard and common attributes."""
 from __future__ import annotations
 
+import os
 import sys
 import traceback
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Final
 
+from loggia._internal.bootstrap_logger import bootstrap_logger
+from loggia._internal.conf import is_truthy_string
 from loggia.base_preset import BasePreset
 
 if sys.version_info >= (3, 10):
@@ -22,11 +25,14 @@ if TYPE_CHECKING:
 
 ExcInfo: TypeAlias = "tuple[type[BaseException], BaseException, None | TracebackType]"
 
-
-try:
-    import ddtrace
-except ImportError:
-    ddtrace = None  # type: ignore[assignment]
+# XXX(GabDug): cleanup ddtrace import
+DD_TRACE_ENABLED: Final[bool | None] = is_truthy_string(os.environ.get("DD_TRACE_ENABLED", False))
+if DD_TRACE_ENABLED:
+    try:
+        import ddtrace
+    except ImportError:
+        bootstrap_logger.error("DD_TRACE_ENABLED environment variable is set but ddtrace package cannot be loaded")
+        ddtrace = None  # type: ignore[assignment]
 
 try:
     from loggia._version import __version__
