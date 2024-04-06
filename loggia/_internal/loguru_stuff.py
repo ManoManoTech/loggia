@@ -2,6 +2,7 @@
 
 We expect importing code to import-guard against loguru.
 """
+
 from __future__ import annotations
 
 import logging

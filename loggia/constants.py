@@ -1,4 +1,5 @@
 """Constants for the loggia package."""
+
 import logging.config
 import re
 from typing import Final

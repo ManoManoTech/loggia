@@ -1,4 +1,5 @@
 """Main module for logging configuration, using standard logging."""
+
 from __future__ import annotations
 
 import logging

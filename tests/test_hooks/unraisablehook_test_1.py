@@ -3,6 +3,7 @@ This is meant to be called from tests as a subprocess ... this is the cleanest
 way to dodge the several layers of pytest who prevent us from testing the various
 exception hooks.
 """
+
 import sys
 
 from loggia.conf import LoggerConfiguration
