@@ -10,6 +10,7 @@ If you use primarily use loguru, you should consider using logging.
 
 
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

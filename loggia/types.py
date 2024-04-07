@@ -9,8 +9,7 @@ if TYPE_CHECKING:
 class SupportsFilter(Protocol):
     """Standard logging compatible filter instances implement this."""
 
-    def filter(self, __record: LogRecord) -> bool:
-        ...
+    def filter(self, __record: LogRecord) -> bool: ...
 
 
 T = TypeVar("T")

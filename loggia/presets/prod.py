@@ -1,4 +1,5 @@
 """An overarching preset for a no-frills JSON production logger to stdout."""
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING

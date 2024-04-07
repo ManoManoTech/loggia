@@ -1,4 +1,5 @@
 """Remap anything to Datadog standard and common attributes."""
+
 from __future__ import annotations
 
 import os

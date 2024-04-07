@@ -30,8 +30,7 @@ if DD_TRACE_ENABLED:
 class JsonSerializable(Protocol):
     """Protocol for any object willing to cooperate with our CustomJsonEncoder."""
 
-    def __json__(self) -> str:
-        ...
+    def __json__(self) -> str: ...
 
 
 class CustomJsonEncoder(JsonEncoder):

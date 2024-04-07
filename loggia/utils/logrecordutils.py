@@ -2,6 +2,7 @@
 
 This reluctance is gradually going away as this package expands.
 """
+
 from __future__ import annotations
 
 import logging

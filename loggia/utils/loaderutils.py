@@ -21,23 +21,19 @@ T = TypeVar("T")
 
 
 @overload
-def import_fqn(fully_qualified_name: str, *, ensure_instance_of: type[T], ensure_subclass_of: None = None) -> T:
-    ...
+def import_fqn(fully_qualified_name: str, *, ensure_instance_of: type[T], ensure_subclass_of: None = None) -> T: ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type, ensure_instance_of: type) -> Never:
-    ...
+def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type, ensure_instance_of: type) -> Never: ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type[T], ensure_instance_of: None = None) -> type[T]:
-    ...
+def import_fqn(fully_qualified_name: str, *, ensure_subclass_of: type[T], ensure_instance_of: None = None) -> type[T]: ...
 
 
 @overload
-def import_fqn(fully_qualified_name: str, *, ensure_instance_of: None = None, ensure_subclass_of: None = None) -> Any:
-    ...
+def import_fqn(fully_qualified_name: str, *, ensure_instance_of: None = None, ensure_subclass_of: None = None) -> Any: ...
 
 
 # XXX overload for ensure_callable

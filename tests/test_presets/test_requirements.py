@@ -6,16 +6,13 @@ from loggia.utils.envutils import with_env
 from tests.test_preset import TestPreset
 
 
-class TestA(TestPreset):
-    ...
+class TestA(TestPreset): ...
 
 
-class TestB(TestPreset):
-    ...
+class TestB(TestPreset): ...
 
 
-class TestC(TestPreset):
-    ...
+class TestC(TestPreset): ...
 
 
 class TestNeedsA1(TestPreset):
