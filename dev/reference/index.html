@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.9">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.f2e4d321.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.bcfcd587.min.css">
       
         
         <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
@@ -1348,7 +1348,7 @@
 
 
 <a href="#loggia.logger.initialize" class="headerlink" title="Permanent link">¤</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">initialize</span><span class="p">(</span><span class="n">conf</span><span class="p">:</span> <span class="n">LoggerConfiguration</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">initialize</span><span class="p">(</span><span class="n">conf</span><span class="p">:</span> <span class="n">LoggerConfiguration</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1357,8 +1357,7 @@
 
           <details class="quote">
             <summary>Source code in <code>loggia/logger.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-43">43</a></span>
-<span class="normal"><a href="#__codelineno-0-44">44</a></span>
+            <div class="language-python highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"><a href="#__codelineno-0-44">44</a></span>
 <span class="normal"><a href="#__codelineno-0-45">45</a></span>
 <span class="normal"><a href="#__codelineno-0-46">46</a></span>
 <span class="normal"><a href="#__codelineno-0-47">47</a></span>
@@ -1390,40 +1389,41 @@
 <span class="normal"><a href="#__codelineno-0-73">73</a></span>
 <span class="normal"><a href="#__codelineno-0-74">74</a></span>
 <span class="normal"><a href="#__codelineno-0-75">75</a></span>
-<span class="normal"><a href="#__codelineno-0-76">76</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43"></a><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">conf</span><span class="p">:</span> <span class="n">LoggerConfiguration</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the logging system.&quot;&quot;&quot;</span>
-</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a>    <span class="n">conf</span> <span class="o">=</span> <span class="n">_bootstrap_config</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">presets</span><span class="p">)</span>
-</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>
-</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_excepthook</span><span class="p">:</span>
-</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>        <span class="n">_set_excepthook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
-</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>
-</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_unraisablehook</span><span class="p">:</span>
-</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>        <span class="n">_set_unraisablehook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
-</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>
-</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_threading_excepthook</span><span class="p">:</span>
-</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>        <span class="n">_set_threading_excepthook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
-</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>
-</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>    <span class="c1"># XXX asyncio bullshit?</span>
-</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="c1"># XXX audit subsystem bridge</span>
-</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>
-</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_warnings</span><span class="p">:</span>
-</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>        <span class="c1"># XXX test</span>
-</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="n">logging</span><span class="o">.</span><span class="n">captureWarnings</span><span class="p">(</span><span class="n">capture</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>
-</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_loguru</span> <span class="ow">in</span> <span class="p">(</span><span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">AUTO</span><span class="p">,</span> <span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">ENABLED</span><span class="p">):</span>
-</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>        <span class="k">try</span><span class="p">:</span>
-</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>            <span class="kn">from</span> <span class="nn">loggia.loguru_sink</span> <span class="kn">import</span> <span class="n">configure_loguru</span>
-</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>
-</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>            <span class="n">_patch_to_add_level</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;TRACE&quot;</span><span class="p">)</span>
-</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="n">_patch_to_add_level</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;SUCCESS&quot;</span><span class="p">)</span>
-</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="n">configure_loguru</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
-</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>        <span class="k">except</span> <span class="ne">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>            <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_loguru</span> <span class="o">==</span> <span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">ENABLED</span><span class="p">:</span>
-</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>                <span class="n">bootstrap_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to configure loguru! Is is installed?&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
-</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>
-</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>    <span class="c1"># XXX Check that logger levels exists</span>
-</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="c1"># BIM BAM BADABEEM BADABOOM, LOGGIA MAGICA!</span>
-</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">_dictconfig</span><span class="p">)</span>
+<span class="normal"><a href="#__codelineno-0-76">76</a></span>
+<span class="normal"><a href="#__codelineno-0-77">77</a></span></pre></div></td><td class="code"><div><pre><span></span><code><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44"></a><span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">conf</span><span class="p">:</span> <span class="n">LoggerConfiguration</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45"></a><span class="w">    </span><span class="sd">&quot;&quot;&quot;Initialize the logging system.&quot;&quot;&quot;</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46"></a>    <span class="n">conf</span> <span class="o">=</span> <span class="n">_bootstrap_config</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">presets</span><span class="p">)</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47"></a>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_excepthook</span><span class="p">:</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49"></a>        <span class="n">_set_excepthook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50"></a>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_unraisablehook</span><span class="p">:</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52"></a>        <span class="n">_set_unraisablehook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53"></a>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">setup_threading_excepthook</span><span class="p">:</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55"></a>        <span class="n">_set_threading_excepthook</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">())</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56"></a>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57"></a>    <span class="c1"># XXX asyncio bullshit?</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58"></a>    <span class="c1"># XXX audit subsystem bridge</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59"></a>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_warnings</span><span class="p">:</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61"></a>        <span class="c1"># XXX test</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62"></a>        <span class="n">logging</span><span class="o">.</span><span class="n">captureWarnings</span><span class="p">(</span><span class="n">capture</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-0-63"><a id="__codelineno-0-63" name="__codelineno-0-63"></a>
+</span><span id="__span-0-64"><a id="__codelineno-0-64" name="__codelineno-0-64"></a>    <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_loguru</span> <span class="ow">in</span> <span class="p">(</span><span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">AUTO</span><span class="p">,</span> <span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">ENABLED</span><span class="p">):</span>
+</span><span id="__span-0-65"><a id="__codelineno-0-65" name="__codelineno-0-65"></a>        <span class="k">try</span><span class="p">:</span>
+</span><span id="__span-0-66"><a id="__codelineno-0-66" name="__codelineno-0-66"></a>            <span class="kn">from</span> <span class="nn">loggia.loguru_sink</span> <span class="kn">import</span> <span class="n">configure_loguru</span>
+</span><span id="__span-0-67"><a id="__codelineno-0-67" name="__codelineno-0-67"></a>
+</span><span id="__span-0-68"><a id="__codelineno-0-68" name="__codelineno-0-68"></a>            <span class="n">_patch_to_add_level</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;TRACE&quot;</span><span class="p">)</span>
+</span><span id="__span-0-69"><a id="__codelineno-0-69" name="__codelineno-0-69"></a>            <span class="n">_patch_to_add_level</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="s2">&quot;SUCCESS&quot;</span><span class="p">)</span>
+</span><span id="__span-0-70"><a id="__codelineno-0-70" name="__codelineno-0-70"></a>            <span class="n">configure_loguru</span><span class="p">(</span><span class="n">conf</span><span class="p">)</span>
+</span><span id="__span-0-71"><a id="__codelineno-0-71" name="__codelineno-0-71"></a>        <span class="k">except</span> <span class="ne">ModuleNotFoundError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+</span><span id="__span-0-72"><a id="__codelineno-0-72" name="__codelineno-0-72"></a>            <span class="k">if</span> <span class="n">conf</span><span class="o">.</span><span class="n">capture_loguru</span> <span class="o">==</span> <span class="n">FlexibleFlag</span><span class="o">.</span><span class="n">ENABLED</span><span class="p">:</span>
+</span><span id="__span-0-73"><a id="__codelineno-0-73" name="__codelineno-0-73"></a>                <span class="n">bootstrap_logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;Failed to configure loguru! Is is installed?&quot;</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+</span><span id="__span-0-74"><a id="__codelineno-0-74" name="__codelineno-0-74"></a>
+</span><span id="__span-0-75"><a id="__codelineno-0-75" name="__codelineno-0-75"></a>    <span class="c1"># XXX Check that logger levels exists</span>
+</span><span id="__span-0-76"><a id="__codelineno-0-76" name="__codelineno-0-76"></a>    <span class="c1"># BIM BAM BADABEEM BADABOOM, LOGGIA MAGICA!</span>
+</span><span id="__span-0-77"><a id="__codelineno-0-77" name="__codelineno-0-77"></a>    <span class="n">logging</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">dictConfig</span><span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">_dictconfig</span><span class="p">)</span>
 </span></code></pre></div></td></tr></table></div>
           </details>
   </div>
@@ -1470,7 +1470,7 @@
 
 
 <a href="#loggia.conf.LoggerConfiguration" class="headerlink" title="Permanent link">¤</a></h3>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">LoggerConfiguration</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">LoggerConfiguration</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">presets</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1501,7 +1501,7 @@
 
 
 <a href="#loggia.conf.LoggerConfiguration.add_log_filter" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">add_log_filter</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filter_</span><span class="p">:</span> <span class="n">SupportsFilter</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">add_log_filter</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">filter_</span><span class="p">:</span> <span class="n">SupportsFilter</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">logging</span><span class="o">.</span><span class="n">LogRecord</span><span class="p">],</span> <span class="nb">bool</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1527,7 +1527,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_capture_warnings" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_capture_warnings</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_capture_warnings</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1549,7 +1549,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_default_formatter" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_default_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">:</span> <span class="n">UserDefinedObject</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_default_formatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">:</span> <span class="n">UserDefinedObject</span><span class="p">[</span><span class="n">logging</span><span class="o">.</span><span class="n">Formatter</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1570,7 +1570,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_excepthook" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_excepthook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_excepthook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1592,7 +1592,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_general_level" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_general_level</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_general_level</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1614,7 +1614,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_logger_level" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_logger_level</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_logger_level</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1636,7 +1636,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_logger_propagation" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_logger_propagation</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">does_propagate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_logger_propagation</span><span class="p">(</span><span class="n">logger_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">does_propagate</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1657,7 +1657,7 @@ the logger with add_handler_filter</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_loguru_capture" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_loguru_capture</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="n">FlexibleFlag</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_loguru_capture</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="n">FlexibleFlag</span> <span class="o">|</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1684,7 +1684,7 @@ if it is present.</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_loguru_reconfiguration_block" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_loguru_reconfiguration_block</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_loguru_reconfiguration_block</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1709,7 +1709,7 @@ You may have to use this setting if your software fails to initialize.</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_threading_excepthook" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_threading_excepthook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_threading_excepthook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1731,7 +1731,7 @@ You may have to use this setting if your software fails to initialize.</p>
 
 
 <a href="#loggia.conf.LoggerConfiguration.set_unraisablehook" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">set_unraisablehook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">set_unraisablehook</span><span class="p">(</span><span class="n">enabled</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1862,7 +1862,7 @@ or garbage collection.</p>
 
 
 <a href="#loggia.stdlib_formatters.json_formatter.CustomJsonFormatter" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">CustomJsonFormatter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">CustomJsonFormatter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -1975,7 +1975,7 @@ or garbage collection.</p>
 
 
 <a href="#loggia.stdlib_formatters.pretty_formatter.PrettyFormatter" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">PrettyFormatter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">PrettyFormatter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -2329,7 +2329,7 @@ that address a similar concern.</p>
   </span>
 
 <a href="#loggia.base_preset.BasePreset.apply" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">apply</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">apply</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -2354,7 +2354,7 @@ that address a similar concern.</p>
   </span>
 
 <a href="#loggia.base_preset.BasePreset.required_presets" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">required_presets</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">required_presets</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -2404,7 +2404,7 @@ less powerful.</p>
   </span>
 
 <a href="#loggia.base_preset.BasePreset.slots" class="headerlink" title="Permanent link">¤</a></h4>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">slots</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nf">slots</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents ">
@@ -2449,7 +2449,7 @@ single concern.</p>
   </span>
 
 <a href="#loggia.constants.BASE_DICTCONFIG" class="headerlink" title="Permanent link">¤</a></h2>
-<div class="doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">BASE_DICTCONFIG</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">_DictConfigArgs</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;disable_existing_loggers&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;logging.StreamHandler&#39;</span><span class="p">,</span> <span class="s1">&#39;formatter&#39;</span><span class="p">:</span> <span class="s1">&#39;structured&#39;</span><span class="p">}},</span> <span class="s1">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s1">&#39;propagate&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">}}}</span>
+<div class="language-python doc-signature highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">BASE_DICTCONFIG</span><span class="p">:</span> <span class="n">Final</span><span class="p">[</span><span class="n">_DictConfigArgs</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;version&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;disable_existing_loggers&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;class&#39;</span><span class="p">:</span> <span class="s1">&#39;logging.StreamHandler&#39;</span><span class="p">,</span> <span class="s1">&#39;formatter&#39;</span><span class="p">:</span> <span class="s1">&#39;structured&#39;</span><span class="p">}},</span> <span class="s1">&#39;loggers&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;handlers&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">],</span> <span class="s1">&#39;propagate&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;level&#39;</span><span class="p">:</span> <span class="s1">&#39;INFO&#39;</span><span class="p">}}}</span>
 </span></code></pre></div>
 
   <div class="doc doc-contents first">
@@ -2603,7 +2603,7 @@ has the lowest precedence over any kind of configuration in Loggia.</p>
     <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "content.action.view", "content.code.copy", "navigation.instant", "navigation.expand", "navigation.footer", "navigation.top", "search.highlight", "search.share", "search.suggest"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": ["latest", "dev"], "provider": "mike"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.8fd75fb4.min.js"></script>
+      <script src="../assets/javascripts/bundle.1e8ae164.min.js"></script>
       
     
   </body>
