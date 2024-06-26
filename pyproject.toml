@@ -73,7 +73,7 @@ lint = { composite = [
 ], help = "Run all linters (ruff, pylint, mypy)." }
 # Format
 fmt-black = { cmd = "ruff format .", help = "Run ruff black-like formatter" }
-fmt-ruff = { cmd = "ruff . --fix --select I001", help = "Run isort-like import sorting with ruff" }
+fmt-ruff = { cmd = "ruff check . --fix --select I001", help = "Run isort-like import sorting with ruff" }
 fmt = { composite = [
   "fmt-black",
   "fmt-ruff",
@@ -96,7 +96,7 @@ dev = [
     "rich>=13.3.4",
     "gunicorn>=20.1.0",
     "hypercorn>=0.14.3",
-    "ruff>=0.0.262",
+    "ruff>=0.3.5",
     "tox>=4.11.1",
     "tox-pdm>=0.6.1",
 ]
@@ -114,6 +114,7 @@ doc = [
     "mkdocs-section-index>=0.3.4",
     "mdx-truly-sane-lists>=1.3",
     "mike>=1.1.2",
+    "black>=24.4.2",
 ]
 debug = ["check-wheel-contents>=0.4.0"]
 

@@ -1,0 +1,7 @@
+[tools]
+python = "3.11"
+pdm = "2.16"
+
+[env]
+_.python.venv = { path = ".venv", create = true }
+_.file = '.env'
