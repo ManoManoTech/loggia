@@ -65,7 +65,7 @@ env_file = ".env"
 # Lint
 lint-pylint = { cmd = "pylint loggia", help = "Run pylint" }
 lint-mypy = { shell = "mypy", help = "Run mypy type checker" }
-lint-ruff = { cmd = "ruff .", help = "Run ruff linter" }
+lint-ruff = { cmd = "ruff check .", help = "Run ruff linter" }
 lint = { composite = [
   "lint-ruff",
   "lint-pylint",
