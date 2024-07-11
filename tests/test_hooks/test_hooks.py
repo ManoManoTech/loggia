@@ -11,8 +11,8 @@ __HERE__ = os.path.dirname(__file__)  # noqa: PTH120
 
 
 def run_script(script_name, *args, expected_retcode: int = 1):
-    completed_process = subprocess.run(
-        ["python3", f"tests/test_hooks/{script_name}", *args],  # noqa: S603 S607
+    completed_process = subprocess.run(  # noqa: S603
+        ["python3", f"tests/test_hooks/{script_name}", *args],  # noqa: S607
         capture_output=True,
         check=False,
     )
