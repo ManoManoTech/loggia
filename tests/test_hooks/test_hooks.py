@@ -29,7 +29,7 @@ def test_set_excepthook_on(capsys: pytest.CaptureFixture[str]):
     assert sys.excepthook is not previous_hook
 
 
-@pytest.fixture()
+@pytest.fixture
 def _env_setup_teardown():
     # Override the fixture to make it a no-op
     pass

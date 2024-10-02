@@ -115,7 +115,7 @@ class ErrlinesCaptureFixture(pytest.CaptureFixture[str]):
         return any(substring in line for line in self._lines)
 
 
-@pytest.fixture()
+@pytest.fixture
 def caperrlines(request: SubRequest) -> Generator[ErrlinesCaptureFixture, None, None]:
     """Convenience helper around capsys that only exposes non empty split stderr lines"""
     # most code lifted from upstreams capsys fixture
@@ -146,7 +146,7 @@ class JsonStderrCaptureFixture(ErrlinesCaptureFixture):
         return self.records[0] if self.records else None
 
 
-@pytest.fixture()
+@pytest.fixture
 def capjson(request: SubRequest):
     """Convenience helper around capsys that exposes parsed JSON records from stderr"""
     # most code lifted from upstreams capsys fixture
@@ -178,7 +178,7 @@ class BootstrapLoggerFixture:
         return "\n".join(e.msg for e in self.logger.buf)
 
 
-@pytest.fixture()
+@pytest.fixture
 def capbootstrap(_reload_modules: None):
     from loggia._internal.bootstrap_logger import bootstrap_logger
 
