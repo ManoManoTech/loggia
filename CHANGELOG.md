@@ -4,6 +4,10 @@ For a list of planned features, see [the roadmap](ROADMAP.md).
 
 ## Unreleased
 
+- Test using Python 3.13
+
+## 0.3.1 - 2024-04-03
+
 - *CHANGED* `LOGGIA_SUB_LEVEL` and [set_logger_level][loggia.conf.LoggerConfiguration.set_logger_level] now accept a lowercase strings and ints as well as uppercase strings.
 - *FIXED* `ddtrace` was imported even with `DD_TRACE_ENABLED=false`
 

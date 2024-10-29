@@ -49,7 +49,7 @@ Loggia is **not** a new Python logger - it's a nice way to configure - and share
 
 ## Supported versions
 
-We currently support Python 3.9, 3.10, 3.11 and 3.12.
+We currently support Python 3.9, 3.10, 3.11, 3.12 and 3.13.
 
 We may drop the support for a Python version before its end of life, to keep the codebase up to date with the latest Python features: i.e.: we will endeavor to support either the last 3 or 4 stable Python releases.
 
