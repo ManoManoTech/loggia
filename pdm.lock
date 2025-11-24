@@ -5,7 +5,7 @@
 groups = ["default", "ddtrace", "debug", "dev", "doc", "loguru", "rich", "tests"]
 strategy = ["cross_platform", "static_urls"]
 lock_version = "4.5.0"
-content_hash = "sha256:27bc5d9be357c807f89747d0ddc11b6c5b4517effe82090ab43c467e193ef5a1"
+content_hash = "sha256:001c0bb4fca11ca78eec2fc0b5dc8686191a2acf9f10ac7bd689546d3f0c8fcd"
 
 [[metadata.targets]]
 requires_python = ">=3.9"
@@ -1617,12 +1617,15 @@ files = [
 
 [[package]]
 name = "python-json-logger"
-version = "2.0.7"
-requires_python = ">=3.6"
-summary = "A python library adding a json log formatter"
+version = "4.0.0"
+requires_python = ">=3.8"
+summary = "JSON Log Formatter for the Python Logging Package"
+dependencies = [
+    "typing-extensions; python_version < \"3.10\"",
+]
 files = [
-    {url = "https://files.pythonhosted.org/packages/35/a6/145655273568ee78a581e734cf35beb9e33a370b29c5d3c8fee3744de29f/python_json_logger-2.0.7-py3-none-any.whl", hash = "sha256:f380b826a991ebbe3de4d897aeec42760035ac760345e57b812938dc8b35e2bd"},
-    {url = "https://files.pythonhosted.org/packages/4f/da/95963cebfc578dabd323d7263958dfb68898617912bb09327dd30e9c8d13/python-json-logger-2.0.7.tar.gz", hash = "sha256:23e7ec02d34237c5aa1e29a070193a4ea87583bb4e7f8fd06d3de8264c4b2e1c"},
+    {url = "https://files.pythonhosted.org/packages/29/bf/eca6a3d43db1dae7070f70e160ab20b807627ba953663ba07928cdd3dc58/python_json_logger-4.0.0.tar.gz", hash = "sha256:f58e68eb46e1faed27e0f574a55a0455eecd7b8a5b88b85a784519ba3cff047f"},
+    {url = "https://files.pythonhosted.org/packages/51/e5/fecf13f06e5e5f67e8837d777d1bc43fac0ed2b77a676804df5c34744727/python_json_logger-4.0.0-py3-none-any.whl", hash = "sha256:af09c9daf6a813aa4cc7180395f50f2a9e5fa056034c9953aec92e381c5ba1e2"},
 ]
 
 [[package]]

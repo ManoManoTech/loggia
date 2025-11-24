@@ -6,7 +6,8 @@ from socket import socket
 from typing import TYPE_CHECKING, Any, Final, Protocol, runtime_checkable
 from uuid import UUID
 
-from pythonjsonlogger.jsonlogger import RESERVED_ATTRS, JsonEncoder, JsonFormatter
+from pythonjsonlogger.core import RESERVED_ATTRS
+from pythonjsonlogger.json import JsonEncoder, JsonFormatter
 
 from loggia._internal.bootstrap_logger import bootstrap_logger
 from loggia._internal.conf import is_truthy_string
@@ -61,7 +62,7 @@ class CustomJsonFormatter(JsonFormatter):
     RESERVED_ATTRS = RESERVED_ATTRS
 
     def __init__(self, *args: Any, **kwargs: Any):
-        super().__init__(*args, **kwargs)  # type: ignore[no-untyped-call]
+        super().__init__(*args, **kwargs)
         if DD_TRACE_ENABLED and tracer is not None:
             self.process_ddtrace = _process_ddtrace
         else:
