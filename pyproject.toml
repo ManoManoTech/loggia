@@ -11,7 +11,7 @@ authors = [
   { name = "Jonathan Gallon", email = "jonathan.gallon@manomano.com" },
 ]
 dependencies = [
-    "python-json-logger>=2.0.7",
+    "python-json-logger>=3.1.0",
     "typing-extensions>=4.7.1 ; python_version < '3.10'",
 ]
 requires-python = ">=3.9"
