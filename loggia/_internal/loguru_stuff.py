@@ -62,7 +62,7 @@ def _loguru_to_std_sink(message: LoguruMessage) -> None:
         # XXX(dugab): check key actualy exists somewhere?
         attributes["stack"] = record["stack"]  # type: ignore[typeddict-item] # pylance: disable[reportGeneralTypeIssues]
 
-    loguru_extra = cast(dict[str, Any], record.pop("extra", {}))  # type: ignore[misc]
+    loguru_extra = cast("dict[str, Any]", record.pop("extra", {}))  # type: ignore[misc]
     record_dict = loguru_extra | attributes
 
     log_record = logging.makeLogRecord(record_dict)
