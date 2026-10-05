@@ -23,7 +23,6 @@ def _patch_to_add_level(level_number: int, level_name: str) -> None:
     XXX(dugab): Some of these statements may be redundant.
     """
     # pylint: disable=protected-access
-    # ruff: noqa: SLF001
     level_name_upper = level_name.upper()
     logging.addLevelName(level_number, level_name_upper)
 
