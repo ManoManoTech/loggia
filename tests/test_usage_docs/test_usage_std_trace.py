@@ -5,7 +5,6 @@ import pytest
 loguru_module = pytest.importorskip("loguru")
 
 
-# ruff: noqa: F811
 def test_trace_with_standard(capsys: pytest.CaptureFixture[str]):
     # <!-- DOC:START -->
     # Assuming we want a very verbose logger
