@@ -1,4 +1,4 @@
-import logging.config  # noqa: TCH003
+import logging.config  # noqa: TC003
 
 from loggia.utils.dictutils import deep_merge_log_config, del_if_possible, del_many_if_possible, mv_attr
 
