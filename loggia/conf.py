@@ -141,12 +141,12 @@ class LoggerConfiguration:
             typename = f"CallableWrapper<{filter_.__class__.__module__}.{filter_.__class__.__name__}:{id(filter_)}>"
 
         def ctor_proto() -> SupportsFilter:
-            return cast(SupportsFilter, filter_)
+            return cast("SupportsFilter", filter_)
 
         def ctor_callable() -> SupportsFilter:
             t = type(typename, (), {})
             t.filter = filter_  # type:ignore[attr-defined]
-            return cast(SupportsFilter, t)
+            return cast("SupportsFilter", t)
 
         ctor = ctor_callable if callable(filter_) else ctor_proto
         ctor.__name__ = typename
