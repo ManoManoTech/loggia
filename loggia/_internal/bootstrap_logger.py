@@ -70,7 +70,7 @@ class _BootstrapLoggerEntry(NamedTuple):
         return logging._levelToName.get(self.level, "???")
 
     @property
-    def exc_info(self) -> None | tuple[type[Exception], Exception, TracebackType | None]:
+    def exc_info(self) -> tuple[type[Exception], Exception, TracebackType | None] | None:
         if self.exc:
             return (type(self.exc), self.exc, self.exc.__traceback__)
         return None
